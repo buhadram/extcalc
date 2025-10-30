@@ -1,0 +1,126 @@
+EXTCALC README
+
+1. Introduction
+
+2. Installation
+
+3. Content
+
+4. Version
+
+5. Important 
+
+
+
+
+1. INTRODUCTION
+Extcalc is a scientific graphic calculator for linux. It can process difficult
+mathmatical functions, draw graphs and work with functions. You can also calculate tables from functions. A Script-Interpreter for programs, written in a C-like language, is also included in Extcalc. 
+
+
+
+
+2. INSTALLATION
+- unpack archive (tar -xzf extcalc-0.9.3.tar.gz)
+- switch to directory (cd extcalc-0.9.3)
+- run configure (cmake .)
+- compile (make)
+- become root (su)
+- install (make install)
+
+3. CONTENT
+This packet contains the following files and directories:
+
+README                       this readme
+LIESMICH                     german readme
+CMakeLists.txt               CMake configuration file
+...                          other files for installation
+src/                         the complete sourcecode
+    ...
+share/                       files needed for installation
+      ...                    icons, license
+doc/                         documentation
+    help_en.html             english documentation
+    help_de.html             german documentation
+    ...                      images
+
+
+	   
+	   
+4. VERSION
+Version 0.9.3
+
+This is a beta release.
+For information, how to report a bug, please visit the
+project home page http://extcalc-linux.sourceforge.net/.
+
+Due to major changes in the user interface codes, parts
+of the user interface are not accessible in v0.9.3 of Extcalc.
+
+done:
+User Interface for Calculator
+User Interface for Graphics
+parser for calculations
+drawing graphs (cartesian an polar coordinate system)
+working with graphs
+integration, differentiation
+base-n calculations
+logic functions
+3D-graphs
+dynamic graphs
+tables
+scripting functions
+script editor
+script console
+script debug messages
+zooming and moving graphs
+draw into graphics window
+save screenshots of graphics window
+complex numbers
+matrix calculation
+vector calculation
+script commands for file usage and graphics
+window for matrix- and vector-operations
+statistic functions
+
+to do:
+beta test
+
+
+
+
+5. IMPORTANT
+
+This is a beta version. The program may have some bugs.
+
+Tested Distributions:
+Suse Linux 11.2        ok
+Debian Lenny           ok
+Mandriva 2010          ok
+Fedora Core 12         ok
+Ubuntu Linux 9.10      ok
+
+Software Requirements:
+Linux
+GCC 4
+QT4.3 or higher
+OpenGL
+cmake
+
+
+Hardware Requirements:
+CPU at about 1GHz (32Bit or 64Bit)
+enough RAM to run X
+For 3D-graphics, a 3D-graphics card is recommended
+A mouse with mousewheel is needed for rotating, moving and zooming graphs
+
+
+Precision:
+The maximal precision of extcalc on a 32Bit-CPU is 18 digits because it uses long double-variables for
+calculation.
+The precision of integrations is about 9 digits
+The precision of differentiations is about 8 digits
+At trigonimetric functions and logarithms about 17 digits
+
+
+

@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/" >
+        <file alias="drawcircle" >circle.png</file>
+        <file alias="drawfree" >free.png</file>
+        <file alias="drawline" >line.png</file>
+        <file alias="openfile" >open.png</file>
+        <file alias="drawrect" >rect.png</file>
+        <file alias="drawrubber" >rubber.png</file>
+        <file alias="drawtext" >text.png</file>
+    </qresource>
+</RCC>
