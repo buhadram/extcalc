@@ -33,20 +33,20 @@ math classes and shows the user output.
 /*
 class ScriptThread :public QThread
 {
-	Script* script;
-	QObject*parent;
-//	Q_OBJECT
+    Script* script;
+    QObject*parent;
+//    Q_OBJECT
 public:
-	ScriptThread(Script* s,QObject*p) :QThread()
-	{
-		script=s;
-		parent=p;
-	}
+    ScriptThread(Script* s,QObject*p) :QThread()
+    {
+        script=s;
+        parent=p;
+    }
 protected:
-	virtual void run()
-	{
-		script->exec();
-	}
+    virtual void run()
+    {
+        script->exec();
+    }
 };
 */
 
@@ -55,78 +55,78 @@ protected:
 
 class CalcInput :public QTextEdit
 {
-	int lineLength;
-	int charLength;
-	QString line;
-	int lineCursor;
-	QFont *stdFont;
-	int lineCount;
-	Variable*vars;
-	bool scriptExec;
-	List <int>resultParagraphs; 
-//	ScriptThread*script;
-	Script*scriptObject;
-	ThreadSync*threadData;
-	bool ansAvailable,ansDone,autoBrace;
+    int lineLength;
+    int charLength;
+    QString line;
+    int lineCursor;
+    QFont *stdFont;
+    int lineCount;
+    Variable*vars;
+    bool scriptExec;
+    List <int>resultParagraphs; 
+//    ScriptThread*script;
+    Script*scriptObject;
+    ThreadSync*threadData;
+    bool ansAvailable,ansDone,autoBrace;
 
-	Preferences pref;
-	
-	Q_OBJECT
-	public:
-		CalcInput(QWidget*parentWin,Variable*va,ThreadSync*td,bool aB=false) :QTextEdit((QWidget*)parentWin)
-		{
-			vars=va;
-			threadData=td;
-			scriptExec=false;
-			autoBrace=aB;
-//			script=nullptr;
+    Preferences pref;
+    
+    Q_OBJECT
+    public:
+        CalcInput(QWidget*parentWin,Variable*va,ThreadSync*td,bool aB=false) :QTextEdit((QWidget*)parentWin)
+        {
+            vars=va;
+            threadData=td;
+            scriptExec=false;
+            autoBrace=aB;
+//            script=nullptr;
       stdFont=new QFont("monospace",10);
-			stdFont->setFixedPitch(true);
-			setFont(*stdFont);
-			setTextFormat(Qt::PlainText);
-			ansAvailable=false;
-			ansDone=false;
+            stdFont->setFixedPitch(true);
+            setFont(*stdFont);
+            setTextFormat(Qt::PlainText);
+            ansAvailable=false;
+            ansDone=false;
 
 
-			QFontMetrics fontSize=fontMetrics();
-			charLength=fontSize.size(0,QString("m")).width();
-			setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
+            QFontMetrics fontSize=fontMetrics();
+            charLength=fontSize.size(0,QString("m")).width();
+            setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
 
-			lineLength=width()/charLength-1;
+            lineLength=width()/charLength-1;
 
-			line="";
-			lineCursor=0;
-			lineCount=0;
-			connect(this,SIGNAL(clicked(int,int)),this,SLOT(cursorSlot(int,int)));
-		}
-
-
-		void calculateKey();
-		void deleteKey();
-		void backKey();
-		void clearAll();
-		void cursorKey(int key);
-		void textInput(QString text);
-		void setPref(Preferences newPref)
-		{
-			pref=newPref;
-		}
+            line="";
+            lineCursor=0;
+            lineCount=0;
+            connect(this,SIGNAL(clicked(int,int)),this,SLOT(cursorSlot(int,int)));
+        }
 
 
-	protected:
-		virtual void keyPressEvent(QKeyEvent*);
-		virtual void resizeEvent(QResizeEvent*);
-//		virtual void customEvent(QEvent *ev);
-		virtual QMenu *createPopupMenu(const QPoint&);
-	
-	public slots:
-		void cursorSlot(int para,int pos);
-		void menuSlot(int item);
-//		void scriptSlot(QString*code);
+        void calculateKey();
+        void deleteKey();
+        void backKey();
+        void clearAll();
+        void cursorKey(int key);
+        void textInput(QString text);
+        void setPref(Preferences newPref)
+        {
+            pref=newPref;
+        }
 
-	signals:
-		void prefChange(Preferences);
-		void calcSignal();
+
+    protected:
+        virtual void keyPressEvent(QKeyEvent*);
+        virtual void resizeEvent(QResizeEvent*);
+//        virtual void customEvent(QEvent *ev);
+        virtual QMenu *createPopupMenu(const QPoint&);
+    
+    public slots:
+        void cursorSlot(int para,int pos);
+        void menuSlot(int item);
+//        void scriptSlot(QString*code);
+
+    signals:
+        void prefChange(Preferences);
+        void calcSignal();
 };
 
 

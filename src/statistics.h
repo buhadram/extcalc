@@ -49,7 +49,7 @@ Graphical results were shown by the graphics window class.
 #include "catalog.h"
 #include "tabwidget.h"
 
-#define LISTCOUNT		5
+#define LISTCOUNT        5
 
 /*
 - approximation
@@ -71,61 +71,61 @@ Graphical results were shown by the graphics window class.
 
 class StatisticsWidget :public TabWidget
 {
-	FunctionTable *functionTable;
-	QTableWidget *lists;
-	QSplitter *horzSplit,*vertSplit;
-	QToolBar*toolBar;
-	QPixmap *minimizeIcon,*maximizeIcon,*printIcon,*catalogIcon;
-	Catalog *catalog;
-	QComboBox *typeBox, *functionTypeBox,*copyFunction,*listNumberBox;
-	QSpinBox *listNumber,*stepsBox;
-	QPushButton *calculateButton,*maximizeButton,*drawButton,*copyButton,*catalogButton;
-	QLabel *listNumberLabel,*resultLabel,*copyFunctionLabel,*functionTypeLabel,*stepsLabel;
-	QLineEdit * result,*inputLine;
-	QFrame *toolFrame;
-	QGridLayout *toolFrameLayout;
-	
-	double xmin,xmax,ymin,ymax;
-	bool print,functionChanged;
-	int type,changedRow;
-	int menuBottom;
+    FunctionTable *functionTable;
+    QTableWidget *lists;
+    QSplitter *horzSplit,*vertSplit;
+    QToolBar*toolBar;
+    QPixmap *minimizeIcon,*maximizeIcon,*printIcon,*catalogIcon;
+    Catalog *catalog;
+    QComboBox *typeBox, *functionTypeBox,*copyFunction,*listNumberBox;
+    QSpinBox *listNumber,*stepsBox;
+    QPushButton *calculateButton,*maximizeButton,*drawButton,*copyButton,*catalogButton;
+    QLabel *listNumberLabel,*resultLabel,*copyFunctionLabel,*functionTypeLabel,*stepsLabel;
+    QLineEdit * result,*inputLine;
+    QFrame *toolFrame;
+    QGridLayout *toolFrameLayout;
+    
+    double xmin,xmax,ymin,ymax;
+    bool print,functionChanged;
+    int type,changedRow;
+    int menuBottom;
 
-	Q_OBJECT
-	public:
+    Q_OBJECT
+    public:
                 StatisticsWidget(QWidget*parent,Preferences p,Variable*va,ThreadSync*td);
 
-		void setPref(Preferences);
-		void writeListsFile();
-		void readListsFile();
-		void setCoordinateSystem();
+        void setPref(Preferences);
+        void writeListsFile();
+        void readListsFile();
+        void setCoordinateSystem();
 
-	public slots:
-		void getPref(Preferences);
-		void maximizeButtonSlot();
-		void typeBoxSlot(int);
-		void calculateButtonSlot();
-		void itemChangedSlot(int,int);
-		void copyButtonSlot();
-		void printButtonSlot();
-		void buttonInputSlot(QString);
-		void redrawGraphSlot();
-		void dockWindowSlot();
-		void catalogSlot();
-		
-		void selectionChangedSlot(int row,int col);
-		void tableEditSlot(QString);
-		void inputTextChanged(const QString&);
-		void inputTextFinished();
+    public slots:
+        void getPref(Preferences);
+        void maximizeButtonSlot();
+        void typeBoxSlot(int);
+        void calculateButtonSlot();
+        void itemChangedSlot(int,int);
+        void copyButtonSlot();
+        void printButtonSlot();
+        void buttonInputSlot(QString);
+        void redrawGraphSlot();
+        void dockWindowSlot();
+        void catalogSlot();
+        
+        void selectionChangedSlot(int row,int col);
+        void tableEditSlot(QString);
+        void inputTextChanged(const QString&);
+        void inputTextFinished();
 
-//	protected:
-        //	void resizeEvent(QResizeEvent*);
+//    protected:
+        //    void resizeEvent(QResizeEvent*);
 
-	signals:
-		void prefChange(Preferences);
-		void printSignal();
-		void changeTabSignal(int);
-		void drawPointsSignal(long double*,int,bool);
-		void removeLinesSignal();
+    signals:
+        void prefChange(Preferences);
+        void printSignal();
+        void changeTabSignal(int);
+        void drawPointsSignal(long double*,int,bool);
+        void removeLinesSignal();
 
 };
 

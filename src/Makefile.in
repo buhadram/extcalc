@@ -36,7 +36,7 @@ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
-	$(ACLOCAL_M4)
+    $(ACLOCAL_M4)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -44,36 +44,36 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
 PROGRAMS = $(bin_PROGRAMS)
 am_extcalc_OBJECTS = extcalc.$(OBJEXT) buttons.$(OBJEXT) \
-	calctable.$(OBJEXT) calcwidget.$(OBJEXT) calcinput.$(OBJEXT) \
-	global.$(OBJEXT) graph.$(OBJEXT) graphinput.$(OBJEXT) \
-	graphout.$(OBJEXT) graphpref.$(OBJEXT) graphsolve.$(OBJEXT) \
-	calcpref.$(OBJEXT) functiontable.$(OBJEXT) table.$(OBJEXT) \
-	tablepref.$(OBJEXT) scriptedit.$(OBJEXT) scriptpref.$(OBJEXT) \
-	scriptio.$(OBJEXT) matrixwidget.$(OBJEXT) statistics.$(OBJEXT) \
-	catalog.$(OBJEXT) importdialog.$(OBJEXT) \
-	graphsetdialog.$(OBJEXT) moc_extcalc.$(OBJEXT) \
-	moc_buttons.$(OBJEXT) moc_calctable.$(OBJEXT) \
-	moc_calcwidget.$(OBJEXT) moc_calcinput.$(OBJEXT) \
-	moc_graph.$(OBJEXT) moc_graphout.$(OBJEXT) \
-	moc_graphpref.$(OBJEXT) moc_graphsolve.$(OBJEXT) \
-	moc_calcpref.$(OBJEXT) moc_table.$(OBJEXT) \
-	moc_functiontable.$(OBJEXT) moc_tablepref.$(OBJEXT) \
-	moc_scriptedit.$(OBJEXT) moc_scriptpref.$(OBJEXT) \
-	moc_scriptio.$(OBJEXT) moc_matrixwidget.$(OBJEXT) \
-	moc_statistics.$(OBJEXT) moc_catalog.$(OBJEXT) \
-	moc_graphsetdialog.$(OBJEXT) moc_importdialog.$(OBJEXT)
+    calctable.$(OBJEXT) calcwidget.$(OBJEXT) calcinput.$(OBJEXT) \
+    global.$(OBJEXT) graph.$(OBJEXT) graphinput.$(OBJEXT) \
+    graphout.$(OBJEXT) graphpref.$(OBJEXT) graphsolve.$(OBJEXT) \
+    calcpref.$(OBJEXT) functiontable.$(OBJEXT) table.$(OBJEXT) \
+    tablepref.$(OBJEXT) scriptedit.$(OBJEXT) scriptpref.$(OBJEXT) \
+    scriptio.$(OBJEXT) matrixwidget.$(OBJEXT) statistics.$(OBJEXT) \
+    catalog.$(OBJEXT) importdialog.$(OBJEXT) \
+    graphsetdialog.$(OBJEXT) moc_extcalc.$(OBJEXT) \
+    moc_buttons.$(OBJEXT) moc_calctable.$(OBJEXT) \
+    moc_calcwidget.$(OBJEXT) moc_calcinput.$(OBJEXT) \
+    moc_graph.$(OBJEXT) moc_graphout.$(OBJEXT) \
+    moc_graphpref.$(OBJEXT) moc_graphsolve.$(OBJEXT) \
+    moc_calcpref.$(OBJEXT) moc_table.$(OBJEXT) \
+    moc_functiontable.$(OBJEXT) moc_tablepref.$(OBJEXT) \
+    moc_scriptedit.$(OBJEXT) moc_scriptpref.$(OBJEXT) \
+    moc_scriptio.$(OBJEXT) moc_matrixwidget.$(OBJEXT) \
+    moc_statistics.$(OBJEXT) moc_catalog.$(OBJEXT) \
+    moc_graphsetdialog.$(OBJEXT) moc_importdialog.$(OBJEXT)
 extcalc_OBJECTS = $(am_extcalc_OBJECTS)
 extcalc_LDADD = $(LDADD)
 DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 am__depfiles_maybe = depfiles
 CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+    $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 CXXLD = $(CXX)
 CXXLINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) \
-	-o $@
+    -o $@
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
-	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+    $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(extcalc_SOURCES)
@@ -172,140 +172,140 @@ target_alias = @target_alias@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 extcalc_SOURCES = extcalc.h \
-				  buttons.h \
-				  calclocale.h \
-				  calctable.h \
-				  calcinput.h \
-				  calcwidget.h \
- 		                  global.h \
-				  graph.h \
-				  graphinput.h \
-				  graphout.h \
-				  graphpref.h \
-				  graphsolve.h \
-				  calcpref.h \
-				  list.h \
-				  functiontable.h \
-				  table.h \
-				  tablepref.h \
-				  scriptedit.h \
-				  scriptpref.h \
-				  scriptio.h \
-				  matrixwidget.h \
-				  statistics.h \
-				  catalog.h \
-				  importdialog.h \
-				  graphsetdialog.h \
-				  extcalc.cpp \
-				  buttons.cpp \
-				  calctable.cpp \
-				  calcwidget.cpp \
-				  calcinput.cpp \
-                		  global.cpp \
-				  graph.cpp \
-				  graphinput.cpp \
-				  graphout.cpp \
-				  graphpref.cpp \
-				  graphsolve.cpp \
-				  calcpref.cpp \
-				  functiontable.cpp \
-				  table.cpp \
-				  tablepref.cpp \
-				  scriptedit.cpp \
-				  scriptpref.cpp \
-				  scriptio.cpp \
-				  matrixwidget.cpp \
-				  statistics.cpp \
-				  catalog.cpp \
-				  importdialog.cpp \
-				  graphsetdialog.cpp \
-				  moc_extcalc.cpp \
-				  moc_buttons.cpp \
-				  moc_calctable.cpp \
-				  moc_calcwidget.cpp \
-				  moc_calcinput.cpp \
-				  moc_graph.cpp \
-				  moc_graphout.cpp \
-				  moc_graphpref.cpp \
-				  moc_graphsolve.cpp \
-				  moc_calcpref.cpp \
-				  moc_table.cpp \
-				  moc_functiontable.cpp \
-				  moc_tablepref.cpp \
-				  moc_scriptedit.cpp \
-				  moc_scriptpref.cpp \
-				  moc_scriptio.cpp \
-				  moc_matrixwidget.cpp \
-				  moc_statistics.cpp \
-				  moc_catalog.cpp \
-				  moc_graphsetdialog.cpp \
-				  moc_importdialog.cpp
+                  buttons.h \
+                  calclocale.h \
+                  calctable.h \
+                  calcinput.h \
+                  calcwidget.h \
+                           global.h \
+                  graph.h \
+                  graphinput.h \
+                  graphout.h \
+                  graphpref.h \
+                  graphsolve.h \
+                  calcpref.h \
+                  list.h \
+                  functiontable.h \
+                  table.h \
+                  tablepref.h \
+                  scriptedit.h \
+                  scriptpref.h \
+                  scriptio.h \
+                  matrixwidget.h \
+                  statistics.h \
+                  catalog.h \
+                  importdialog.h \
+                  graphsetdialog.h \
+                  extcalc.cpp \
+                  buttons.cpp \
+                  calctable.cpp \
+                  calcwidget.cpp \
+                  calcinput.cpp \
+                          global.cpp \
+                  graph.cpp \
+                  graphinput.cpp \
+                  graphout.cpp \
+                  graphpref.cpp \
+                  graphsolve.cpp \
+                  calcpref.cpp \
+                  functiontable.cpp \
+                  table.cpp \
+                  tablepref.cpp \
+                  scriptedit.cpp \
+                  scriptpref.cpp \
+                  scriptio.cpp \
+                  matrixwidget.cpp \
+                  statistics.cpp \
+                  catalog.cpp \
+                  importdialog.cpp \
+                  graphsetdialog.cpp \
+                  moc_extcalc.cpp \
+                  moc_buttons.cpp \
+                  moc_calctable.cpp \
+                  moc_calcwidget.cpp \
+                  moc_calcinput.cpp \
+                  moc_graph.cpp \
+                  moc_graphout.cpp \
+                  moc_graphpref.cpp \
+                  moc_graphsolve.cpp \
+                  moc_calcpref.cpp \
+                  moc_table.cpp \
+                  moc_functiontable.cpp \
+                  moc_tablepref.cpp \
+                  moc_scriptedit.cpp \
+                  moc_scriptpref.cpp \
+                  moc_scriptio.cpp \
+                  moc_matrixwidget.cpp \
+                  moc_statistics.cpp \
+                  moc_catalog.cpp \
+                  moc_graphsetdialog.cpp \
+                  moc_importdialog.cpp
 
 all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .cpp .o .obj
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
-	@for dep in $?; do \
-	  case '$(am__configure_deps)' in \
-	    *$$dep*) \
-	      cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
-		&& exit 0; \
-	      exit 1;; \
-	  esac; \
-	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
-	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  src/Makefile
+    @for dep in $?; do \
+      case '$(am__configure_deps)' in \
+        *$$dep*) \
+          cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh \
+        && exit 0; \
+          exit 1;; \
+      esac; \
+    done; \
+    echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu  src/Makefile'; \
+    cd $(top_srcdir) && \
+      $(AUTOMAKE) --gnu  src/Makefile
 .PRECIOUS: Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
-	@case '$?' in \
-	  *config.status*) \
-	    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
-	  *) \
-	    echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
-	    cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
-	esac;
+    @case '$?' in \
+      *config.status*) \
+        cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh;; \
+      *) \
+        echo ' cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe)'; \
+        cd $(top_builddir) && $(SHELL) ./config.status $(subdir)/$@ $(am__depfiles_maybe);; \
+    esac;
 
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
 $(top_srcdir)/configure:  $(am__configure_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
-	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+    cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 install-binPROGRAMS: $(bin_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
-	  if test -f $$p \
-	  ; then \
-	    f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
-	   echo " $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
-	   $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
-	  else :; fi; \
-	done
+    @$(NORMAL_INSTALL)
+    test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+    @list='$(bin_PROGRAMS)'; for p in $$list; do \
+      p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+      if test -f $$p \
+      ; then \
+        f=`echo "$$p1" | sed 's,^.*/,,;$(transform);s/$$/$(EXEEXT)/'`; \
+       echo " $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) '$$p' '$(DESTDIR)$(bindir)/$$f'"; \
+       $(INSTALL_PROGRAM_ENV) $(binPROGRAMS_INSTALL) "$$p" "$(DESTDIR)$(bindir)/$$f" || exit 1; \
+      else :; fi; \
+    done
 
 uninstall-binPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
-	  echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
-	  rm -f "$(DESTDIR)$(bindir)/$$f"; \
-	done
+    @$(NORMAL_UNINSTALL)
+    @list='$(bin_PROGRAMS)'; for p in $$list; do \
+      f=`echo "$$p" | sed 's,^.*/,,;s/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+      echo " rm -f '$(DESTDIR)$(bindir)/$$f'"; \
+      rm -f "$(DESTDIR)$(bindir)/$$f"; \
+    done
 
 clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+    -test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 extcalc$(EXEEXT): $(extcalc_OBJECTS) $(extcalc_DEPENDENCIES) 
-	@rm -f extcalc$(EXEEXT)
-	$(CXXLINK) $(extcalc_OBJECTS) $(extcalc_LDADD) $(LIBS)
+    @rm -f extcalc$(EXEEXT)
+    $(CXXLINK) $(extcalc_OBJECTS) $(extcalc_LDADD) $(LIBS)
 
 mostlyclean-compile:
-	-rm -f *.$(OBJEXT)
+    -rm -f *.$(OBJEXT)
 
 distclean-compile:
-	-rm -f *.tab.c
+    -rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/buttons.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/calcinput.Po@am__quote@
@@ -353,132 +353,132 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tablepref.Po@am__quote@
 
 .cpp.o:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ $<
+@am__fastdepCXX_TRUE@    $(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+@am__fastdepCXX_TRUE@    mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@    source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@    DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@    $(CXXCOMPILE) -c -o $@ $<
 
 .cpp.obj:
-@am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-@am__fastdepCXX_TRUE@	mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCXX_FALSE@	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@    $(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+@am__fastdepCXX_TRUE@    mv -f $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@    source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@    DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@    $(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
-	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '{ files[$$0] = 1; nonemtpy = 1; } \
-	      END { if (nonempty) { for (i in files) print i; }; }'`; \
-	mkid -fID $$unique
+    list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+    unique=`for i in $$list; do \
+        if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+      done | \
+      $(AWK) '{ files[$$0] = 1; nonemtpy = 1; } \
+          END { if (nonempty) { for (i in files) print i; }; }'`; \
+    mkid -fID $$unique
 tags: TAGS
 
 TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
-	tags=; \
-	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
-	      END { if (nonempty) { for (i in files) print i; }; }'`; \
-	if test -z "$(ETAGS_ARGS)$$tags$$unique"; then :; else \
-	  test -n "$$unique" || unique=$$empty_fix; \
-	  $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
-	    $$tags $$unique; \
-	fi
+        $(TAGS_FILES) $(LISP)
+    tags=; \
+    here=`pwd`; \
+    list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+    unique=`for i in $$list; do \
+        if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+      done | \
+      $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
+          END { if (nonempty) { for (i in files) print i; }; }'`; \
+    if test -z "$(ETAGS_ARGS)$$tags$$unique"; then :; else \
+      test -n "$$unique" || unique=$$empty_fix; \
+      $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
+        $$tags $$unique; \
+    fi
 ctags: CTAGS
 CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
-	tags=; \
-	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
-	      END { if (nonempty) { for (i in files) print i; }; }'`; \
-	test -z "$(CTAGS_ARGS)$$tags$$unique" \
-	  || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
-	     $$tags $$unique
+        $(TAGS_FILES) $(LISP)
+    tags=; \
+    list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
+    unique=`for i in $$list; do \
+        if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+      done | \
+      $(AWK) '{ files[$$0] = 1; nonempty = 1; } \
+          END { if (nonempty) { for (i in files) print i; }; }'`; \
+    test -z "$(CTAGS_ARGS)$$tags$$unique" \
+      || $(CTAGS) $(CTAGSFLAGS) $(AM_CTAGSFLAGS) $(CTAGS_ARGS) \
+         $$tags $$unique
 
 GTAGS:
-	here=`$(am__cd) $(top_builddir) && pwd` \
-	  && cd $(top_srcdir) \
-	  && gtags -i $(GTAGS_ARGS) $$here
+    here=`$(am__cd) $(top_builddir) && pwd` \
+      && cd $(top_srcdir) \
+      && gtags -i $(GTAGS_ARGS) $$here
 
 distclean-tags:
-	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
+    -rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
-	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
-	list='$(DISTFILES)'; \
-	  dist_files=`for file in $$list; do echo $$file; done | \
-	  sed -e "s|^$$srcdirstrip/||;t" \
-	      -e "s|^$$topsrcdirstrip/|$(top_builddir)/|;t"`; \
-	case $$dist_files in \
-	  */*) $(MKDIR_P) `echo "$$dist_files" | \
-			   sed '/\//!d;s|^|$(distdir)/|;s,/[^/]*$$,,' | \
-			   sort -u` ;; \
-	esac; \
-	for file in $$dist_files; do \
-	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
-	  if test -d $$d/$$file; then \
-	    dir=`echo "/$$file" | sed -e 's,/[^/]*$$,,'`; \
-	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
-	      cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
-	    fi; \
-	    cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file \
-	    || exit 1; \
-	  fi; \
-	done
+    @srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
+    topsrcdirstrip=`echo "$(top_srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
+    list='$(DISTFILES)'; \
+      dist_files=`for file in $$list; do echo $$file; done | \
+      sed -e "s|^$$srcdirstrip/||;t" \
+          -e "s|^$$topsrcdirstrip/|$(top_builddir)/|;t"`; \
+    case $$dist_files in \
+      */*) $(MKDIR_P) `echo "$$dist_files" | \
+               sed '/\//!d;s|^|$(distdir)/|;s,/[^/]*$$,,' | \
+               sort -u` ;; \
+    esac; \
+    for file in $$dist_files; do \
+      if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
+      if test -d $$d/$$file; then \
+        dir=`echo "/$$file" | sed -e 's,/[^/]*$$,,'`; \
+        if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
+          cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
+        fi; \
+        cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
+      else \
+        test -f $(distdir)/$$file \
+        || cp -p $$d/$$file $(distdir)/$$file \
+        || exit 1; \
+      fi; \
+    done
 check-am: all-am
 check: check-am
 all-am: Makefile $(PROGRAMS)
 installdirs:
-	for dir in "$(DESTDIR)$(bindir)"; do \
-	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
-	done
+    for dir in "$(DESTDIR)$(bindir)"; do \
+      test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+    done
 install: install-am
 install-exec: install-exec-am
 install-data: install-data-am
 uninstall: uninstall-am
 
 install-am: all-am
-	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+    @$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
 installcheck: installcheck-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
-	  `test -z '$(STRIP)' || \
-	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+    $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+      install_sh_PROGRAM="$(INSTALL_STRIP_PROGRAM)" INSTALL_STRIP_FLAG=-s \
+      `test -z '$(STRIP)' || \
+        echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
 
 clean-generic:
 
 distclean-generic:
-	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
+    -test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)
 
 maintainer-clean-generic:
-	@echo "This command is intended for maintainers to use"
-	@echo "it deletes files that may require special tools to rebuild."
+    @echo "This command is intended for maintainers to use"
+    @echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
 clean-am: clean-binPROGRAMS clean-generic mostlyclean-am
 
 distclean: distclean-am
-	-rm -rf ./$(DEPDIR)
-	-rm -f Makefile
+    -rm -rf ./$(DEPDIR)
+    -rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
-	distclean-tags
+    distclean-tags
 
 dvi: dvi-am
 
@@ -509,8 +509,8 @@ install-ps: install-ps-am
 installcheck-am:
 
 maintainer-clean: maintainer-clean-am
-	-rm -rf ./$(DEPDIR)
-	-rm -f Makefile
+    -rm -rf ./$(DEPDIR)
+    -rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
@@ -530,17 +530,17 @@ uninstall-am: uninstall-binPROGRAMS
 .MAKE: install-am install-strip
 
 .PHONY: CTAGS GTAGS all all-am check check-am clean clean-binPROGRAMS \
-	clean-generic ctags distclean distclean-compile \
-	distclean-generic distclean-tags distdir dvi dvi-am html \
-	html-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-dvi install-dvi-am \
-	install-exec install-exec-am install-html install-html-am \
-	install-info install-info-am install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-compile \
-	mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
-	uninstall-am uninstall-binPROGRAMS
+    clean-generic ctags distclean distclean-compile \
+    distclean-generic distclean-tags distdir dvi dvi-am html \
+    html-am info info-am install install-am install-binPROGRAMS \
+    install-data install-data-am install-dvi install-dvi-am \
+    install-exec install-exec-am install-html install-html-am \
+    install-info install-info-am install-man install-pdf \
+    install-pdf-am install-ps install-ps-am install-strip \
+    installcheck installcheck-am installdirs maintainer-clean \
+    maintainer-clean-generic mostlyclean mostlyclean-compile \
+    mostlyclean-generic pdf pdf-am ps ps-am tags uninstall \
+    uninstall-am uninstall-binPROGRAMS
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

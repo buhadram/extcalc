@@ -28,34 +28,34 @@ Overloaded QTable class that supports colored cells.
 
 class CalcTable :public QTableWidget
 {
-	
-	int coloredCol;
-	bool editable;
-	List <QColor> colorTable;
-	
-	Q_OBJECT
+    
+    int coloredCol;
+    bool editable;
+    List <QColor> colorTable;
+    
+    Q_OBJECT
 public:
-	
-	
-	CalcTable(QWidget*parent,int coloredColumn=0,bool isEditable=true) :QTableWidget(parent)
-	{
-		coloredCol=coloredColumn;
-		editable=isEditable;
-	}
-	
-	void changeColor(int row,QColor color);
-	
-	
+    
+    
+    CalcTable(QWidget*parent,int coloredColumn=0,bool isEditable=true) :QTableWidget(parent)
+    {
+        coloredCol=coloredColumn;
+        editable=isEditable;
+    }
+    
+    void changeColor(int row,QColor color);
+    
+    
 protected:
-	
-	virtual void paintCell( QPainter * p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg );
-	QWidget* beginEdit( int row, int col, bool replace );
+    
+    virtual void paintCell( QPainter * p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg );
+    QWidget* beginEdit( int row, int col, bool replace );
 
-	
-	signals:
-	void cellEditStarted(int,int);
-	
-	
+    
+    signals:
+    void cellEditStarted(int,int);
+    
+    
 }; 
 
 

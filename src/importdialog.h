@@ -21,32 +21,32 @@
 
 class ImportDialog :public QWidget
 {
-	QPushButton*saveButton,*cancelButton,*openDialogButton,*saveDialogButton;
-	QLabel *mainLabel,*openPathLabel,*savePathLabel;
-	QLineEdit *openPathLine,*savePathLine;
-	bool dialog;
-	bool importFile;
-	bool function;
-	Preferences pref;
-	QString directory;
-	
-	
-	Q_OBJECT
-	public:
-		ImportDialog(Preferences p,QWidget*parent,bool importF,bool function=false);
-	
-	protected:
-		virtual void windowActivationChange(bool);
+    QPushButton*saveButton,*cancelButton,*openDialogButton,*saveDialogButton;
+    QLabel *mainLabel,*openPathLabel,*savePathLabel;
+    QLineEdit *openPathLine,*savePathLine;
+    bool dialog;
+    bool importFile;
+    bool function;
+    Preferences pref;
+    QString directory;
+    
+    
+    Q_OBJECT
+    public:
+        ImportDialog(Preferences p,QWidget*parent,bool importF,bool function=false);
+    
+    protected:
+        virtual void windowActivationChange(bool);
 
-	public slots:
+    public slots:
 
-		void saveSlot();
-		void openDialogSlot();
-		void saveDialogSlot();
-		
-	signals:
-		void updateScriptSignal(int);
-		void prefChange(Preferences);
+        void saveSlot();
+        void openDialogSlot();
+        void saveDialogSlot();
+        
+    signals:
+        void updateScriptSignal(int);
+        void prefChange(Preferences);
 };
 
 #endif

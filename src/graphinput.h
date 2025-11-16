@@ -11,26 +11,26 @@
 
 class GraphInput :public QLineEdit
 {
-	
-	int cursorPos;
-	Preferences pref;
-	
-	
-	
+    
+    int cursorPos;
+    Preferences pref;
+    
+    
+    
 public:
-	
-	GraphInput(QWidget*parent) :QLineEdit(parent)
-	{
-		cursorPos=0;
-		
-		
-	}
-	
-	
-	void insertText(QString ins);
-	void delKey();
+    
+    GraphInput(QWidget*parent) :QLineEdit(parent)
+    {
+        cursorPos=0;
+        
+        
+    }
+    
+    
+    void insertText(QString ins);
+    void delKey();
 
-	
+    
 };
 
 

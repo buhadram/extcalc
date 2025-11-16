@@ -71,13 +71,13 @@ dialog, the todo list and the bug list.
 
 //Unicode characters:
 //
-//Wurzel	8730
-//Pi		960
-//Euler		65349 (1214)
-//Mega		65325 (1052)
-//Giga		65319 (1292)
-//Terra		65332 (1196)
-//Integral	8747
+//Wurzel    8730
+//Pi        960
+//Euler        65349 (1214)
+//Mega        65325 (1052)
+//Giga        65319 (1292)
+//Terra        65332 (1196)
+//Integral    8747
 
 
 
@@ -190,57 +190,57 @@ dialog, the todo list and the bug list.
 
 /////////////////////////////////////////////bugs/////////////////////////////////////////////
 //                                                                                          //
-//	- Menu for number of output-Digits doesn't work                                     ok  //
-//	- Colors in gaphic analysation window are not resetted                              ok  //
-//	- some buttons of calculator don't move if window switches to fullscreen mode       ok  //
-//	- buffer overflow at some functions													                        ok	//
-//	- wrong text at some graph analysation options                                      ok	//
-//	- calculation of roots doesn't work                                                 ok	//
-//	- Newton's method doesn't work                                                      ok	//
-//	- function box in graph solve window is sometimes empty                             ok	//
-//	- script editor saves unicode wrong                                                 ok	//
-//	- calculaton repeating doesn't work with second line                                ok	//
-//	- integral calculation doesn't work on periodic functions                           ok	//
-//	- graph analyse window doesn't view result of integral correctly                    ok	//
-//	- graph analyse window does not allways process mouse events                        ok	//
-//	- preferences dialogs can't process mathematical expressions                        ok  //
-//	- Script editor has no Menu bar                                                     ok	//
-//	- converting floating point values does not work for all locale settings            ok	//
-//	- asymptotes are not alsways shown correctly                                        ok	//
-//	- calculator keys must be sorted                                                    ok	//
-//	- Size of output-table in GraphSolveWidget is not resized                           ok	//
-//	- text copying does not work in script console                                      ok	//
-//	- changing angle type does not work                                                 ok	//
-//	- changing analyse precision does not work                                          ok	//
-//	- some script commands may cause problems in calculator mode                        ok	//
-//	- recalculaton of 3d-graphs and parameter graphs is not needed                      ok	//
-//	- automatic ans inserting does not work corectly                                    ok	//
-//	- dynamic graphs are not shown correctly when coordinate system is moved            ok	//
-//	- debug messages in graph calculation                                               ok	//
-//	- CPU-load is 100% when waiting for keyboart input                                  ok	//
-//	- 3rd, 5th ... root of  N returns only complex results                              ok	//
-//	- result lines in polar cs were drawn wrong when angle type isn't rad               ok	//
-//	- array memory can't be deleted                                                     ok	//
-//	- script load balancing doesn't work on fast (dual-core) CPUs                       ok	//
-//	- inserting text into a running script doesn't work                                 ok	//
-//	- gl script programming does not work on every system	                              ok	//
-//	- import script dialog path check is wrong                                          ok	//
-//	- bug in script console at selection                                                ok	//
-//	- file dialog in script preferences window is always in background                  ok	//
-//	- view error when maximizing statistics tab                                         ok	//
-//	- directory creation at first start does not work                                   ok	//
-//	- command priority in script interpreter wrong                                      ok	//
-//	- autosize setting leads to wrong screenshot size                                   ok	//
-//	- abs does not exist in standard calculator class                                   ok	//
-//	- timer for animated graphs does not work                                           ok	//
-//	- automatic insertion of * operator is not always correct                           ok	//
-//	- different fonts in different windows                                              ok	//
-//	- segfault when drawing animated graphs                                             ok	//
-//	- screenshot export does not work                                                   ok	//
-//	- complex operator cant't be used as prefix                                         ok	//
-//	- faculty of 1 and negative values is wrong                                         ok	//
-//	- communication between script and console does not work                            ok	//
-//	- automatic switching to script console window does not work                        ok	//
+//    - Menu for number of output-Digits doesn't work                                     ok  //
+//    - Colors in gaphic analysation window are not resetted                              ok  //
+//    - some buttons of calculator don't move if window switches to fullscreen mode       ok  //
+//    - buffer overflow at some functions                                                                            ok    //
+//    - wrong text at some graph analysation options                                      ok    //
+//    - calculation of roots doesn't work                                                 ok    //
+//    - Newton's method doesn't work                                                      ok    //
+//    - function box in graph solve window is sometimes empty                             ok    //
+//    - script editor saves unicode wrong                                                 ok    //
+//    - calculaton repeating doesn't work with second line                                ok    //
+//    - integral calculation doesn't work on periodic functions                           ok    //
+//    - graph analyse window doesn't view result of integral correctly                    ok    //
+//    - graph analyse window does not allways process mouse events                        ok    //
+//    - preferences dialogs can't process mathematical expressions                        ok  //
+//    - Script editor has no Menu bar                                                     ok    //
+//    - converting floating point values does not work for all locale settings            ok    //
+//    - asymptotes are not alsways shown correctly                                        ok    //
+//    - calculator keys must be sorted                                                    ok    //
+//    - Size of output-table in GraphSolveWidget is not resized                           ok    //
+//    - text copying does not work in script console                                      ok    //
+//    - changing angle type does not work                                                 ok    //
+//    - changing analyse precision does not work                                          ok    //
+//    - some script commands may cause problems in calculator mode                        ok    //
+//    - recalculaton of 3d-graphs and parameter graphs is not needed                      ok    //
+//    - automatic ans inserting does not work corectly                                    ok    //
+//    - dynamic graphs are not shown correctly when coordinate system is moved            ok    //
+//    - debug messages in graph calculation                                               ok    //
+//    - CPU-load is 100% when waiting for keyboart input                                  ok    //
+//    - 3rd, 5th ... root of  N returns only complex results                              ok    //
+//    - result lines in polar cs were drawn wrong when angle type isn't rad               ok    //
+//    - array memory can't be deleted                                                     ok    //
+//    - script load balancing doesn't work on fast (dual-core) CPUs                       ok    //
+//    - inserting text into a running script doesn't work                                 ok    //
+//    - gl script programming does not work on every system                                  ok    //
+//    - import script dialog path check is wrong                                          ok    //
+//    - bug in script console at selection                                                ok    //
+//    - file dialog in script preferences window is always in background                  ok    //
+//    - view error when maximizing statistics tab                                         ok    //
+//    - directory creation at first start does not work                                   ok    //
+//    - command priority in script interpreter wrong                                      ok    //
+//    - autosize setting leads to wrong screenshot size                                   ok    //
+//    - abs does not exist in standard calculator class                                   ok    //
+//    - timer for animated graphs does not work                                           ok    //
+//    - automatic insertion of * operator is not always correct                           ok    //
+//    - different fonts in different windows                                              ok    //
+//    - segfault when drawing animated graphs                                             ok    //
+//    - screenshot export does not work                                                   ok    //
+//    - complex operator cant't be used as prefix                                         ok    //
+//    - faculty of 1 and negative values is wrong                                         ok    //
+//    - communication between script and console does not work                            ok    //
+//    - automatic switching to script console window does not work                        ok    //
 //  - context menu in script editor disabled                                                //
 //  - 3D-graphics in scripting is disabled                                                  //
 //  - matrix and vector calculation features are invisible                                  //
@@ -265,11 +265,11 @@ dialog, the todo list and the bug list.
 //      79        78             63            5                   0
 //
 //
-//		precision: 
-//		18 digits in normal mode
-//		17 digits in trigonometric functions
-//		ca. 9 digits at integrations
-//		ca. 8 digits at differentiations
+//        precision: 
+//        18 digits in normal mode
+//        17 digits in trigonometric functions
+//        ca. 9 digits at integrations
+//        ca. 8 digits at differentiations
 
 
 //////////////////////////////Operations/////////////////////////////
@@ -324,53 +324,53 @@ class InfoDialog;
 
 class MainObject :public QMainWindow
 {
-	QMenuBar*mainMenu;
-	QMenu *calcMenu,*helpMenu,*prefMenu,*graphMenu;
-	QMenu *coordinateMenu,*tableMenu;
-	QMenu *viewMenu,*fileMenu,*scriptMenu,*statisticsMenu;
-	QMenu *editMenu,*angleMenu,*floatPointMenu,*outputMenu;
-	QSignalMapper *editMapper,*angleMapper,*floatPointMapper,*outputMapper;
-	QActionGroup*floatPointActions,*angleActions,*outputActions;
-	//new
-	QActionGroup *calcModeActions,*languageActions,*baseActions,*graphTypeActions,*graphSetActions,*tableTypeActions;
-	QSignalMapper *calcModeMapper,*languageMapper,*baseMapper,*graphTypeMapper,*graphSetMapper,*tableTypeMapper;
-	QMenu *calcModeMenu,*languageMenu,*baseMenu,*graphTypeMenu,*graphSetMenu,*tableTypeMenu;
-	QAction *complexAction;
+    QMenuBar*mainMenu;
+    QMenu *calcMenu,*helpMenu,*prefMenu,*graphMenu;
+    QMenu *coordinateMenu,*tableMenu;
+    QMenu *viewMenu,*fileMenu,*scriptMenu,*statisticsMenu;
+    QMenu *editMenu,*angleMenu,*floatPointMenu,*outputMenu;
+    QSignalMapper *editMapper,*angleMapper,*floatPointMapper,*outputMapper;
+    QActionGroup*floatPointActions,*angleActions,*outputActions;
+    //new
+    QActionGroup *calcModeActions,*languageActions,*baseActions,*graphTypeActions,*graphSetActions,*tableTypeActions;
+    QSignalMapper *calcModeMapper,*languageMapper,*baseMapper,*graphTypeMapper,*graphSetMapper,*tableTypeMapper;
+    QMenu *calcModeMenu,*languageMenu,*baseMenu,*graphTypeMenu,*graphSetMenu,*tableTypeMenu;
+    QAction *complexAction;
 
   ScreenshotDialog *screenshotDialog;
 
-	QTabBar*tabBar;
-	CalcWidget *calculator,*calculator2;
-	GraphWidget * graph;
-	GraphPreferences*grPref;
-	CalcPreferences*calcPref;
-	TablePreferences*tablePref;
-	ScriptPreferences*scriptPref;
-	ImportDialog*importDialog;
-	ImportDialog*exportDialog;
-	ImportDialog*functionDialog;
-	GraphSetDialog*graphSetDialog;
-	TableWidget*table;
-	ScriptWidget*scripting;
-	ScriptIOWidget*scriptIO;
-	MatrixWidget*matrix;
-	StatisticsWidget*statistics;
-	Preferences pref;
-	QProcess*helpProcess;
-	InfoDialog*infoDialog;
-	QTextEdit*licenseWidget;
-	QLabel*authorInfo;
-	QLabel*versionInfo;
-	QPixmap*appIcon;
-	QDir*graphsDir;
-	HelpBrowser *helpBrowser;
-	Variable *vars;
-	Vector *vecs;
-	bool calcFocus;
-	bool calcModeChanged;
-	ThreadSync*threadData;
+    QTabBar*tabBar;
+    CalcWidget *calculator,*calculator2;
+    GraphWidget * graph;
+    GraphPreferences*grPref;
+    CalcPreferences*calcPref;
+    TablePreferences*tablePref;
+    ScriptPreferences*scriptPref;
+    ImportDialog*importDialog;
+    ImportDialog*exportDialog;
+    ImportDialog*functionDialog;
+    GraphSetDialog*graphSetDialog;
+    TableWidget*table;
+    ScriptWidget*scripting;
+    ScriptIOWidget*scriptIO;
+    MatrixWidget*matrix;
+    StatisticsWidget*statistics;
+    Preferences pref;
+    QProcess*helpProcess;
+    InfoDialog*infoDialog;
+    QTextEdit*licenseWidget;
+    QLabel*authorInfo;
+    QLabel*versionInfo;
+    QPixmap*appIcon;
+    QDir*graphsDir;
+    HelpBrowser *helpBrowser;
+    Variable *vars;
+    Vector *vecs;
+    bool calcFocus;
+    bool calcModeChanged;
+    ThreadSync*threadData;
     QTabWidget *clientArea;
-	QToolBar *toolBar;
+    QToolBar *toolBar;
 
 
 Q_OBJECT
@@ -379,7 +379,7 @@ MainObject();
 
 ~MainObject()
 {
-	delete[]vars;
+    delete[]vars;
 }
 int readConfigFile();
 void readVarFile();
@@ -497,10 +497,10 @@ void tabChangeSlot(int index);
 void getPref(Preferences newPref);
 
 signals:
-	void editSignal(int);
-	void runScript(QString*);
-	void matrixEnterSignal();
-	void removeGraphicsLinesSignal();
+    void editSignal(int);
+    void runScript(QString*);
+    void matrixEnterSignal();
+    void removeGraphicsLinesSignal();
 
 };
 
@@ -509,39 +509,39 @@ signals:
 
 class HelpBrowser :public QWidget
 {
-	QToolBar*toolBar;
-	QVBoxLayout* dockArea;
-	QPixmap *forwardIcon,*backIcon,*zoominIcon,*zoomoutIcon;
-	QToolButton *forwardButton,*backButton,*zoominButton,*zoomoutButton;
-	QTextBrowser *browser;
-	QString currentSource;
-	Q_OBJECT
-	
-	public:
-	HelpBrowser(QWidget*parent);
-	void setContent(QString);
-	
-	public slots:
-	void zoominSlot();
-	void zoomoutSlot();
-	void sourceSlot(const QString&);
-	
-	protected:
-	void resizeEvent(QResizeEvent*);
+    QToolBar*toolBar;
+    QVBoxLayout* dockArea;
+    QPixmap *forwardIcon,*backIcon,*zoominIcon,*zoomoutIcon;
+    QToolButton *forwardButton,*backButton,*zoominButton,*zoomoutButton;
+    QTextBrowser *browser;
+    QString currentSource;
+    Q_OBJECT
+    
+    public:
+    HelpBrowser(QWidget*parent);
+    void setContent(QString);
+    
+    public slots:
+    void zoominSlot();
+    void zoomoutSlot();
+    void sourceSlot(const QString&);
+    
+    protected:
+    void resizeEvent(QResizeEvent*);
 };
 
 
 class InfoDialog :public QDialog
 {
-	Q_OBJECT
-	QTabWidget *tabWidget;
-	QDialogButtonBox *buttonBox;
-	QTextEdit *licenseWidget;
-	QLabel *authorInfo,*versionInfo;
-	QGridLayout*layout;
+    Q_OBJECT
+    QTabWidget *tabWidget;
+    QDialogButtonBox *buttonBox;
+    QTextEdit *licenseWidget;
+    QLabel *authorInfo,*versionInfo;
+    QGridLayout*layout;
 
-	public:
-		InfoDialog(QWidget*parent);
+    public:
+        InfoDialog(QWidget*parent);
 };
 
 

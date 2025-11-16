@@ -19,48 +19,48 @@ any later version.
 
 void CalcTable::paintCell( QPainter * p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg )
 {
-	QTableWidgetItem*paintItem=item(row,col);
-	if(paintItem==nullptr)
-	{
-		setText(row,col," ");
-		paintItem=item(row,col);
-	}
-	QColorGroup g(cg);
+    QTableWidgetItem*paintItem=item(row,col);
+    if(paintItem==nullptr)
+    {
+        setText(row,col," ");
+        paintItem=item(row,col);
+    }
+    QColorGroup g(cg);
 
 
-	
-	if(col == coloredCol && row < colorTable.GetLen())
-	{
-		g.setColor(QColorGroup::Text,colorTable[row]);
-	}
-	
-	
-	paintItem->paint(p,g,cr,selected);
-//	paintCell(p,row,col,cr,selected,g);
+    
+    if(col == coloredCol && row < colorTable.GetLen())
+    {
+        g.setColor(QColorGroup::Text,colorTable[row]);
+    }
+    
+    
+    paintItem->paint(p,g,cr,selected);
+//    paintCell(p,row,col,cr,selected,g);
 
-		
+        
 }
 
 
 QWidget *CalcTable::beginEdit( int row, int col, bool replace )
 {
-	emit cellEditStarted(row,col);
-	if ( isReadOnly() || isRowReadOnly( row ) || isColumnReadOnly( col ) || (!editable&&col==coloredCol))
-		return 0;
-	QTableWidgetItem *itm = item( row, col );
-	if ( itm && !itm->isEnabled() )
-		return 0;
-	if ( cellWidget( row, col ) )
-		return 0;
-	ensureCellVisible( row, col );
-	QWidget *e = createEditor( row, col, !replace );
-	if ( !e )
-		return 0;
-	setCellWidget( row, col, e );
-	e->setActiveWindow();
-	e->setFocus();
-	updateCell( row, col );
-	return e;
+    emit cellEditStarted(row,col);
+    if ( isReadOnly() || isRowReadOnly( row ) || isColumnReadOnly( col ) || (!editable&&col==coloredCol))
+        return 0;
+    QTableWidgetItem *itm = item( row, col );
+    if ( itm && !itm->isEnabled() )
+        return 0;
+    if ( cellWidget( row, col ) )
+        return 0;
+    ensureCellVisible( row, col );
+    QWidget *e = createEditor( row, col, !replace );
+    if ( !e )
+        return 0;
+    setCellWidget( row, col, e );
+    e->setActiveWindow();
+    e->setFocus();
+    updateCell( row, col );
+    return e;
 }
 
 
@@ -73,15 +73,15 @@ QWidget *CalcTable::beginEdit( int row, int col, bool replace )
 
 void CalcTable::changeColor(int row,QColor color)
 {
-	int rowNum=numRows();
-	if(rowNum != colorTable.GetLen())
-	{
-		for(int c=0; c<rowNum; c++)
-			colorTable.NewItem(QColor(0,0,0));
-	}
-	
-	if(row < colorTable.GetLen())
-		colorTable[row]=color;
+    int rowNum=numRows();
+    if(rowNum != colorTable.GetLen())
+    {
+        for(int c=0; c<rowNum; c++)
+            colorTable.NewItem(QColor(0,0,0));
+    }
+    
+    if(row < colorTable.GetLen())
+        colorTable[row]=color;
 }
 
 

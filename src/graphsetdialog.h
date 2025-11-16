@@ -26,26 +26,26 @@
 
 class GraphSetDialog :public QWidget
 {
-	QPushButton*okButton,*cancelButton,*removeButton,*renameButton;
-	Q3ListBox *table;
-	QLabel*mainLabel;
-	Preferences pref;
-	QDir *graphsDir;
-	bool dialog;
-	
-	Q_OBJECT
-	public:
-		GraphSetDialog(Preferences p,QWidget*parent);
-	
-	protected:
-		virtual void windowActivationChange(bool);
-		
+    QPushButton*okButton,*cancelButton,*removeButton,*renameButton;
+    Q3ListBox *table;
+    QLabel*mainLabel;
+    Preferences pref;
+    QDir *graphsDir;
+    bool dialog;
+    
+    Q_OBJECT
+    public:
+        GraphSetDialog(Preferences p,QWidget*parent);
+    
+    protected:
+        virtual void windowActivationChange(bool);
+        
 
-	public slots:
+    public slots:
 
-		void okSlot();
-		void removeSlot();
-		void renameSlot();
+        void okSlot();
+        void removeSlot();
+        void renameSlot();
 
 };
 
