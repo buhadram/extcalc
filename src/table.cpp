@@ -16,7 +16,8 @@ any later version.
 #include "table.h"
 //Added by qt3to4:
 #include <QResizeEvent>
-#include <Q3ValueList>
+//#include <QList>
+#include <QVector>
 
 /*
 void TableWidget::resizeEvent(QResizeEvent*)
@@ -154,14 +155,14 @@ void TableWidget::calculateButtonSlot()
 				outputTable->setNumCols(outputTable->numCols()+1);
 				horzHeader->setLabel(outputTable->numCols()-1,"y"+QString::number(c+1)+"(x)");
 				char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-				Calculate ca(NULL,cleanString,&pref,vars);
+				Calculate ca(nullptr,cleanString,&pref,vars);
 				
 				for(int c=0; c<pref.tableXSteps;c++)
 				{
 					vars[23]=vertValues[c];
 					outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
 				}
-				if(cleanString!=NULL)
+				if(cleanString!=nullptr)
 					free(cleanString);
 			}
 		}
@@ -176,13 +177,13 @@ void TableWidget::calculateButtonSlot()
 				outputTable->setNumCols(outputTable->numCols()+1);
 				outputTable->horizontalHeader()->setLabel(outputTable->numCols()-1,"r"+QString::number(c+1)+"(x)");
 				char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-				Calculate ca(NULL,cleanString,&pref,vars);
+				Calculate ca(nullptr,cleanString,&pref,vars);
 				for(int c=0; c<pref.tableXSteps;c++)
 				{
 					vars[23]=vertValues[c];
 					outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
 				}
-				if(cleanString!=NULL)
+				if(cleanString!=nullptr)
 					free(cleanString);
 			}
 		}
@@ -201,17 +202,17 @@ void TableWidget::calculateButtonSlot()
 				char*cleanStringX=preprocessor(&input,&pref,false);
 				input=pref.functions[c].right(pref.functions[c].length()-1-pref.functions[c].find("\\"));
 				char*cleanStringY=preprocessor(&input,&pref,false);
-				Calculate caX(NULL,cleanStringX,&pref,vars);
-				Calculate caY(NULL,cleanStringY,&pref,vars);
+				Calculate caX(nullptr,cleanStringX,&pref,vars);
+				Calculate caY(nullptr,cleanStringY,&pref,vars);
 				for(int c=0; c<pref.tableXSteps;c++)
 				{
 					vars[19]=vertValues[c];
 					outputTable->setText(c,outputTable->numCols()-2,formatOutput(caX.calc(),&pref));
 					outputTable->setText(c,outputTable->numCols()-1,formatOutput(caY.calc(),&pref));
 				}
-				if(cleanStringX!=NULL)
+				if(cleanStringX!=nullptr)
 					free(cleanStringX);
-				if(cleanStringY!=NULL)
+				if(cleanStringY!=nullptr)
 					free(cleanStringY);
 			}
 		}
@@ -229,13 +230,13 @@ void TableWidget::calculateButtonSlot()
 				outputTable->setNumCols(outputTable->numCols()+1);
 				outputTable->horizontalHeader()->setLabel(outputTable->numCols()-1,"y"+QString::number(c+1)+"(x)");
 				char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-				Calculate ca(NULL,cleanString,&pref,vars);
+				Calculate ca(nullptr,cleanString,&pref,vars);
 				for(int c=0; c<pref.tableXSteps;c++)
 				{
 					vars[23]=vertValues[c];
 					outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
 				}
-				if(cleanString!=NULL)
+				if(cleanString!=nullptr)
 					free(cleanString);
 			}
 		}
@@ -251,7 +252,7 @@ void TableWidget::calculateButtonSlot()
 				for(int c1=0; c1<pref.tableZSteps;c1++)
 					outputTable->horizontalHeader()->setLabel(outputTable->numCols()-pref.tableZSteps+c1,"y"+QString::number(c+1)+"(x"+QString::number(horzValues[c1],'g',5)+")");
 				char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-				Calculate ca(NULL,cleanString,&pref,vars);
+				Calculate ca(nullptr,cleanString,&pref,vars);
 				for(int c2=0; c2<pref.tableXSteps;c2++)
 				{
 					for(int c1=0; c1<pref.tableZSteps;c1++)
@@ -261,7 +262,7 @@ void TableWidget::calculateButtonSlot()
 						outputTable->setText(c2,outputTable->numCols()-pref.tableZSteps+c1,formatOutput(ca.calc(),&pref));
 					}
 				}
-				if(cleanString!=NULL)
+				if(cleanString!=nullptr)
 					free(cleanString);
 			}
 		}
@@ -278,20 +279,20 @@ void TableWidget::calculateButtonSlot()
 				outputTable->setNumCols(outputTable->numCols()+1);
 				horzHeader->setLabel(outputTable->numCols()-1,"F"+QString::number(c+1)+"(z)");
 				char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-				if(cleanString==NULL || strlen(cleanString)<=0)
+				if(cleanString==nullptr || strlen(cleanString)<=0)
 				{
 					for(int c=0; c<pref.tableXSteps; c++)
 						outputTable->setText(c,outputTable->numCols()-1,"nan");
 					continue;
 				}
-				Script ca(NULL,cleanString,&pref,vars,threadData);
+				Script ca(nullptr,cleanString,&pref,vars,threadData);
 				threadData->vars[25][0].type=NFLOAT;
 				for(int c=0; c<pref.tableXSteps;c++)
 				{
 					threadData->vars[25][0].fval=Complex(vertValues[c]);
 					outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.exec(),&pref));
 				}
-				if(cleanString!=NULL)
+				if(cleanString!=nullptr)
 					free(cleanString);
 			}
 		}
@@ -338,7 +339,7 @@ void TableWidget::maximizeButtonSlot()
 //		inputLine->hide();
 	}
 	fullscreen=!fullscreen;
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 	*/
 }
 

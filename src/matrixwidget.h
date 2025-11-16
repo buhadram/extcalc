@@ -26,15 +26,20 @@ Includes the matrix/vector window GUI and all needed math. functions.
 #include <qapplication.h>
 #include <qspinbox.h>
 #include <qlabel.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qtooltip.h>
 #include <qsplitter.h>
 //Added by qt3to4:
 #include <QResizeEvent>
-#include <Q3ValueList>
+//#include <QList>
+#include <QVector>
 #include <QPixmap>
 #include "buttons.h"
 #include "calcinput.h"
@@ -61,7 +66,7 @@ class MatrixWidget :public TabWidget
 	QLineEdit *input1,*input2,*input3;
 	QPushButton *calcButton,*sizeButton,*catalogButton;
 
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 //	Q3DockArea*dockArea;
 	QPixmap *catalogIcon;
 	Catalog *catalog;
@@ -96,7 +101,7 @@ class MatrixWidget :public TabWidget
 			catalogIcon=new QPixmap(INSTALLDIR+QString("/data/catalog.png"));
 			
 
-			toolBar=new Q3ToolBar();
+			toolBar=new QToolBar();
 			dockArea->moveDockWindow(toolBar);
 			
 			setMainWidget(split);
@@ -115,7 +120,7 @@ class MatrixWidget :public TabWidget
 			varTable->horizontalHeader()->setLabel(0,MATRIXWIDGETH_STR1);
 			varTable->horizontalHeader()->setLabel(1,MATRIXWIDGETH_STR2);
 			varTable->horizontalHeader()->setLabel(2,MATRIXWIDGETH_STR3);
-			varTable->setSelectionMode(Q3Table::SingleRow);
+			varTable->setSelectionMode(QTableWidget::SingleRow);
 			varTable->selectRow(currentVar);
 			varTable->setColumnReadOnly(0,true);
 			setVarTable();

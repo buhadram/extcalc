@@ -44,7 +44,7 @@ static const char qt_meta_stringdata_StandardButtons[] = {
 };
 
 const QMetaObject StandardButtons::staticMetaObject = {
-    { &Q3ButtonGroup::staticMetaObject, qt_meta_stringdata_StandardButtons,
+    { &QButtonGroup::staticMetaObject, qt_meta_stringdata_StandardButtons,
       qt_meta_data_StandardButtons, 0 }
 };
 
@@ -58,12 +58,12 @@ void *StandardButtons::qt_metacast(const char *_clname)
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_StandardButtons))
         return static_cast<void*>(const_cast< StandardButtons*>(this));
-    return Q3ButtonGroup::qt_metacast(_clname);
+    return QButtonGroup::qt_metacast(_clname);
 }
 
 int StandardButtons::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = Q3ButtonGroup::qt_metacall(_c, _id, _a);
+    _id = QButtonGroup::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
@@ -118,7 +118,7 @@ static const char qt_meta_stringdata_ExtButtons[] = {
 };
 
 const QMetaObject ExtButtons::staticMetaObject = {
-    { &Q3ButtonGroup::staticMetaObject, qt_meta_stringdata_ExtButtons,
+    { &QButtonGroup::staticMetaObject, qt_meta_stringdata_ExtButtons,
       qt_meta_data_ExtButtons, 0 }
 };
 
@@ -132,12 +132,12 @@ void *ExtButtons::qt_metacast(const char *_clname)
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_ExtButtons))
         return static_cast<void*>(const_cast< ExtButtons*>(this));
-    return Q3ButtonGroup::qt_metacast(_clname);
+    return QButtonGroup::qt_metacast(_clname);
 }
 
 int ExtButtons::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = Q3ButtonGroup::qt_metacall(_c, _id, _a);
+    _id = QButtonGroup::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

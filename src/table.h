@@ -23,15 +23,19 @@ The tab window for function tables
 #include <qclipboard.h>
 #include <qapplication.h>
 #include <qinputdialog.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
 #include <qtooltip.h>
 #include <qsplitter.h>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QResizeEvent>
-#include <Q3ValueList>
+//#include <QList>
+#include <QVector>
 #include "functiontable.h"
 #include "buttons.h"
 #include "catalog.h"
@@ -53,7 +57,7 @@ class TableWidget :public TabWidget
 	QPushButton*calculateButton,*maximizeButton,*catalogButton;
 	QPixmap *minimizeIcon,*maximizeIcon,*catalogIcon;
 	QComboBox*typeBox;
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 //	Q3DockArea*dockArea;
 	Catalog *catalog;
 	QSplitter *horzSplit,*vertSplit;
@@ -89,7 +93,7 @@ public:
 		vertHeader->setClickEnabled(true);
 		catalog=new Catalog(CATMATHSTD | CATMATHCOMPLEX,this);
 //		dockArea=new Q3DockArea(Qt::Horizontal,Q3DockArea::Normal,this);
-		toolBar=new Q3ToolBar();
+		toolBar=new QToolBar();
 		dockArea->moveDockWindow(toolBar);
 		
 		setMainWidget(horzSplit);

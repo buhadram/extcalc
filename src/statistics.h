@@ -30,10 +30,14 @@ Graphical results were shown by the graphics window class.
 #include <qlabel.h>
 #include <qsplitter.h>
 #include <qpushbutton.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qtooltip.h>
 //Added by qt3to4:
 #include <QResizeEvent>
@@ -68,9 +72,9 @@ Graphical results were shown by the graphics window class.
 class StatisticsWidget :public TabWidget
 {
 	FunctionTable *functionTable;
-	Q3Table *lists;
+	QTableWidget *lists;
 	QSplitter *horzSplit,*vertSplit;
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 	QPixmap *minimizeIcon,*maximizeIcon,*printIcon,*catalogIcon;
 	Catalog *catalog;
 	QComboBox *typeBox, *functionTypeBox,*copyFunction,*listNumberBox;

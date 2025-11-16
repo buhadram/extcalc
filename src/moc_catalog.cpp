@@ -133,7 +133,7 @@ static const char qt_meta_stringdata_Catalog[] = {
 };
 
 const QMetaObject Catalog::staticMetaObject = {
-    { &Q3PopupMenu::staticMetaObject, qt_meta_stringdata_Catalog,
+    { &QMenu::staticMetaObject, qt_meta_stringdata_Catalog,
       qt_meta_data_Catalog, 0 }
 };
 
@@ -147,12 +147,12 @@ void *Catalog::qt_metacast(const char *_clname)
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_Catalog))
         return static_cast<void*>(const_cast< Catalog*>(this));
-    return Q3PopupMenu::qt_metacast(_clname);
+    return QMenu::qt_metacast(_clname);
 }
 
 int Catalog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = Q3PopupMenu::qt_metacall(_c, _id, _a);
+    _id = QMenu::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

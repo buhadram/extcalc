@@ -619,7 +619,7 @@ void GraphSolveWidget::resetDialog()
 			break;
 		}
 	}
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 
@@ -628,7 +628,7 @@ void GraphSolveWidget::resetDialog()
 void GraphSolveWidget::calculateYVal(QString text)
 {
 
-	if(pref.functions == NULL || pref.activeFunctions == NULL)
+	if(pref.functions == nullptr || pref.activeFunctions == nullptr)
 		return;
 	outputTable->setNumRows(0);
 //	MessageBox("remove");
@@ -692,14 +692,14 @@ int GraphSolveWidget::calculateRoots(QString function,long double startValue, lo
 	if(cleanFunction.length()<=0)
 		return -1;
 	char*modifiedFunction=(char*)cleanFunction.ascii();
-	Calculate *cfx=NULL;
-	Script*sfx=NULL;
+	Calculate *cfx=nullptr;
+	Script*sfx=nullptr;
 	bool oldcpref=pref.complex;
 	pref.complex=true;
 
 	if(forceScript)
-		sfx=new Script(NULL,modifiedFunction,&pref,vars,threadData);
-	else cfx=new Calculate(NULL,modifiedFunction,&pref,vars);
+		sfx=new Script(nullptr,modifiedFunction,&pref,vars,threadData);
+	else cfx=new Calculate(nullptr,modifiedFunction,&pref,vars);
 	pref.complex=oldcpref;	
 	QString strdfx("d/dx("+function+"");
 	cf=preprocessor(&strdfx,&pref,false);
@@ -715,13 +715,13 @@ int GraphSolveWidget::calculateRoots(QString function,long double startValue, lo
 		return -1;
 	modifiedFunction=(char*)cleanFunction.ascii();
 	
-	Calculate *cdfx=NULL;
+	Calculate *cdfx=nullptr;
 	oldcpref=pref.complex;
 	pref.complex=true;
-	Script*sdfx=NULL;
+	Script*sdfx=nullptr;
 	if(forceScript)
-		sdfx=new Script(NULL,modifiedFunction,&pref,vars,threadData);
-	else cdfx=new Calculate(NULL,modifiedFunction,&pref,vars);
+		sdfx=new Script(nullptr,modifiedFunction,&pref,vars,threadData);
+	else cdfx=new Calculate(nullptr,modifiedFunction,&pref,vars);
 	List <long double> results;
 
 
@@ -935,15 +935,15 @@ long double GraphSolveWidget::calculateValue(QString func,long double val,int va
 {
 	long double ret;
 	char* cf=preprocessor(&func,&pref,false);
-	if(cf == NULL)
+	if(cf == nullptr)
 		return NAN;
 	if(strlen(cf)<=0)
 		return NAN;
-	Calculate *ca=NULL;
-	Script *sc=NULL;
+	Calculate *ca=nullptr;
+	Script *sc=nullptr;
 	if(forceScript)
 	{
-		sc=new Script(NULL,cf,&pref,vars,threadData);
+		sc=new Script(nullptr,cf,&pref,vars,threadData);
 		threadData->vars[varIndex][0].type=NFLOAT;
 		threadData->vars[varIndex][0].fval=val;
 		Number n=sc->exec();
@@ -952,7 +952,7 @@ long double GraphSolveWidget::calculateValue(QString func,long double val,int va
 		delete sc;
 	}
 	else {
-		ca=new Calculate(NULL,cf,&pref,vars);
+		ca=new Calculate(nullptr,cf,&pref,vars);
 		vars[varIndex]=val;
 		ret=ca->calc();
 		delete ca;
@@ -1012,7 +1012,7 @@ void GraphSolveWidget::calculateNewton(QString function,bool forceScript=false)
 	QString strdfx("d/dx("+function+",X)");
 	char* cf=preprocessor(&function,&pref,false);
 	char* cdf=preprocessor(&strdfx,&pref,false);
-	if(cf == NULL || cdf==NULL)
+	if(cf == nullptr || cdf==nullptr)
 		return;
 	if(strlen(cf)<=0 || strlen(cdf)<=0)
 		return;
@@ -1022,8 +1022,8 @@ void GraphSolveWidget::calculateNewton(QString function,bool forceScript=false)
 	
 	if(forceScript)
 	{
-		sfx=new Script(NULL,cf,&pref,vars,threadData);
-		sdfx=new Script(NULL,cdf,&pref,vars,threadData);
+		sfx=new Script(nullptr,cf,&pref,vars,threadData);
+		sdfx=new Script(nullptr,cdf,&pref,vars,threadData);
 		Number n;
 		for(int c=0; c<spinBox->value(); c++)
 		{
@@ -1045,8 +1045,8 @@ void GraphSolveWidget::calculateNewton(QString function,bool forceScript=false)
 		delete sdfx;
 	}
 	else {
-		cfx=new Calculate(NULL,cf,&pref,vars);
-		cdfx=new Calculate(NULL,cdf,&pref,vars);
+		cfx=new Calculate(nullptr,cf,&pref,vars);
+		cdfx=new Calculate(nullptr,cdf,&pref,vars);
 		for(int c=0; c<spinBox->value(); c++)
 		{
 			outputTable->setText(c,0,formatOutput(x1,&pref));
@@ -1077,7 +1077,7 @@ void GraphSolveWidget::setFunctionBox(QComboBox*fBox)
 	fBox->clear();
 	
 	
-	if(pref.functions != NULL && pref.activeFunctions != NULL)
+	if(pref.functions != nullptr && pref.activeFunctions != nullptr)
 	{
 		int functionCount=0;
 		for(int c=0; c<20; c++)
@@ -1479,7 +1479,7 @@ void GraphSolveWidget::solveButtonSlot()
 			functionString+=QString::number(end,'g',pref.precision);
 			functionString+=")";
 			char*cleanFunc=preprocessor(&functionString,&pref,false);
-			if(cleanFunc == NULL)
+			if(cleanFunc == nullptr)
 				return;
 			emit removeLines();
 			
@@ -1492,7 +1492,7 @@ void GraphSolveWidget::solveButtonSlot()
 					break;
 				double zStep=(zEnd-zStart)/INTEGRAL3DSTEPS;
 				zStart+=zStep/2.0;
-				Calculate ca(NULL,cleanFunc,&pref,vars);
+				Calculate ca(nullptr,cleanFunc,&pref,vars);
 				for(int c=0; c<INTEGRAL3DSTEPS; c++)
 				{
 					vars[25]=zStart+c*zStep;
@@ -1845,7 +1845,7 @@ void GraphSolveWidget::setPref(Preferences newPref)
 	
 	for(int c=0; c<20; c++)
 	{
-		if(pref.activeFunctions!=NULL && pref.functionTypes!=NULL && pref.dynamicFunctions!=NULL)
+		if(pref.activeFunctions!=nullptr && pref.functionTypes!=nullptr && pref.dynamicFunctions!=nullptr)
 		{	 
 			if(pref.activeFunctions[c] && 
 					(functionType == pref.functionTypes[c] ||
@@ -1855,7 +1855,7 @@ void GraphSolveWidget::setPref(Preferences newPref)
 				aVisible=true;
 				aLine->show();
 				aLabel->show();
-				resizeEvent(NULL);
+				resizeEvent(nullptr);
 				break;
 			}
 		}
@@ -1864,7 +1864,7 @@ void GraphSolveWidget::setPref(Preferences newPref)
 	{
 		aLine->hide();
 		aLabel->hide();
-		resizeEvent(NULL);
+		resizeEvent(nullptr);
 	}
 //	if(isShown())
 //		resetDialog();

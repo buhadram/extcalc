@@ -159,7 +159,7 @@ void MatrixWidget::resizeVar(int var,int rows,int cols)
 		for(int c=threadData->numlen[var]; c<newlen; c++)
 		{
 			threadData->vars[var][c].type=NNONE;
-			threadData->vars[var][c].cval=NULL;
+			threadData->vars[var][c].cval=nullptr;
 		}
 	}
 
@@ -175,7 +175,7 @@ void MatrixWidget::resizeVar(int var,int rows,int cols)
 		for(int c=threadData->numlen[var]; c<newlen; c++)
 		{
 			threadData->vars[var][c].type=NNONE;
-			threadData->vars[var][c].cval=NULL;
+			threadData->vars[var][c].cval=nullptr;
 		}
 		threadData->numlen[var]=newlen;
 		for(int c=oldDimension2-1; c>=1; c--)
@@ -327,7 +327,7 @@ void MatrixWidget::resetInterface()
 			matrixBoxSlot(currentVar);
 			break;
 	}
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 }
 
 void MatrixWidget::setHeader(CalcTable*table)

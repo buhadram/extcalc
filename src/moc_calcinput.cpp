@@ -46,7 +46,7 @@ static const char qt_meta_stringdata_CalcInput[] = {
 };
 
 const QMetaObject CalcInput::staticMetaObject = {
-    { &Q3TextEdit::staticMetaObject, qt_meta_stringdata_CalcInput,
+    { &QTextEdit::staticMetaObject, qt_meta_stringdata_CalcInput,
       qt_meta_data_CalcInput, 0 }
 };
 
@@ -60,12 +60,12 @@ void *CalcInput::qt_metacast(const char *_clname)
     if (!_clname) return 0;
     if (!strcmp(_clname, qt_meta_stringdata_CalcInput))
         return static_cast<void*>(const_cast< CalcInput*>(this));
-    return Q3TextEdit::qt_metacast(_clname);
+    return QTextEdit::qt_metacast(_clname);
 }
 
 int CalcInput::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 {
-    _id = Q3TextEdit::qt_metacall(_c, _id, _a);
+    _id = QTextEdit::qt_metacall(_c, _id, _a);
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {

@@ -29,13 +29,13 @@ TabWidget::TabWidget(QWidget*parent,Preferences p,Variable *va,ThreadSync*td, bo
 	dockArea->setMinimumHeight(30);
 
 	mainLayout=new QGridLayout(this);
-	buttonLayout=new QGridLayout((QWidget*)NULL);
-	maximizeLayout=new QGridLayout((QWidget*)NULL);
+	buttonLayout=new QGridLayout((QWidget*)nullptr);
+	maximizeLayout=new QGridLayout((QWidget*)nullptr);
 	mainLayout->addLayout(maximizeLayout,0,0,1,1);
 	subWidgetCount=0;
 	dockAreaPos=-1;
-	subWidgets=NULL;
-	mainWidget=NULL;
+	subWidgets=nullptr;
+	mainWidget=nullptr;
 	if(max)
 		maximizeSlot(max);
 	maximizeLayout->setRowStretch(0,0);
@@ -76,7 +76,7 @@ void TabWidget::maximizeSlot(bool maximize)
 
 void TabWidget::setMainWidget(QWidget*mainW)
 {
-	if(mainWidget!=NULL)
+	if(mainWidget!=nullptr)
 		maximizeLayout->removeWidget(mainWidget);
 	mainWidget=mainW;
 	maximizeLayout->addWidget(mainW,1,0,1,1);

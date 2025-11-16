@@ -6,7 +6,7 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
-#include <q3filedialog.h>
+#include <QFileDialog>
 #include "global.h"
 #include "calctable.h"
 

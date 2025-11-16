@@ -24,22 +24,28 @@ Class of the graphics tab window
 #include <QWidget>
 #include <qpainter.h>
 #include <qmessagebox.h>
-#include <QGLWidget>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
 #include <QtOpenGL>
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qclipboard.h>
 #include <qapplication.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qtooltip.h>
 #include <qsplitter.h>
 //Added by qt3to4:
 #include <QResizeEvent>
-#include <Q3ValueList>
+//#include <QList>
+#include <QVector>
 #include <QPixmap>
 #include <math.h>
 #include "list.h"
@@ -91,7 +97,7 @@ class GraphWidget :public TabWidget
 //	GraphSolveWidget *solveWidget;
   ScreenshotDialog *screenshotDialog;
 
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 	QComboBox *solveType,*functionType,*modeBox;
 	QPixmap *minimizeIcon,*maximizeIcon,*printIcon,*catalogIcon;
 	Catalog *catalog;
@@ -135,7 +141,7 @@ Q_OBJECT
 		printIcon=new QPixmap(INSTALLDIR+QString("/data/print.png"));
 		catalogIcon=new QPixmap(INSTALLDIR+QString("/data/catalog.png"));
 
-		toolBar=new Q3ToolBar();
+		toolBar=new QToolBar();
 		dockArea->moveDockWindow(toolBar);
 		
 		drawButton=new QPushButton(*printIcon,GRAPHH_STR1,toolBar);

@@ -19,7 +19,7 @@ any later version.
 #include <QPixmap>
 #include <QCloseEvent>
 #include <QTranslator>
-#include <QCustomEvent>
+#include <QEvent>
 
 
 MainObject *mainObj;
@@ -29,12 +29,12 @@ int main( int argc, char **argv ) {
 
 	int language=LANG_EN;
 	struct stat fileStat;
-	QTranslator trans(NULL),qtTrans(NULL);
+	QTranslator trans(nullptr),qtTrans(nullptr);
 	chdir(getenv("HOME"));
 	if(lstat(CONFIGFILE,&fileStat) == 0)
 	{
 		FILE*configFile = fopen(CONFIGFILE,"r");
-		if(configFile != NULL)
+		if(configFile != nullptr)
 		{
 			char* cConfFile = new char[fileStat.st_size+1];
 			fread((void*)cConfFile,fileStat.st_size,1,configFile);
@@ -89,8 +89,8 @@ int main( int argc, char **argv ) {
 
 MainObject::MainObject() :QMainWindow()
 {
-  helpBrowser=NULL;
-  graphsDir=NULL;
+  helpBrowser=nullptr;
+  graphsDir=nullptr;
   QAction *tmpAction;
   vars=new Variable [27];
   for(int c=0; c<27;c++)
@@ -109,25 +109,25 @@ MainObject::MainObject() :QMainWindow()
   calcModeChanged=false;
     
   struct timeval rndTime;
-  gettimeofday(&rndTime,NULL);
+  gettimeofday(&rndTime,nullptr);
   srand(rndTime.tv_usec*rndTime.tv_sec);
     
   setGeometry(10,10,640,630); 
   setMinimumWidth(640);
   setMinimumHeight(400);
-  helpProcess=new Q3Process(this);
+  helpProcess=new QProcess(this);
     
   infoDialog=new InfoDialog(this);
 
 
-  grPref=NULL;
-  calcPref=NULL;
-  tablePref=NULL;
-  scriptPref=NULL;
-  importDialog=NULL;
-  exportDialog=NULL;
-  functionDialog=NULL;
-  graphSetDialog=NULL;
+  grPref=nullptr;
+  calcPref=nullptr;
+  tablePref=nullptr;
+  scriptPref=nullptr;
+  importDialog=nullptr;
+  exportDialog=nullptr;
+  functionDialog=nullptr;
+  graphSetDialog=nullptr;
 
   mainMenu=menuBar();
 
@@ -148,8 +148,8 @@ MainObject::MainObject() :QMainWindow()
   pref.label=false;
   pref.complex=false;
   pref.clearScriptMemory=true;
-  pref.functions=NULL;
-  pref.functionComments=NULL;
+  pref.functions=nullptr;
+  pref.functionComments=nullptr;
   pref.activeFunctions=new bool[20];
   for(int c=0; c<20;c++)
     pref.activeFunctions[c]=false;
@@ -202,12 +202,12 @@ MainObject::MainObject() :QMainWindow()
   pref.showWindows[0]=pref.showWindows[2]=pref.showWindows[3]=pref.showWindows[4]=pref.showWindows[6]=true;
   pref.showWindows[1]=pref.showWindows[5]=pref.showWindows[7]=false;
   pref.language=LANG_EN;
-  pref.constList=NULL;
+  pref.constList=nullptr;
   pref.constLen=pref.userConstLen=0;
 
 
   threadData=new ThreadSync;
-  threadData->mutex=NULL;
+  threadData->mutex=nullptr;
   threadData->eventReciver=this;
   threadData->status=0;
   threadData->eventCount=0;
@@ -216,7 +216,7 @@ MainObject::MainObject() :QMainWindow()
   threadData->bbreak=false;
   threadData->bcontinue=false;
   threadData->calcMode=true;
-  threadData->data=NULL;
+  threadData->data=nullptr;
   threadData->sleepTime=1000;
   threadData->vars=new Number*[VARNUM];
   for(int c=0; c<VARNUM;c++)
@@ -224,7 +224,7 @@ MainObject::MainObject() :QMainWindow()
     threadData->vars[c]=(Number*)malloc(sizeof(Number));
     threadData->numlen[c]=1;
     threadData->vars[c][0].type=NNONE;
-    threadData->vars[c][0].cval=NULL;
+    threadData->vars[c][0].cval=nullptr;
     threadData->vars[c][0].fval=Complex(0.0,0.0);
     for(int c1=0; c1<VARDIMENSIONS; c1++)
       threadData->dimension[c][c1]=1;
@@ -354,7 +354,7 @@ MainObject::MainObject() :QMainWindow()
   baseMenu->setItemChecked(pref.base,true);
 
 
-  calcMenu=new Q3PopupMenu;
+  calcMenu=new QMenu;
   calcMenu->insertItem(EXTCALCH_MENU8,angleMenu,ANGLE);
   calcMenu->insertItem(EXTCALCH_MENU9,outputMenu,OUTPUT);
   calcMenu->insertItem(EXTCALCH_MENU34,calcModeMenu,MODE);
@@ -362,7 +362,7 @@ MainObject::MainObject() :QMainWindow()
 //  outputMenu->setItemChecked(pref.outputType,true);
 //  calcTypeMenu->setItemChecked(pref.calcType,true);
     
-  coordinateMenu=new Q3PopupMenu;
+  coordinateMenu=new QMenu;
   coordinateMenu->insertItem(EXTCALCH_MENU19,STANDARDCOORDS);
   coordinateMenu->insertItem(EXTCALCH_MENU20,TRIGONOMETRICCOORDS);
   coordinateMenu->insertItem(EXTCALCH_MENU21,SHOWAXES);
@@ -405,7 +405,7 @@ MainObject::MainObject() :QMainWindow()
   graphSetActions=new QActionGroup(this);
   QObject::connect(graphSetMapper,SIGNAL(mapped(int)),this,SLOT(graphSetMenuSlot(int))); 
     
-  graphMenu=new Q3PopupMenu;
+  graphMenu=new QMenu;
   graphMenu->insertItem(EXTCALCH_MENU25,coordinateMenu,COORDINATE);
   graphMenu->insertItem(EXTCALCH_MENU26,graphTypeMenu,GRAPHTYPE);
   graphMenu->insertSeparator();
@@ -466,14 +466,14 @@ MainObject::MainObject() :QMainWindow()
 
   QObject::connect(tableTypeMapper,SIGNAL(mapped(int)),this,SLOT(tableTypeMenuSlot(int)));
     
-  tableMenu=new Q3PopupMenu;
+  tableMenu=new QMenu;
   tableMenu->insertItem(EXTCALCH_MENU43,STANDARDTABLE);
   tableMenu->insertItem(EXTCALCH_MENU68,RESETTABLE);
   tableMenu->insertItem(EXTCALCH_MENU44,tableTypeMenu,TABLETYPE);
   QObject::connect(tableMenu,SIGNAL(activated(int)),this,SLOT(tableMenuSlot(int)));
 
 
-  scriptMenu=new Q3PopupMenu;
+  scriptMenu=new QMenu;
   scriptMenu->insertItem(EXTCALCH_MENU62,EXPORTSCRIPT);
   scriptMenu->insertItem(EXTCALCH_MENU63,IMPORTSCRIPT);
   scriptMenu->insertSeparator();
@@ -481,7 +481,7 @@ MainObject::MainObject() :QMainWindow()
   scriptMenu->insertItem(EXTCALCH_MENU65,CLEARMEMNOW);
   QObject::connect(scriptMenu,SIGNAL(activated(int)),this,SLOT(scriptMenuSlot(int)));
     
-  statisticsMenu=new Q3PopupMenu;
+  statisticsMenu=new QMenu;
   statisticsMenu->insertItem(EXTCALCH_MENU69,STATCLEAR);
   statisticsMenu->insertItem(EXTCALCH_MENU70,STATAUTOCLEAR);
   statisticsMenu->insertSeparator();
@@ -518,7 +518,7 @@ MainObject::MainObject() :QMainWindow()
 
 
 
-  prefMenu=new Q3PopupMenu;
+  prefMenu=new QMenu;
   prefMenu->insertItem(EXTCALCH_MENU10,CPREF);
   prefMenu->insertItem(EXTCALCH_MENU11,GPREF);
   prefMenu->insertItem(EXTCALCH_MENU45,TPREF);
@@ -526,7 +526,7 @@ MainObject::MainObject() :QMainWindow()
   prefMenu->insertSeparator();
   prefMenu->insertItem(tr("Language"),languageMenu,LPREF);
 
-  helpMenu=new Q3PopupMenu;
+  helpMenu=new QMenu;
   helpMenu->insertItem(EXTCALCH_MENU12,EXTHELP);
   helpMenu->insertItem(EXTCALCH_MENU13,INFO);
 
@@ -549,7 +549,7 @@ MainObject::MainObject() :QMainWindow()
   editMapper->setMapping(tmpAction,EDITPASTE);
   QObject::connect(editMapper,SIGNAL(mapped(int)),this,SLOT(editMenuSlot(int)));
 
-  viewMenu=new Q3PopupMenu;
+  viewMenu=new QMenu;
   viewMenu->insertItem(EXTCALCH_MENU52,VIEWCALC1);
   viewMenu->insertItem(EXTCALCH_MENU53,VIEWCALC2);
   viewMenu->insertItem(EXTCALCH_MENU54,VIEWGRAPH);
@@ -560,7 +560,7 @@ MainObject::MainObject() :QMainWindow()
   viewMenu->insertItem(EXTCALCH_MENU61,VIEWSCRIPTIO);
   QObject::connect(viewMenu,SIGNAL(activated(int)),this,SLOT(viewMenuSlot(int)));
     
-  fileMenu=new Q3PopupMenu;
+  fileMenu=new QMenu;
   fileMenu->insertItem(EXTCALCH_MENU57,QUIT);
   QObject::connect(fileMenu,SIGNAL(activated(int)),this,SLOT(fileMenuSlot(int)));
     
@@ -660,7 +660,7 @@ MainObject::MainObject() :QMainWindow()
     pref.dataDirName="data";
     if(ret==0)
     {
-      if(scriptPref != NULL)
+      if(scriptPref != nullptr)
         delete scriptPref;
       scriptPref=new ScriptPreferences(pref,(QWidget*)this);
       QObject::connect(scriptPref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -669,7 +669,7 @@ MainObject::MainObject() :QMainWindow()
     }
     else 
     {
-      if(scriptPref != NULL)
+      if(scriptPref != nullptr)
         delete scriptPref;
       scriptPref=new ScriptPreferences(pref,(QWidget*)this);
       QObject::connect(scriptPref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -705,7 +705,7 @@ void MainObject::closeEvent(QCloseEvent*e)
 }
 
 
-void MainObject::customEvent(QCustomEvent*ev)
+void MainObject::customEvent(QEvent *ev)
 {
 
 	switch(ev->type())
@@ -803,7 +803,7 @@ int MainObject::readConfigFile()
 
 		mkdir(".extcalc", S_IRUSR | S_IWUSR | S_IXUSR);
 		configFile=fopen(CONFIGFILE,"w");
-		if(configFile != NULL)
+		if(configFile != nullptr)
 		{
 			ret=-1;
 			QString file("ANGLE=rad\n\
@@ -1033,7 +1033,7 @@ F20TYPE=nyquist2d\n");
 
 
 	configFile = fopen(CONFIGFILE,"r");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		MessageBox(EXTCALCC_MSG3+QString(CONFIGFILE)+"\n\n"+getErrorMessage());
 		return -3;
@@ -1530,7 +1530,7 @@ F20TYPE=nyquist2d\n");
 		if(functionStrings[c].length()<=0)
 			functionStrings[c]="";
 	}
-	if(pref.functions!=NULL)
+	if(pref.functions!=nullptr)
 		delete[]pref.functions;
 	pref.functions=functionStrings;
 	
@@ -1542,7 +1542,7 @@ F20TYPE=nyquist2d\n");
 		if(commentStrings[c].length()<=0)
 			commentStrings[c]="";
 	}
-	if(pref.functionComments!=NULL)
+	if(pref.functionComments!=nullptr)
 		delete[]pref.functionComments;
 	pref.functionComments=commentStrings;
 	
@@ -1555,7 +1555,7 @@ F20TYPE=nyquist2d\n");
 			activeFunctions[c]=true;
 		else activeFunctions[c]=false;
 	}
-	if(pref.activeFunctions!=NULL)
+	if(pref.activeFunctions!=nullptr)
 		delete[]pref.activeFunctions;
 	pref.activeFunctions=activeFunctions;
 	
@@ -1567,7 +1567,7 @@ F20TYPE=nyquist2d\n");
 			dynamicFunctions[c]=true;
 		else dynamicFunctions[c]=false;
 	}
-	if(pref.dynamicFunctions!=NULL)
+	if(pref.dynamicFunctions!=nullptr)
 		delete[]pref.dynamicFunctions;
 	pref.dynamicFunctions=dynamicFunctions;
 	
@@ -1579,7 +1579,7 @@ F20TYPE=nyquist2d\n");
 			logicFunctions[c]=true;
 		else logicFunctions[c]=false;
 	}
-	if(pref.logicFunctions!=NULL)
+	if(pref.logicFunctions!=nullptr)
 		delete[]pref.logicFunctions;
 	pref.logicFunctions=logicFunctions;
 
@@ -1606,7 +1606,7 @@ F20TYPE=nyquist2d\n");
 			functionColors[c]=getColor(GRAPHH_COL1);
 		else functionColors[c]=getColor(colorName);
 	}
-	if(pref.functionColors!=NULL)
+	if(pref.functionColors!=nullptr)
 		delete[]pref.functionColors;
 	pref.functionColors=functionColors;
 
@@ -1639,7 +1639,7 @@ F20TYPE=nyquist2d\n");
 		}
 		else types[c]=GRAPHSTD;
 	}
-	if(pref.functionTypes!=NULL)
+	if(pref.functionTypes!=nullptr)
 		delete[]pref.functionTypes;
 	pref.functionTypes=types;
 
@@ -1654,7 +1654,7 @@ void MainObject::writeConfigFile()
 
 	chdir(getenv("HOME"));
 	configFile = fopen(CONFIGFILE,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		MessageBox(EXTCALCC_MSG1+QString(CONFIGFILE)+"\n\n"+getErrorMessage());
 		return;
@@ -1949,7 +1949,7 @@ void MainObject::readVarFile()
 
 	
 	FILE*varFile = fopen(VARSFILE,"r");
-	if(varFile == NULL)
+	if(varFile == nullptr)
 	{
 		MessageBox(EXTCALCH_STR21+QString(VARSFILE)+"\n\n"+getErrorMessage());
 		return;
@@ -2010,7 +2010,7 @@ void MainObject::readVarFile()
 			
 			if(failure)
 			{
-				threadData->vars[c][c1].cval=NULL;
+				threadData->vars[c][c1].cval=nullptr;
 				threadData->vars[c][c1].type=NNONE;
 				continue;
 			}
@@ -2034,9 +2034,9 @@ void MainObject::readVarFile()
 			}
 			num2=configFile.mid(pos1,pos2-pos1);
 			pos1=pos2+1;
-			threadData->vars[c][c1].fval=Complex(strtold(num,NULL),strtold(num2,NULL));
+			threadData->vars[c][c1].fval=Complex(strtold(num,nullptr),strtold(num2,nullptr));
 			threadData->vars[c][c1].type=NFLOAT;
-			threadData->vars[c][c1].cval=NULL;
+			threadData->vars[c][c1].cval=nullptr;
 		}
 	}
 }
@@ -2047,7 +2047,7 @@ void MainObject::writeVarFile()
 
 	chdir(getenv("HOME"));
 	configFile = fopen(VARSFILE,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(EXTCALCH_STR22+QString(VARSFILE)+"\n\n"+getErrorMessage());
 		return;
@@ -2089,7 +2089,7 @@ void MainObject::writeVarFile()
 
 void MainObject::initConstants()
 {
-	if(pref.constList!=NULL)
+	if(pref.constList!=nullptr)
 	{
 		for(int c=0; c<pref.constLen; c++)
 		{
@@ -2248,7 +2248,7 @@ void MainObject::initConstants()
 	else fileLen=fileStat.st_size;
 	
 	configFile = fopen(CONSTFILE,"r");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(tr("Can't read constants file %1.\n\n").arg(CONSTFILE)+getErrorMessage());
 		getPref(pref);
@@ -2291,7 +2291,7 @@ void MainObject::writeConstants()
 
 	chdir(getenv("HOME"));
 	configFile = fopen(CONSTFILE,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(tr("Constants file %1 could not be written.\n\n").arg(CONSTFILE)+getErrorMessage());
 		return;
@@ -2443,7 +2443,7 @@ void MainObject::helpMenuSlot(int item)
 	switch(item)
 	{
 	case EXTHELP:
-		if(helpBrowser!=NULL)
+		if(helpBrowser!=nullptr)
 			delete helpBrowser;
 		helpBrowser=new HelpBrowser(this);
 		helpBrowser->setGeometry(50,50,750,550);
@@ -2589,7 +2589,7 @@ void MainObject::graphMenuSlot(int item)
 {
 	if(item==GRAPHIMPORT)
 	{
-		if(functionDialog!=NULL)
+		if(functionDialog!=nullptr)
 		{
 			QObject::disconnect(SIGNAL(prefChange(Preferences)),this);
 			delete functionDialog;
@@ -2600,14 +2600,14 @@ void MainObject::graphMenuSlot(int item)
 	}
 	else if(item==GRAPHEXPORT)
 	{
-		if(functionDialog!=NULL)
+		if(functionDialog!=nullptr)
 			delete functionDialog;
 		functionDialog=new ImportDialog(pref,this,false,true);	
 		functionDialog->show();
 	}
 	else if(item==GRAPHSETMANAGE)
 	{
-		if(graphSetDialog!=NULL)
+		if(graphSetDialog!=nullptr)
 			delete graphSetDialog;
 
 		graphSetDialog=new GraphSetDialog(pref,this);
@@ -2720,13 +2720,13 @@ void MainObject::scriptMenuSlot(int item)
 	switch(item)
 	{
 		case EXPORTSCRIPT:
-			if(exportDialog != NULL)
+			if(exportDialog != nullptr)
 				delete exportDialog;
 			exportDialog=new ImportDialog(pref,(QWidget*)this,false);
 			exportDialog->show();			
 			break;
 		case IMPORTSCRIPT:
-			if(importDialog != NULL)
+			if(importDialog != nullptr)
 				delete importDialog;
 			importDialog=new ImportDialog(pref,(QWidget*)this,true);
 			QObject::connect(importDialog,SIGNAL(updateScriptSignal(int)),scripting,SLOT(fileBrowserMenuSlot(int)));
@@ -2780,7 +2780,7 @@ void MainObject::prefMenuSlot(int item)
 	switch(item)
 	{
 		case GPREF:
-			if(grPref != NULL)
+			if(grPref != nullptr)
 				delete grPref;
 			grPref=new GraphPreferences(pref,vars,(QWidget*)this);
 			QObject::connect(grPref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -2788,7 +2788,7 @@ void MainObject::prefMenuSlot(int item)
 			grPref->show();
 			break;
 		case CPREF:
-			if(calcPref != NULL)
+			if(calcPref != nullptr)
 				delete calcPref;
 			calcPref=new CalcPreferences(pref,(QWidget*)this);
 			QObject::connect(calcPref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -2796,7 +2796,7 @@ void MainObject::prefMenuSlot(int item)
 			calcPref->show();
 			break;
 		case TPREF:
-			if(tablePref != NULL)
+			if(tablePref != nullptr)
 				delete tablePref;
 			tablePref=new TablePreferences(pref,(QWidget*)this);
 			QObject::connect(tablePref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -2804,7 +2804,7 @@ void MainObject::prefMenuSlot(int item)
 			tablePref->show();
 			break;
 		case SPREF:
-			if(scriptPref != NULL)
+			if(scriptPref != nullptr)
 				delete scriptPref;
 			scriptPref=new ScriptPreferences(pref,(QWidget*)this);
 			QObject::connect(scriptPref,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
@@ -2821,7 +2821,7 @@ void MainObject::languageMenuSlot(int item)
 	int ret=YesNoCancelBox(tr("Extcalc must be restarted to apply this changes!\n\nRestart now?"));
 	if(ret==0)
 	{
-		Q3Process extcalcProcess;
+		QProcess extcalcProcess;
 		extcalcProcess.addArgument("extcalc");
 		extcalcProcess.start();
 		qApp->closeAllWindows();
@@ -3122,7 +3122,7 @@ void MainObject::writeUIState()
 	FILE*configFile;
 	chdir(getenv("HOME"));
 	configFile = fopen(UIFILE,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 		return;
 	//0             1              2..7
 	//window width, window height, function table column 1-6
@@ -3150,7 +3150,7 @@ void MainObject::readUIState()
 		return;
 	
 	FILE*configFile = fopen(UIFILE,"r");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 		return;
 	
 	
@@ -3183,7 +3183,7 @@ void MainObject::readFunctionFile(QString name)
 	
 	
 	FILE*configFile = fopen(name,"r");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(tr("Unable to read graphs file %1\n\n").arg(name));
 		return;
@@ -3437,7 +3437,7 @@ void MainObject::writeFunctionFile(QString name)
 	FILE*configFile;
 	chdir(getenv("HOME"));
 	configFile = fopen(GRAPHSDIR+name,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(tr("Unable to write graphs file %1\n\n").arg(GRAPHSDIR+name));
 		return;
@@ -3542,7 +3542,7 @@ void MainObject::writeFunctionFile(QString name)
 
 void MainObject::readGraphsDir()
 {
-	if(graphsDir==NULL)
+	if(graphsDir==nullptr)
 	{
 		graphsDir=new QDir(QString(getenv("HOME"))+"/"+QString(GRAPHSDIR));
 		if(!graphsDir->exists())
@@ -3587,7 +3587,7 @@ void MainObject::readGraphsDir()
 HelpBrowser::HelpBrowser(QWidget*parent) :QWidget(parent,"Help Browser",Qt::WType_TopLevel)
 {
 	currentSource="";
-	toolBar=new Q3ToolBar();
+	toolBar=new QToolBar();
 	dockArea=new Q3DockArea(Qt::Horizontal,Q3DockArea::Normal,this);
 	dockArea->moveDockWindow(toolBar);
 	toolBar->setMovingEnabled(false);
@@ -3597,7 +3597,7 @@ HelpBrowser::HelpBrowser(QWidget*parent) :QWidget(parent,"Help Browser",Qt::WTyp
 	zoominIcon=new QPixmap(INSTALLDIR+QString("/data/zoomin.png"));
 	zoomoutIcon=new QPixmap(INSTALLDIR+QString("/data/zoomout.png"));
 	
-	browser=new Q3TextBrowser(this);
+	browser=new QTextBrowser(this);
 	
 	backButton=new QToolButton(*backIcon,"","",browser,SLOT(backward()),toolBar);	
 	forwardButton=new QToolButton(*forwardIcon,"","",browser,SLOT(forward()),toolBar);
@@ -3655,7 +3655,7 @@ InfoDialog::InfoDialog(QWidget*parent) : QDialog(parent)
 	FILE*licenseFile;
 	struct stat fileStat;
 	licenseFile = fopen(INSTALLDIR+QString("/data/license.txt"),"r");
-	if(licenseFile == NULL)
+	if(licenseFile == nullptr)
 		license=EXTCALCH_STR1;
 	else {
 		if(lstat(INSTALLDIR+QString("/data/license.txt"),&fileStat) !=0)

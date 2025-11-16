@@ -6,10 +6,12 @@
 #include <qlineedit.h>
 #include <qcombobox.h>
 #include <qcheckbox.h>
-#include <q3filedialog.h>
+#include <QFileDialog>
 #include <qinputdialog.h>
 #include <qdir.h>
-#include <q3listbox.h>
+#include <QListWidget>
+#include <QListWidgetItem>
+
 #include <qinputdialog.h>
 #include "global.h"
 

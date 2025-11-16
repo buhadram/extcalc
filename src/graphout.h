@@ -19,7 +19,8 @@ It also includes the interfaces for screenshot generation, drawing functions and
 #define GRAPHOUTH
 
 
-#include <qgl.h>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
 #include <qwidget.h>
 #include <qapplication.h>
 #include <qtimer.h>
@@ -28,7 +29,7 @@ It also includes the interfaces for screenshot generation, drawing functions and
 #include <qpainter.h>
 #include <qinputdialog.h>
 #include <qthread.h>
-#include <QCustomEvent>
+#include <QEvent>
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QList>
@@ -92,7 +93,7 @@ class GraphicsThread :public QThread
 		vars=new Variable[27];
 		
 		threadData=new ThreadSync;
-		threadData->mutex=NULL;
+		threadData->mutex=nullptr;
 		threadData->eventReciver=parent;
 		threadData->status=0;
 		threadData->eventCount=0;
@@ -101,7 +102,7 @@ class GraphicsThread :public QThread
 		threadData->bbreak=false;
 		threadData->bcontinue=false;
 		threadData->calcMode=true;
-		threadData->data=NULL;
+		threadData->data=nullptr;
 		threadData->sleepTime=1000;
 		threadData->vars=new Number*[VARNUM];
 		for(int c=0; c<VARNUM;c++)
@@ -109,7 +110,7 @@ class GraphicsThread :public QThread
 			threadData->vars[c]=(Number*)malloc(sizeof(Number));
 			threadData->numlen[c]=1;
 			threadData->vars[c][0].type=NNONE;
-			threadData->vars[c][0].cval=NULL;
+			threadData->vars[c][0].cval=nullptr;
 			threadData->vars[c][0].fval=Complex(0.0,0.0);
 			for(int c1=0; c1<VARDIMENSIONS; c1++)
 				threadData->dimension[c][c1]=1;
@@ -138,7 +139,7 @@ class GraphicsThread :public QThread
 
 
 
-class GraphOutput :public QGLWidget
+class GraphOutput : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	GLuint axes;
 	Preferences pref;
@@ -178,7 +179,7 @@ class GraphOutput :public QGLWidget
 
 Q_OBJECT
 public:
-	GraphOutput(QWidget*parent,Variable*va,ThreadSync*td,QGLWidget*shareWidget=NULL) :QGLWidget(parent,0,shareWidget)
+	GraphOutput(QWidget*parent,Variable*va,ThreadSync*td,QGLWidget*shareWidget=nullptr) :QOpenGLWidget(parent,0,shareWidget)
 	{
 		graphProcess=false;
 		axes=0xffffffff;
@@ -190,7 +191,7 @@ public:
 		backCursor=0;
 		backMap=new QPixmap*[BACKSTEPS];
 		for(int c=0; c<BACKSTEPS; c++)
-			backMap[c]=NULL;
+			backMap[c]=nullptr;
 
 		hasSolveObjects=hasStatisticsObjects=false;
 		draw=new QPainter();
@@ -261,14 +262,14 @@ public slots:
 	void timerStartSlot(bool);
 
 protected:
-	void initializeGL();
-	void paintGL();
-	void resizeGL(int,int);
+	void initializeGL() override;
+	void paintGL() override;
+	void resizeGL(int w,int h) override;
 	void mousePressEvent(QMouseEvent*);
 	void mouseMoveEvent(QMouseEvent*);
 	void mouseReleaseEvent(QMouseEvent*);
 	void wheelEvent(QWheelEvent*);
-	void customEvent(QCustomEvent*);
+	void customEvent(QEvent*);
 
 	
 signals:

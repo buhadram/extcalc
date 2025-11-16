@@ -190,9 +190,9 @@ T & List<T>::operator [] (int index)
 		
 
 		if(index >= NumItems)
-			return *((T*)NULL);
+			return *((T*)nullptr);
 		if(index < 0)
-			return *((T*)NULL);
+			return *((T*)nullptr);
 		
 
 

@@ -294,7 +294,7 @@ class Math
 	Variable*vars;                                      //The variables array for Calc
 	Preferences*pref;                                   //The preferences for this calculation
 	Math*parent;                                        //A pointer to the parent object
-	                                                    //At the root object, this is set to NULL
+	                                                    //At the root object, this is set to nullptr
 	Math *vertObj,*horzObj;                             //Pointers to the following objects
 	double number;                                      //A variable as temporary memory for calculations and to store
 	                                                    //the value of constants
@@ -422,7 +422,7 @@ This string must be processed by the preprocessor, which returns another string.
 <pre> operation=preprocessor(operations,&pref); //returns 3+4*5*sinX</pre>
 The returend string can be used to generate an object tree.<br>
 This object tree represents the matematical operations in the memory.<br>
-<pre>Calculate calc(NULL,operation,&pref,vars);</pre>
+<pre>Calculate calc(nullptr,operation,&pref,vars);</pre>
 Now, the calc object has been created, and it can be used to run the operations.<br
 <pre> double result=calc.calc();</pre>
 calc() can be used several times with different variable values<br>

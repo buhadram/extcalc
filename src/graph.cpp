@@ -15,8 +15,9 @@ any later version.
 ////////////////////////////////////////////////////////////////////////////////////////////*/
 #include "graph.h"
 //Added by qt3to4:
-#include <QResizeEvent>
-#include <Q3ValueList>
+#include <QResizeEvent>c
+//#include <QList>
+#include <QVector>
 
 
 

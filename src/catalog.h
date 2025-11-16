@@ -17,10 +17,12 @@ This is a overloaded popup menu that serves a complete function catalog.
 #ifndef CATALOGH
 #define CATALOGH
 
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include <q3listbox.h>
+#include <QListWidget>
+#include <QListWidgetItem>
 #include <qlineedit.h>
 #include <qdialog.h>
 #include "global.h"
@@ -76,9 +78,9 @@ class ConstantDialog :public QDialog
 };
 
 
-class Catalog :public Q3PopupMenu
+class Catalog :public QMenu
 {
-	Q3PopupMenu *mathStandard,*mathTrigonometric,*mathExtended,*mathLogic,*matrix,*scriptStandard,*scriptText,*scriptGraphics,*scriptGL,*scriptFile,
+	QMenu *mathStandard,*mathTrigonometric,*mathExtended,*mathLogic,*matrix,*scriptStandard,*scriptText,*scriptGraphics,*scriptGL,*scriptFile,
  	*constantsMath,*constantsPhysics,*constantsConv,*constantsUser;
 	Preferences pref;
 	int mathConstLen,physicsConstLen,convConstLen;
@@ -89,31 +91,31 @@ class Catalog :public Q3PopupMenu
 
 	public:
 	
-	Catalog(int st, QWidget*parent,Preferences *p=NULL) :Q3PopupMenu(parent)
+	Catalog(int st, QWidget*parent,Preferences *p=nullptr) :QMenu(parent)
 	{
 		state=st;
-		if(p==NULL)
+		if(p==nullptr)
 		{
 			if(state&CATCONSTANTS)
 				state&=~CATCONSTANTS;
-			pref.constList=NULL;
+			pref.constList=nullptr;
 		}
 		else pref=*p;
-		mathStandard=new Q3PopupMenu(this);
-		mathTrigonometric=new Q3PopupMenu(this);
-		mathExtended=new Q3PopupMenu(this);
-		mathLogic=new Q3PopupMenu(this);
-		matrix=new Q3PopupMenu(this);
-		scriptStandard=new Q3PopupMenu(this);
-		scriptText=new Q3PopupMenu(this);
-		scriptGraphics=new Q3PopupMenu(this);
-		scriptGL=new Q3PopupMenu(this);
-		scriptFile=new Q3PopupMenu(this);
+		mathStandard=new QMenu(this);
+		mathTrigonometric=new QMenu(this);
+		mathExtended=new QMenu(this);
+		mathLogic=new QMenu(this);
+		matrix=new QMenu(this);
+		scriptStandard=new QMenu(this);
+		scriptText=new QMenu(this);
+		scriptGraphics=new QMenu(this);
+		scriptGL=new QMenu(this);
+		scriptFile=new QMenu(this);
 
-		constantsMath=new Q3PopupMenu(this);
-		constantsPhysics=new Q3PopupMenu(this);
-		constantsConv=new Q3PopupMenu(this);
-		constantsUser=new Q3PopupMenu(this);
+		constantsMath=new QMenu(this);
+		constantsPhysics=new QMenu(this);
+		constantsConv=new QMenu(this);
+		constantsUser=new QMenu(this);
 		
 		cDialog=new ConstantDialog(parent,"Mofify Constants",pref);
 

@@ -21,7 +21,7 @@ Scripting preferences dialog.
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
-#include <q3filedialog.h>
+#include <QFileDialog>
 #include <qcheckbox.h>
 #include "global.h"
 #include <sys/stat.h>

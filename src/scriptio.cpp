@@ -19,12 +19,12 @@ any later version.
 #include <QWheelEvent>
 #include <QMouseEvent>
 #include <QKeyEvent>
-#include <QCustomEvent>
+#include <QEvent>
 #include <QPaintEvent>
 
 
 
-ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWidget*shareContext) :TabWidget(parent,pr,va,NULL,true)
+ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWidget*shareContext) :TabWidget(parent,pr,va,nullptr,true)
 {
 //			vars=va;
 //			menuBottom=mB;
@@ -34,11 +34,11 @@ ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWid
 //			pref=pr;
 //			maximized=true;
 	scriptExec=false;
-	script=NULL;
+	script=nullptr;
 	inputMode=IMDEFAULT;
 	inputBuffer=(char*)calloc(1,1);
 	bufferCursor=0;
-	scriptObject=NULL;
+	scriptObject=nullptr;
 	displayType=SCRIPTTEXT;
 	modeRequest=SCRIPTTEXT;
 	autosize=true;
@@ -58,7 +58,7 @@ ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWid
 	threadData->bbreak=false;
 	threadData->bcontinue=false;
 	threadData->calcMode=false;
-	threadData->data=NULL;
+	threadData->data=nullptr;
 	threadData->sleepTime=1000;
 	threadData->vars=new Number*[VARNUM];
 	for(int c=0; c<VARNUM;c++)
@@ -66,7 +66,7 @@ ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWid
 		threadData->vars[c]=(Number*)malloc(sizeof(Number));
 		threadData->numlen[c]=1;
 		threadData->vars[c][0].type=NNONE;
-		threadData->vars[c][0].cval=NULL;
+		threadData->vars[c][0].cval=nullptr;
 		for(int c1=0; c1<VARDIMENSIONS; c1++)
 			threadData->dimension[c][c1]=1;
 	}
@@ -85,7 +85,7 @@ ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWid
 
   output2D=new ScriptDisplay(this);
   glWindow=new ScriptGL(output2D,pref,shareContext);
-	toolBar=new Q3ToolBar();
+	toolBar=new QToolBar();
 
 
 
@@ -100,7 +100,7 @@ ScriptIOWidget::ScriptIOWidget(QWidget*parent,Preferences pr,Variable *va,QGLWid
 	killButton->setEnabled(false);
 
 	runButton->setEnabled(false);
-	contextMenu=new Q3PopupMenu(this);
+	contextMenu=new QMenu(this);
 	contextMenu->insertItem(SCRIPTIO_STR12,EDITCOPY);
 	contextMenu->insertItem(SCRIPTIO_STR13,EDITPASTE);
 	contextMenu->insertSeparator();
@@ -187,11 +187,11 @@ void ScriptIOWidget::killSlot()
       output2D->insertText(QString(SCRIPTIO_STR3));
 			scriptExec=false;
 			delete script;
-			script=NULL;
+			script=nullptr;
 			inputMode=IMDEFAULT;
 			killButton->setEnabled(false);
 //			scrollBar->show();
-			resizeEvent(NULL);
+			resizeEvent(nullptr);
 			if(pref.clearScriptMemory)
 				clearMemSlot();
 		}
@@ -251,7 +251,7 @@ void ScriptIOWidget::keyPressEvent(QKeyEvent*e)
         output2D->insertText("\n");
 			else if(inputMode==IMSCRIPTING)
 			{
-				if(inputBuffer!=NULL)
+				if(inputBuffer!=nullptr)
 					if(strlen(inputBuffer)>0)
 						free(inputBuffer);
 				inputBuffer=(char*)calloc(1,1);
@@ -429,9 +429,9 @@ void ScriptIOWidget::wheelEvent(QWheelEvent*ev)
 
 void ScriptIOWidget::customEvent(QEvent*e)
 {
-	QCustomEvent*ev=(QCustomEvent*)e;
+	QEvent*ev=(QEvent*)e;
 	threadData->eventCount--;
-	if(scriptExec && script!=NULL)
+	if(scriptExec && script!=nullptr)
 	{
 //		perror("customEvent: "+QString::number(ev->type())+" "+QString::number(pthread_self()));
 		switch(ev->type())
@@ -439,10 +439,10 @@ void ScriptIOWidget::customEvent(QEvent*e)
 			case SIGPRINT:
 			{
 				char*text=(char*)ev->data();
-				gettimeofday(&currentTime,NULL);
+				gettimeofday(&currentTime,nullptr);
 				if(currentTime.tv_sec > drawTime.tv_sec || currentTime.tv_usec-drawTime.tv_usec > 20000)
 				{
-					gettimeofday(&drawTime,NULL);
+					gettimeofday(&drawTime,nullptr);
 					if(!t->isActive())
 						t->start(30,true);
 				}
@@ -626,10 +626,10 @@ void ScriptIOWidget::customEvent(QEvent*e)
 							break;
 					}
 					p.end();
-					gettimeofday(&currentTime,NULL);
+					gettimeofday(&currentTime,nullptr);
 					if(currentTime.tv_sec > drawTime.tv_sec || currentTime.tv_usec-drawTime.tv_usec > 20000)
 					{
-						gettimeofday(&drawTime,NULL);
+						gettimeofday(&drawTime,nullptr);
 						if(!t->isActive())
 							t->start(30,true);
 					}
@@ -732,19 +732,19 @@ void ScriptIOWidget::customEvent(QEvent*e)
 				if(pref.scriptPath.length()>0 && lstat(path,&fileStat)==0)
 				{
 					f=fopen(path,"r");
-					if(f!=NULL && fileStat.st_size>0 && S_ISREG(fileStat.st_mode))
+					if(f!=nullptr && fileStat.st_size>0 && S_ISREG(fileStat.st_mode))
 					{
 						fileData=new char[fileStat.st_size+1];
 						fileData[fileStat.st_size]=(char)0;
 						fread(fileData,fileStat.st_size,1,f);
 						fclose(f);
 					}
-					else fileData=NULL;
+					else fileData=nullptr;
 				}
-				else fileData=NULL;
+				else fileData=nullptr;
 				perror("Path: "+path+"\nData: "+QString(fileData));
 				
-				if(fileData==NULL)
+				if(fileData==nullptr)
 					threadData->data=calloc(2,1);
 				else threadData->data=fileData;
 				break;
@@ -763,7 +763,7 @@ void ScriptIOWidget::customEvent(QEvent*e)
 				if(pref.scriptPath.length()>0)
 				{
 					f=fopen(path,"a");
-					if(f!=NULL)
+					if(f!=nullptr)
 					{
 						int dataLen=strlen(&((char*)ev->data())[pathLen+1]);
 						fwrite(&((char*)ev->data())[pathLen+1],dataLen,1,f);
@@ -787,7 +787,7 @@ void ScriptIOWidget::customEvent(QEvent*e)
 				if(pref.scriptPath.length()>0)
 				{
 					f=fopen(path,"w");
-					if(f!=NULL)
+					if(f!=nullptr)
 					{
 						int dataLen=strlen(&((char*)ev->data())[pathLen+1]);
 						fwrite(&((char*)ev->data())[pathLen+1],dataLen,1,f);
@@ -815,7 +815,7 @@ void ScriptIOWidget::customEvent(QEvent*e)
 			case SIGFINISHED:		//script stopped
 			{
 				setDisplayMode(SCRIPTTEXT);
-				gettimeofday(&currentTime,NULL);
+				gettimeofday(&currentTime,nullptr);
 				int secs=currentTime.tv_sec-startTime.tv_sec;
 				int usecs=currentTime.tv_usec-startTime.tv_usec;
 				if(usecs<0)
@@ -829,10 +829,10 @@ void ScriptIOWidget::customEvent(QEvent*e)
 				scriptExec=false;
 				script->wait();
 				delete script;
-				script=NULL;
+				script=nullptr;
 				inputMode=IMDEFAULT;
 //				scrollBar->show();
-				resizeEvent(NULL);
+				resizeEvent(nullptr);
 				killButton->setEnabled(false);
 				if(pref.clearScriptMemory)
 					clearMemSlot();
@@ -970,12 +970,12 @@ void ScriptIOWidget::runScript(QString*code)
 		glWindow->setPref(runningPref);
 	delete scriptObject;
   output2D->insertText(SCRIPTIO_STR8);
-	if(cleanString==NULL)
+	if(cleanString==nullptr)
 	{
     output2D->insertText("\nPreprocessor Error\n");
 		return;
 	}
-	scriptObject=new Script(NULL,cleanString,&runningPref,vars,threadData);
+	scriptObject=new Script(nullptr,cleanString,&runningPref,vars,threadData);
 	loadSubScripts();
 	free(cleanString);
 
@@ -1002,7 +1002,7 @@ void ScriptIOWidget::runSlot()
 	
 
   output2D->insertText(QString(SCRIPTIO_STR6));
-	if(inputBuffer!=NULL)
+	if(inputBuffer!=nullptr)
 		if(strlen(inputBuffer)>0)
 		{
 			free(inputBuffer);
@@ -1021,11 +1021,11 @@ void ScriptIOWidget::runSlot()
 		setDisplayMode(SCRIPT3D);
 	else if(modeRequest==SCRIPT2D)
 		setDisplayMode(SCRIPT2D);
-	resizeEvent(NULL);
+	resizeEvent(nullptr);
 
-	gettimeofday(&drawTime,NULL);
+	gettimeofday(&drawTime,nullptr);
 //	t->start(timerInterval);
-	gettimeofday(&startTime,NULL);
+	gettimeofday(&startTime,nullptr);
 #if QT_VERSION < 0x030200			//priority parameter is supported sience QT 3.2
 	script->start();
 #else
@@ -1037,7 +1037,7 @@ void ScriptIOWidget::searchScripts(QString*code)
 {
 	Preferences tmpPref=pref;
 	char*cleanStr=preprocessor(code,&tmpPref,true);
-	if(cleanStr==NULL)
+	if(cleanStr==nullptr)
 		return;
 	char*scriptName;
 	QString filePath;
@@ -1073,7 +1073,7 @@ void ScriptIOWidget::searchScripts(QString*code)
 					;
 				else {
 					subFile=fopen(filePath,"r");
-					if(subFile==NULL || fileStat.st_size<=0)
+					if(subFile==nullptr || fileStat.st_size<=0)
 						;
 					else
 					{
@@ -1110,11 +1110,11 @@ void ScriptIOWidget::loadSubScripts()
 	{
 		filePath=pref.scriptPath+QString("/")+pref.scriptDirName+QString("/")+QString(threadData->subprogramPath[c]);
 		if(lstat(filePath,&fileStat)!=0)
-			threadData->subprograms.NewItem((Math*)NULL);
+			threadData->subprograms.NewItem((Math*)nullptr);
 		else {
 			subFile=fopen(filePath,"r");
-			if(subFile==NULL || fileStat.st_size<=0)
-				threadData->subprograms.NewItem((Math*)NULL);
+			if(subFile==nullptr || fileStat.st_size<=0)
+				threadData->subprograms.NewItem((Math*)nullptr);
 			else
 			{
 				subFileContent=new char[fileStat.st_size+1];
@@ -1128,14 +1128,14 @@ void ScriptIOWidget::loadSubScripts()
 				qApp->processEvents();
         output2D->insertText(SCRIPTIO_STR9);
         output2D->insertText(threadData->subprogramPath[c]);
-				if(cleanSubFileContent==NULL)
+				if(cleanSubFileContent==nullptr)
 				{
           output2D->insertText("\nPreprocessor Error\n");
-					subScript=NULL;
+					subScript=nullptr;
 				}
 				else 
 				{
-					subScript=new Script(scriptObject,NULL,&pref,vars,threadData);
+					subScript=new Script(scriptObject,nullptr,&pref,vars,threadData);
 					subScript->split(cleanSubFileContent,0,strlen(cleanSubFileContent));
 				}
 				delete[]subFileContent;
@@ -1488,7 +1488,7 @@ void ScriptIOWidget::setDisplayMode(int mode)
     scrollArea->setWidget(glWindow);
 		glWindow->scrReset();
 		glWindow->resetRotation();
-		resizeEvent(NULL);
+		resizeEvent(nullptr);
 		repaint(true);
 		
 	}

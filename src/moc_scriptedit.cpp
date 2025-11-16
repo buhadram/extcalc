@@ -60,8 +60,8 @@ static const char qt_meta_stringdata_ScriptWidget[] = {
     "runScript(QString*)\0controlScriptMenu(int)\0"
     "getPref(Preferences)\0buttonInputSlot(QString)\0"
     "maximizeButtonSlot()\0editSlot(int)\0"
-    "showFile(Q3ListViewItem*)\0,,\0"
-    "createFileBrowserMenu(Q3ListViewItem*,QPoint,int)\0"
+    "showFile(QListWidget*)\0,,\0"
+    "createFileBrowserMenu(QListWidget*,QPoint,int)\0"
     "item\0fileBrowserMenuSlot(int)\0"
     "textChangedSlot()\0saveSlot()\0"
     "runButtonSlot()\0,\0lineNumSlot(int,int)\0"
@@ -102,8 +102,8 @@ int ScriptWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         case 4: buttonInputSlot((*reinterpret_cast< QString(*)>(_a[1]))); break;
         case 5: maximizeButtonSlot(); break;
         case 6: editSlot((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 7: showFile((*reinterpret_cast< Q3ListViewItem*(*)>(_a[1]))); break;
-        case 8: createFileBrowserMenu((*reinterpret_cast< Q3ListViewItem*(*)>(_a[1])),(*reinterpret_cast< const QPoint(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
+        case 7: showFile((*reinterpret_cast< QListWidget*(*)>(_a[1]))); break;
+        case 8: createFileBrowserMenu((*reinterpret_cast< QListWidget*(*)>(_a[1])),(*reinterpret_cast< const QPoint(*)>(_a[2])),(*reinterpret_cast< int(*)>(_a[3]))); break;
         case 9: fileBrowserMenuSlot((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 10: textChangedSlot(); break;
         case 11: saveSlot(); break;

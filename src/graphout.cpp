@@ -16,7 +16,7 @@ any later version.
 #include "graphout.h"
 #include <pthread.h>
 //Added by qt3to4:
-#include <QCustomEvent>
+#include <QEvent>
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QWheelEvent>
@@ -587,7 +587,7 @@ void GraphOutput::mousePressEvent(QMouseEvent*e)
 			QPen pen(drawColor,previewPen);
 			pen.setCapStyle(Qt::RoundCap);
 
-			if(backMap[BACKSTEPS-1]!=NULL)
+			if(backMap[BACKSTEPS-1]!=nullptr)
 				delete backMap[BACKSTEPS-1];
 			for(int c=BACKSTEPS-1; c>0; c--)
 				backMap[c]=backMap[c-1];
@@ -777,7 +777,7 @@ void GraphOutput::wheelEvent(QWheelEvent*e)
 }
 
 
-void GraphOutput::customEvent(QCustomEvent*ev)
+void GraphOutput::customEvent(QEvent*ev)
 {
 
 	switch(ev->type())
@@ -852,8 +852,8 @@ void GraphOutput::processStdFunction(ObjectInfo*obj, int index,ThreadSync*td,Var
   obj->objectData[index].coordinateLength=PRECISION2D;
   if(obj->logic)
 	{
-		Script ca1(NULL,func,&pref,va,td);
-		gettimeofday(&t1,NULL);
+		Script ca1(nullptr,func,&pref,va,td);
+		gettimeofday(&t1,nullptr);
 		td->vars[0][0].type=NFLOAT;
     td->vars[0][0].fval=obj->objectData[index].dynamicParameter;
 		for(int c=0; c<PRECISION2D; c++)
@@ -865,12 +865,12 @@ void GraphOutput::processStdFunction(ObjectInfo*obj, int index,ThreadSync*td,Var
 			convertToFloat(&result);
 			coordinates[2*c+1]=result.fval.real();
 		}
-		gettimeofday(&t2,NULL);
+		gettimeofday(&t2,nullptr);
 	}
 	else 
 	{
-		Calculate ca1(NULL,func,&pref,va);
-		gettimeofday(&t1,NULL);
+		Calculate ca1(nullptr,func,&pref,va);
+		gettimeofday(&t1,nullptr);
 		
     va[0]=obj->objectData[index].dynamicParameter;
 		for(int c=0; c<PRECISION2D; c++)
@@ -879,7 +879,7 @@ void GraphOutput::processStdFunction(ObjectInfo*obj, int index,ThreadSync*td,Var
 			coordinates[2*c]  =va[23];
 			coordinates[2*c+1]=ca1.calc();
 		}
-		gettimeofday(&t2,NULL);
+		gettimeofday(&t2,nullptr);
 	}
 
 	int seconds,usecs;
@@ -924,9 +924,9 @@ void GraphOutput::processPolarFunction(ObjectInfo*obj,int index,ThreadSync*threa
 	{
 		Number r;
 		long double x;
-		Script ca1(NULL,func,&pref,vars,threadData);
+		Script ca1(nullptr,func,&pref,vars,threadData);
 		
-		gettimeofday(&t1,NULL);
+		gettimeofday(&t1,nullptr);
 		
 		threadData->vars[0][0].type=NFLOAT;
     threadData->vars[0][0].fval=obj->objectData[index].dynamicParameter;
@@ -942,12 +942,12 @@ void GraphOutput::processPolarFunction(ObjectInfo*obj,int index,ThreadSync*threa
       coordinates[2*c+1]=sin(x*multiplier)*r.fval.real();
 			
 		}
-		gettimeofday(&t2,NULL);
+		gettimeofday(&t2,nullptr);
 	}
 	else {
-		Calculate ca1(NULL,func,&pref,vars);
+		Calculate ca1(nullptr,func,&pref,vars);
     vars[0]=obj->objectData[index].dynamicParameter;
-		gettimeofday(&t1,NULL);
+		gettimeofday(&t1,nullptr);
 		for(int c=0; c<=PRECISION2D; c++)
 		{
 			vars[23]=xStart+(double)c*xStep;
@@ -955,7 +955,7 @@ void GraphOutput::processPolarFunction(ObjectInfo*obj,int index,ThreadSync*threa
       coordinates[c*2]=cos(vars[23]*multiplier)*r;
       coordinates[c*2+1]=sin(vars[23]*multiplier)*r;
 		}
-		gettimeofday(&t2,NULL);
+		gettimeofday(&t2,nullptr);
 	}
 
 	int seconds,usecs;
@@ -989,9 +989,9 @@ void GraphOutput::processParameterFunction(ObjectInfo*obj,int index,ThreadSync*t
   if(obj->logic)
 	{
 		Number result;
-		Script ca1(NULL,func1,&pref,vars,threadData);
-		Script ca2(NULL,func2,&pref,vars,threadData);
-		gettimeofday(&t1,NULL);
+		Script ca1(nullptr,func1,&pref,vars,threadData);
+		Script ca2(nullptr,func2,&pref,vars,threadData);
+		gettimeofday(&t1,nullptr);
 		
 		threadData->vars[0][0].type=NFLOAT;
     threadData->vars[0][0].fval=obj->objectData[index].dynamicParameter;
@@ -1011,17 +1011,17 @@ void GraphOutput::processParameterFunction(ObjectInfo*obj,int index,ThreadSync*t
 		}
 	}
 	else {
-    Calculate ca1(NULL,func1,&pref,vars);
-    Calculate ca2(NULL,func2,&pref,vars);
+    Calculate ca1(nullptr,func1,&pref,vars);
+    Calculate ca2(nullptr,func2,&pref,vars);
     vars[0]=obj->objectData[index].dynamicParameter;
-    gettimeofday(&t1,NULL);
+    gettimeofday(&t1,nullptr);
     for(int c=0; c<pref.parameterSteps; c++)
     {
       vars[19]=xStart+(double)c*xStep;
       coordinates[2*c]=ca1.calc();
       coordinates[2*c+1]=ca2.calc();
     }
-    gettimeofday(&t2,NULL);
+    gettimeofday(&t2,nullptr);
 	}
 
 	int seconds,usecs;
@@ -1096,8 +1096,8 @@ void GraphOutput::process3dFunction(ObjectInfo*obj,int index,ThreadSync*threadDa
   if(obj->logic)
 	{
 		Number result;
-		Script ca1(NULL,func,&pref,vars,threadData);
-		gettimeofday(&t1,NULL);
+		Script ca1(nullptr,func,&pref,vars,threadData);
+		gettimeofday(&t1,nullptr);
 
 		threadData->vars[0][0].type=NFLOAT;
     threadData->vars[0][0].fval=obj->objectData[index].dynamicParameter;
@@ -1117,9 +1117,9 @@ void GraphOutput::process3dFunction(ObjectInfo*obj,int index,ThreadSync*threadDa
 		}
 	}
 	else {
-		Calculate ca1(NULL,func,&pref,vars);
+		Calculate ca1(nullptr,func,&pref,vars);
     vars[0]=obj->objectData[index].dynamicParameter;
-		gettimeofday(&t1,NULL);
+		gettimeofday(&t1,nullptr);
 	
 		for(int c=0; c<PRECISION3D; c++)
 		{
@@ -1132,7 +1132,7 @@ void GraphOutput::process3dFunction(ObjectInfo*obj,int index,ThreadSync*threadDa
 		}
 	}
 
-	gettimeofday(&t2,NULL);
+	gettimeofday(&t2,nullptr);
 
 
 
@@ -1179,8 +1179,8 @@ void GraphOutput::processInequalityFunction(ObjectInfo*obj,int index,ThreadSync*
 
 	float x,y1,y2;
 	QString num,num2;
-	Calculate *ca1=NULL,*ca2=NULL;
-	Script*s1=NULL,*s2=NULL;
+	Calculate *ca1=nullptr,*ca2=nullptr;
+	Script*s1=nullptr,*s2=nullptr;
 	Number result;
   if(obj->logic)
 	{
@@ -1188,14 +1188,14 @@ void GraphOutput::processInequalityFunction(ObjectInfo*obj,int index,ThreadSync*
 		threadData->vars[0][0].type=NFLOAT;
     threadData->vars[0][0].fval=obj->objectData[index].dynamicParameter;
 		
-		s1=new Script(NULL,func,&pref,vars,threadData);	
-		s2=new Script(NULL,func2,&pref,vars,threadData);	
+		s1=new Script(nullptr,func,&pref,vars,threadData);	
+		s2=new Script(nullptr,func2,&pref,vars,threadData);	
 	}
 	else {
     vars[0]=obj->objectData[index].dynamicParameter;
 
-		ca1=new Calculate(NULL,func,&pref,vars);
-		ca2=new Calculate(NULL,func2,&pref,vars);
+		ca1=new Calculate(nullptr,func,&pref,vars);
+		ca2=new Calculate(nullptr,func2,&pref,vars);
 	}
 	for(int c=0; c<=PRECISION2D; c++)
 	{
@@ -1287,7 +1287,7 @@ void GraphOutput::processComplexFunction(ObjectInfo*obj,int index,ThreadSync*thr
 	QString num,num2;
 	bool oldcpref=pref.complex;
 	pref.complex=true;
-	Script ca1(NULL,func,&pref,vars,threadData);
+	Script ca1(nullptr,func,&pref,vars,threadData);
 	pref.complex=oldcpref;
 	struct timeval t1,t2;
 	Number result;
@@ -1299,7 +1299,7 @@ void GraphOutput::processComplexFunction(ObjectInfo*obj,int index,ThreadSync*thr
 	threadData->vars[0][0].type=NFLOAT;
   threadData->vars[0][0].fval=obj->objectData[index].dynamicParameter;
 	
-	gettimeofday(&t1,NULL);
+	gettimeofday(&t1,nullptr);
 	threadData->vars[25][0].type=NFLOAT;
   if(obj->type==GRAPHCOMP3D)
 	{
@@ -1324,7 +1324,7 @@ void GraphOutput::processComplexFunction(ObjectInfo*obj,int index,ThreadSync*thr
 		}
 	}
 
-	gettimeofday(&t2,NULL);
+	gettimeofday(&t2,nullptr);
 
 	int seconds,usecs;
 	seconds=t2.tv_sec-t1.tv_sec;
@@ -1576,7 +1576,7 @@ void GraphOutput::setPref(Preferences newPref)
 		backCursor=0;
 		backMap=new QPixmap*[BACKSTEPS];
 		for(int c=0; c<BACKSTEPS; c++)
-			backMap[c]=NULL;
+			backMap[c]=nullptr;
 		
 	}
 	currentSolvePrec=pref.solvePrec;
@@ -1653,7 +1653,7 @@ bool GraphOutput::updateFunctions(double oldXMin,double oldXMax)
         if(obj->logic)
         {
           Number result;
-          Script ca(NULL,obj->function,&pref,vars,threadData);
+          Script ca(nullptr,obj->function,&pref,vars,threadData);
           for(int c1=0; c1<steps; c1++)
           {
             threadData->vars[23][0].type=NFLOAT;
@@ -1665,7 +1665,7 @@ bool GraphOutput::updateFunctions(double oldXMin,double oldXMax)
           }
         }
         else {
-          Calculate ca(NULL,obj->function,&pref,vars);
+          Calculate ca(nullptr,obj->function,&pref,vars);
           for(int c1=0; c1<steps; c1++)
           {
             vars[23]=xStart+c1*xStep;
@@ -1679,8 +1679,8 @@ bool GraphOutput::updateFunctions(double oldXMin,double oldXMax)
 		{
 //			perror("xStart: "+QString::number(xStart)+" xStep: "+QString::number(xStep)+" shiftRight: "+QString::number(shiftRight)+" function: "+QString(objectInfo[c].function)); 
 
-			Calculate *ca1=NULL,*ca2=NULL;
-			Script*s1=NULL,*s2=NULL;
+			Calculate *ca1=nullptr,*ca2=nullptr;
+			Script*s1=nullptr,*s2=nullptr;
 			Number result;
 
       for(c=0; c<obj->dataLength; c++)
@@ -1693,12 +1693,12 @@ bool GraphOutput::updateFunctions(double oldXMin,double oldXMax)
         else vars[0]=obj->objectData[c].dynamicParameter;
         if(obj->logic)
         {
-          s1=new Script(NULL,obj->function,&pref,vars,threadData);
-          s2=new Script(NULL,obj->function2,&pref,vars,threadData);
+          s1=new Script(nullptr,obj->function,&pref,vars,threadData);
+          s2=new Script(nullptr,obj->function2,&pref,vars,threadData);
         }
         else {
-          ca1=new Calculate(NULL,obj->function,&pref,vars);
-          ca2=new Calculate(NULL,obj->function2,&pref,vars);
+          ca1=new Calculate(nullptr,obj->function,&pref,vars);
+          ca2=new Calculate(nullptr,obj->function2,&pref,vars);
         }
 
         if(obj->type == GRAPHIEG || obj->type == GRAPHIEL)
@@ -1837,7 +1837,7 @@ void GraphOutput::processFunction(QString function,QString function2, int type, 
 	else
 	{
     info->function=preprocessor(&function,&pref,false);
-    info->function2=NULL;
+    info->function2=nullptr;
   }
 
 	if(dynamic)
@@ -1856,7 +1856,7 @@ void GraphOutput::processFunction(QString function,QString function2, int type, 
     info->objectData[c].dynamicParameter=pref.dynamicStart+c*((pref.dynamicEnd-pref.dynamicStart)/(pref.dynamicSteps-1));
     info->objectData[c].processed=info->objectData[c].glCreated=false;
     info->objectData[c].coordinateLength=0;
-    info->objectData[c].coordinates=NULL;
+    info->objectData[c].coordinates=nullptr;
   }
   objectInfo.append(info);
 }
@@ -2213,7 +2213,7 @@ GLuint GraphOutput::generateGLList(ObjectInfo*obj,int index)
 				}
 			}
       delete[] obj->objectData[index].coordinates;
-      obj->objectData[index].coordinates=NULL;
+      obj->objectData[index].coordinates=nullptr;
       obj->objectData[index].coordinateLength=0;
       obj->objectData[index].processed=false;
 		}
@@ -2664,8 +2664,8 @@ void GraphOutput::generateTexture()
 		return;
 //	struct timeval t1,t2;
 //	int seconds,usecs;
-//	gettimeofday(&t1,NULL);
-//	gettimeofday(&t2,NULL);
+//	gettimeofday(&t1,nullptr);
+//	gettimeofday(&t2,nullptr);
 
 	
 //	seconds=t2.tv_sec-t1.tv_sec;
@@ -2764,7 +2764,7 @@ void GraphOutput::drawSlot(int state,QColor color,int pen)
 
 	if(state==DRAWCLEAR)
 	{
-		if(backMap[BACKSTEPS-1]!=NULL)
+		if(backMap[BACKSTEPS-1]!=nullptr)
 			delete backMap[BACKSTEPS-1];
 		for(int c=BACKSTEPS-1; c>0; c--)
 			backMap[c]=backMap[c-1];
@@ -2778,7 +2778,7 @@ void GraphOutput::drawSlot(int state,QColor color,int pen)
 	}
 	else if(state==DRAWBACK)
 	{
-		if(backCursor<BACKSTEPS && backMap[backCursor]!=NULL)
+		if(backCursor<BACKSTEPS && backMap[backCursor]!=nullptr)
 		{
 			QPixmap*tmp=drawMap;
 			drawMap=backMap[backCursor];
@@ -2877,7 +2877,7 @@ void GraphicsThread::run()
 {
 	if(index>=0)
     ((GraphOutput*)parent)->processGraph(obj,index,threadData,vars);
-	QCustomEvent *ev=new QCustomEvent(SIGTHREADSYNC);
+	QEvent *ev=new QEvent(SIGTHREADSYNC);
 	QApplication::postEvent(parent,ev);
 }
 

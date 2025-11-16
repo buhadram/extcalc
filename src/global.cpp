@@ -19,7 +19,7 @@ any later version.
 
 
 #ifndef CONSOLE
-#include <QCustomEvent>
+#include <QEvent>
 QString cleanConfigString(QString prefName,QString par)
 {
 	QString parameter=par;
@@ -255,7 +255,7 @@ QString formatOutput(Number num,Preferences*pref,ThreadSync*varData)
 //			ret+="(string)";
 			break;
 		case NVECTOR:
-			if(varData==NULL)
+			if(varData==nullptr)
 				ret=formatOutput((long double)num.ival,pref);
 			else {
 				if(num.ival<0 || num.ival >=VARNUM)
@@ -359,11 +359,11 @@ long double runCalc(QString line,Preferences*pref,Variable*vars)
 {
 
 	char*cleanString=preprocessor(&line,pref,false);
-	if(cleanString==NULL)
+	if(cleanString==nullptr)
 		return NAN;
 	else 
 	{
-		Calculate ca(NULL,cleanString,0,strlen(cleanString),pref,vars);
+		Calculate ca(nullptr,cleanString,0,strlen(cleanString),pref,vars);
 		double result= ca.calc();
 		free(cleanString);
 		return (long double)result;
@@ -479,7 +479,7 @@ char*checkString(QString input,Preferences*pref)
 {
 
 	if(input.length()<=0)
-		return NULL;
+		return nullptr;
 	
 	QString qstr=input;
 	qstr.replace("\xb2"+getUnicode(ROOTSTRING),"sqrt");
@@ -515,22 +515,22 @@ char*checkString(QString input,Preferences*pref)
 char* preprocessor(char*input,Preferences*pref,bool script)
 {
 	char*ret=removeComments(input);
-	if(ret==NULL)
-		return NULL;
+	if(ret==nullptr)
+		return nullptr;
 
 	if(script)
 	{
 		ret=preferencesPreprocessor(ret,pref);
-		if(ret==NULL)
-			return NULL;
+		if(ret==nullptr)
+			return nullptr;
 
 		ret=macroPreprocessor(ret);
-		if(ret==NULL)
-			return NULL;
+		if(ret==nullptr)
+			return nullptr;
 	}
 	ret=cleanString(ret,pref);
-	if(ret==NULL)
-		return NULL;
+	if(ret==nullptr)
+		return nullptr;
 		
 	return ret;	
 }
@@ -541,15 +541,15 @@ char* preprocessor(QString *input,Preferences*pref,bool script)
 	if(!script)
 		replaceConstants(input,pref);
 	char*ret=removeUnicode(input);
-	if(ret==NULL)
-		return NULL;
+	if(ret==nullptr)
+		return nullptr;
 	ret=preprocessor(ret,pref,script);
 	return ret;
 }
 char* removeUnicode(QString*input)
 {
 	if(input->length()<=0)
-		return NULL;
+		return nullptr;
 
 	QString qstr=*input;
 	qstr.replace("\xb2"+getUnicode(ROOTSTRING),"sqrt");
@@ -633,7 +633,7 @@ char* preferencesPreprocessor(char*code,Preferences*pref)
 {
 	int pos=0,startPos=0,endPos=0,len=strlen(code);
 	bool quote=false;
-	char*configString=NULL;
+	char*configString=nullptr;
 	
 	
 	while(pos<len)
@@ -690,7 +690,7 @@ char* preferencesPreprocessor(char*code,Preferences*pref)
 				int num=atoi(configString+12);
 				if(num>=2 && num<=pref->precision)
 					pref->outputLength=num;
-				else return NULL;
+				else return nullptr;
 			}
 #ifndef CONSOLE
 			else if(strncmp(configString,"gl",2)==0)
@@ -714,7 +714,7 @@ char* preferencesPreprocessor(char*code,Preferences*pref)
 			else if(strncmp(configString,"autoscaleoff",12)==0)
 				pref->autosize=false;
 #endif
-			else return NULL;
+			else return nullptr;
 			
 			memmove(&code[startPos],&code[endPos],len-endPos+1);
 			len=strlen(code);
@@ -725,7 +725,7 @@ char* preferencesPreprocessor(char*code,Preferences*pref)
 	}
 	
 	if(strlen(code)<=0)
-		return NULL;
+		return nullptr;
 	
 	return code;
 }
@@ -734,7 +734,7 @@ char* macroPreprocessor(char*code)
 {
 	int pos=0,startPos=0,endPos=0,len=strlen(code),macroLen=0,replacementLen=0;
 	bool quote=false,mQuote=false;
-	char*configString=NULL,*macro,*replacement;
+	char*configString=nullptr,*macro,*replacement;
 	
 	
 	while(pos<len)
@@ -754,7 +754,7 @@ char* macroPreprocessor(char*code)
 			
 			if(strncmp(&code[startPos],"#define",7)==0)
 				configStartPos+=7;
-			else return NULL;
+			else return nullptr;
 			
 			while(code[endPos]!='\n' && endPos<=len)
 				endPos++;
@@ -785,7 +785,7 @@ char* macroPreprocessor(char*code)
 			endPos=strlen(configString);
 			
 			if(endPos<=startPos)
-				return NULL;
+				return nullptr;
 			
 			replacement=(char*)malloc(endPos-startPos+1);
 			memcpy(replacement,&configString[startPos],endPos-startPos);
@@ -796,14 +796,14 @@ char* macroPreprocessor(char*code)
 			if(!((macro[0]>='a' && macro[0]<='z') ||
 						  (macro[0]>='A' && macro[0]<='Z') ||
 						  macro[0]=='_'))
-				return NULL;
+				return nullptr;
 			for(int c=1; c<macroLen; c++)
 			{
 				if(!((macro[c]>='a' && macro[c]<='z') ||
 								 (macro[c]>='A' && macro[c]<='Z') ||
 								 (macro[c]>='0' && macro[c]<='9') ||
 								 macro[c]=='_'))
-					return NULL;
+					return nullptr;
 			}
 			
 			if(strlen(macro)>0 && strlen(replacement)>0)
@@ -843,7 +843,7 @@ char* macroPreprocessor(char*code)
 	}
 	
 	if(strlen(code)<=0)
-		return NULL;
+		return nullptr;
 	
 	return code;
 	
@@ -857,7 +857,7 @@ char* cleanString(char*code,Preferences*pref)
 	for(unsigned int c=0; c<len; c++)
 	{
 		if(len<=0)
-			return NULL;
+			return nullptr;
 		
 		if(quote)
 		{
@@ -894,7 +894,7 @@ char* cleanString(char*code,Preferences*pref)
 							code[c]='\\';
 							break;
 						default:
-							return NULL;
+							return nullptr;
 					}
 					memmove(&code[c+1],&code[c+2],len-c-1);
 					c--;
@@ -917,7 +917,7 @@ char* cleanString(char*code,Preferences*pref)
 				{
 					if(code[c+1]=='\n')
 						memmove(&code[c],&code[c+2],len-c-1);
-					else return NULL;
+					else return nullptr;
 					c--;
 				}
 			}
@@ -929,7 +929,7 @@ char* cleanString(char*code,Preferences*pref)
 	for(unsigned int c=0; c<len; c++)
 	{
 		if(len <= 0)
-			return NULL;
+			return nullptr;
 		if(code[c]=='\"')
 			quote=!quote;
 		if(quote)
@@ -1009,7 +1009,7 @@ char* cleanString(char*code,Preferences*pref)
 	for(unsigned int c=0; c<len-1; c++)
 	{
 		if(len<=0)
-			return NULL;
+			return nullptr;
 		
 		if(quote)
 		{
@@ -1278,7 +1278,7 @@ char* checkStringAnsi(char* str,Preferences*pref)
 	for(int c=0; c<calcLen; c++)	//Step 1: remove whitespace, correct strings
 	{
 		if(calcLen <= 0)
-			return NULL;
+			return nullptr;
 		if(calcString[c]=='\"')
 			quote=!quote;
 		if(quote)
@@ -1321,7 +1321,7 @@ char* checkStringAnsi(char* str,Preferences*pref)
 					break;
 				}
 			if(pos==-1)
-				return NULL;
+				return nullptr;
 			else {
 				tmp=calcString;
 				calcString=strcut(calcString,c,pos-c);
@@ -1337,7 +1337,7 @@ char* checkStringAnsi(char* str,Preferences*pref)
 		}
 		if(calcString[c] == '\\')//reserved character
 		{
-			return NULL;
+			return nullptr;
 		}
 		calcLen=strlen(calcString);
 	}
@@ -1345,7 +1345,7 @@ char* checkStringAnsi(char* str,Preferences*pref)
 	for(int c=0; c<calcLen; c++)	//Step 2: replace special functions
 	{
 		if(calcLen <= 0)
-			return NULL;
+			return nullptr;
 		if(calcString[c]=='\"')
 			quote=!quote;
 		if(quote)
@@ -1606,7 +1606,7 @@ char* checkStringAnsi(char* str,Preferences*pref)
 	for(int c=0; c<calcLen-1; c++)		//Step 4: replace constants
 	{
 		if(calcLen <= 0)
-			return NULL;
+			return nullptr;
 		if(calcString[c]=='\"')
 			quote=!quote;
 		if(quote)
@@ -1746,7 +1746,7 @@ void convertToInt(Number*num)
 		case NBOOL:
 			num->ival=(long long)num->bval; break;
 		case NCHAR:
-			if(num->cval==NULL) 
+			if(num->cval==nullptr) 
 				num->ival=0;
 			else num->ival=(long long)num->cval[0]; break;
 		default:
@@ -1767,7 +1767,7 @@ void convertToBool(Number*num)
 		case NFLOAT:
 			num->bval=num->fval.real()!=0.0; break;
 		case NCHAR:
-			if(num->cval==NULL) 
+			if(num->cval==nullptr) 
 				num->bval=false;
 			else num->bval=(long long)num->cval[0]!=0; break;
 		default:
@@ -1785,10 +1785,10 @@ int Calculate::split(char* line, int start, int end)
 	operation=NONE;
 	number=NAN;
 	var=-1;
-	horzObj=NULL;
-	vertObj=NULL;
+	horzObj=nullptr;
+	vertObj=nullptr;
 	
-	if(line==NULL)
+	if(line==nullptr)
 		return -1;
 
 	int len=strlen(line);
@@ -2055,7 +2055,7 @@ int Calculate::split(char* line, int start, int end)
 		char*tmp=new char[end-start+1];
 		tmp[end-start]=(char)0;
 		memcpy(tmp,&line[start],end-start);
-		number=strtod(tmp,NULL);
+		number=strtod(tmp,nullptr);
 		delete[] tmp;
 		
 		if(number==NAN)
@@ -2075,11 +2075,11 @@ double Calculate::calc()
 	{
 		case NONE:
 		{
-			if(horzObj != NULL)
+			if(horzObj != nullptr)
 			{
 				return horzObj->calc();
 			}
-			else if(vertObj != NULL)
+			else if(vertObj != nullptr)
 			{
 				return vertObj->calc();
 			}
@@ -2094,11 +2094,11 @@ double Calculate::calc()
 		}
 		case PLUS:
 		{
-			if(vertObj != NULL && horzObj != NULL)
+			if(vertObj != nullptr && horzObj != nullptr)
 			{
 				return vertObj->calc()+horzObj->calc();
 			}
-			else if(horzObj != NULL)
+			else if(horzObj != nullptr)
 			{
 				return horzObj->calc();
 			}
@@ -2108,11 +2108,11 @@ double Calculate::calc()
 		}
 		case MINUS:
 		{
-			if(vertObj != NULL && horzObj != NULL)
+			if(vertObj != nullptr && horzObj != nullptr)
 			{
 				return vertObj->calc()-horzObj->calc();
 			}
-			else if(horzObj != NULL)
+			else if(horzObj != nullptr)
 			{
 				return (double)-1.0*horzObj->calc();
 			}
@@ -2166,10 +2166,10 @@ double Calculate::calc()
 		{
 			double savedX=vars[23];
 			double point;
-			if(vertObj!= NULL)
+			if(vertObj!= nullptr)
 				point=vertObj->calc();
 			else return NAN;
-			if(horzObj == NULL)
+			if(horzObj == nullptr)
 				return NAN;
 			double step=(point*1e-6);
 			if(step<1e-6)
@@ -2187,7 +2187,7 @@ double Calculate::calc()
 		{
 			double savedX=vars[23];
 			double complete=(double)0.0;
-			if(vertObj == NULL || horzObj == NULL)
+			if(vertObj == nullptr || horzObj == nullptr)
 				return NAN;
 			double start=vertObj->calcHorzObj();
 			double end=vertObj->calcVertObj();
@@ -2265,14 +2265,14 @@ double Calculate::calc()
 
 double Calculate::calcVertObj()
 {
-	if(vertObj != NULL)
+	if(vertObj != nullptr)
 		return vertObj->calc();
 	else return NAN;
 }
 
 double Calculate::calcHorzObj()
 {
-	if(horzObj != NULL)
+	if(horzObj != nullptr)
 		return horzObj->calc();
 	else return NAN;
 }
@@ -2282,19 +2282,19 @@ int Script::split(char*line,int start,int end)
 {
 	bool init=false;
 	int rest;
-	if(parent==NULL)
+	if(parent==nullptr)
 	{
 		value.type=NNONE;
 		rest=start;
 		init=true;
-		parse(NULL,0,0);
+		parse(nullptr,0,0);
 		operation=SINIT;
 	}
 	else rest=parse(line,start,end);
 
 	if(rest!=-1)
 	{
-		horzObj=new Script(this,NULL,0,0,pref,vars,eventReciver);
+		horzObj=new Script(this,nullptr,0,0,pref,vars,eventReciver);
 		horzObj->split(line,rest,end);
 	}
 	return 0;
@@ -2305,7 +2305,7 @@ int Script::parse(char* line,int start,int end)
 {
 
 	static int semicolonCount=0;
-	if(line==NULL)
+	if(line==nullptr)
 	{
 		semicolonCount=0;
 		return -1;
@@ -2347,7 +2347,7 @@ int Script::parse(char* line,int start,int end)
 		}
 		vertObj=new Script(this,line,start+3,pos2,pref,vars,eventReciver);
 
-		vertObj2=new Script(this,NULL,0,0,pref,vars,eventReciver);
+		vertObj2=new Script(this,nullptr,0,0,pref,vars,eventReciver);
 		int rest=vertObj2->parse(line,pos2+1,end);
 		if(rest==-1)
 		{
@@ -2358,7 +2358,7 @@ int Script::parse(char* line,int start,int end)
 		if(strncmp(line+rest,"else",4)==0)
 		{
 			operation=SIFELSE;
-			vertObj3=new Script(this,NULL,pref,vars,eventReciver);
+			vertObj3=new Script(this,nullptr,pref,vars,eventReciver);
 			rest=vertObj3->parse(line,rest+4,end);
 		}
 		else operation=SIF;
@@ -2383,7 +2383,7 @@ int Script::parse(char* line,int start,int end)
 		}
 
 		vertObj=new Script(this,line,start+6,pos2,pref,vars,eventReciver);
-		vertObj2=new Script(this,NULL,0,0,pref,vars,eventReciver);
+		vertObj2=new Script(this,nullptr,0,0,pref,vars,eventReciver);
 		int rest=vertObj2->parse(line,pos2+1,end);
 
 		return rest;
@@ -2412,7 +2412,7 @@ int Script::parse(char* line,int start,int end)
 		semicolonCount++;
 		if(pos3-pos2>1)
 			vertObj2=new Script(this,line,pos2+1,pos3,pref,vars,eventReciver);
-		else vertObj2=NULL;
+		else vertObj2=nullptr;
 		semicolonCount++;
 
 
@@ -2426,7 +2426,7 @@ int Script::parse(char* line,int start,int end)
 			return -1;
 		}
 
-		vertObj4=new Script(this,NULL,pref,vars,eventReciver);
+		vertObj4=new Script(this,nullptr,pref,vars,eventReciver);
 		return vertObj4->parse(line,pos4+1,end);
 	}
 	else if(line[start] == '{')
@@ -2439,7 +2439,7 @@ int Script::parse(char* line,int start,int end)
 			operation=SFAIL;
 			return -1;
 		}
-		vertObj=new Script(this,NULL,pref,vars,eventReciver);
+		vertObj=new Script(this,nullptr,pref,vars,eventReciver);
 		vertObj->split(line,start+1,pos1);
 		if(pos1==end)
 			return -1;
@@ -2452,7 +2452,7 @@ int Script::parse(char* line,int start,int end)
 
 		if(pos1>start)
 			vertObj=new Script(this,line,start,pos1,pref,vars,eventReciver);
-		else vertObj=NULL;
+		else vertObj=nullptr;
 		semicolonCount++;
 
 		if(pos1<end-1)
@@ -2605,7 +2605,7 @@ int Script::parse(char* line,int start,int end)
 		if(pos1<start+1)
 		{
 			operation=PLUS;
-			vertObj=NULL;
+			vertObj=nullptr;
 		}
 		else if(end-pos1<2)
 			printError("Second operand of + invalid",semicolonCount,eventReciver);
@@ -2629,7 +2629,7 @@ int Script::parse(char* line,int start,int end)
 		if(pos1<start+1)
 		{
 			operation=MINUS;
-			vertObj=NULL;
+			vertObj=nullptr;
 		}
 		else if(end-pos1<2)
 			printError("Second operand of - invalid",semicolonCount,eventReciver);
@@ -3749,7 +3749,7 @@ int Script::parse(char* line,int start,int end)
 			}
 			if(pos1-3<=start && end-pos1-2<=0)
 			{
-				vertObj=vertObj2=NULL;
+				vertObj=vertObj2=nullptr;
 			}
 			else {
 				vertObj=new Script(this,line,start+2,pos1-1,pref,vars,eventReciver);
@@ -3879,13 +3879,13 @@ double Script::calc()
 
 double Script::calcVertObj()
 {
-	if(vertObj != NULL)
+	if(vertObj != nullptr)
 		return vertObj->calc();
 	else return NAN;
 }
 double Script::calcHorzObj()
 {
-	if(horzObj != NULL)
+	if(horzObj != nullptr)
 		return horzObj->calc();
 	else return NAN;
 }
@@ -3925,9 +3925,9 @@ Number Script::exec()
 	{
 		case SSEMICOLON:
 		{
-			if(vertObj!=NULL)
+			if(vertObj!=nullptr)
 				value=vertObj->exec();
-			if(horzObj!=NULL)
+			if(horzObj!=nullptr)
 			{
 				return value=horzObj->exec();
 			}
@@ -3958,7 +3958,7 @@ Number Script::exec()
 			if(eventReciver->vars[var][0].type==NCHAR && eventReciver->numlen[var]==1)
 			{
 				value.type=NINT;
-				if(eventReciver->vars[var][0].cval!=NULL && (signed)strlen(eventReciver->vars[var][0].cval)>index)
+				if(eventReciver->vars[var][0].cval!=nullptr && (signed)strlen(eventReciver->vars[var][0].cval)>index)
 					value.ival=(long long)eventReciver->vars[var][0].cval[index];
 				else value.ival=0;
 				return value;
@@ -3978,7 +3978,7 @@ Number Script::exec()
 		}
 		case SMATRIX:
 		{
-			if(vertObj==NULL && vertObj2==NULL)
+			if(vertObj==nullptr && vertObj2==nullptr)
 			{
 				value.type=NMATRIX;
 				value.ival=var;
@@ -4003,7 +4003,7 @@ Number Script::exec()
 			if(index<eventReciver->numlen[var] && eventReciver->vars[var][index].type==NCHAR)
 			{
 				value.type=NINT;
-				if(eventReciver->vars[var][index].cval!=NULL && (signed)strlen(eventReciver->vars[var][index].cval)>index2)
+				if(eventReciver->vars[var][index].cval!=nullptr && (signed)strlen(eventReciver->vars[var][index].cval)>index2)
 					value.ival=(long long)eventReciver->vars[var][index].cval[index2];
 				else value.ival=0;
 				return value;
@@ -4017,7 +4017,7 @@ Number Script::exec()
 		}
 		case PLUS:
 		{
-			if(vertObj!=NULL)
+			if(vertObj!=nullptr)
 				value=vertObj->exec();
 			else {
 				value.type=NFLOAT;
@@ -4032,7 +4032,7 @@ Number Script::exec()
 				
 				eventReciver->vars[27]= (Number*)malloc(sizeof(Number));
 				eventReciver->vars[27][0].type=NNONE;
-				eventReciver->vars[27][0].cval=NULL;
+				eventReciver->vars[27][0].cval=nullptr;
 				eventReciver->dimension[27][0]=eventReciver->dimension[27][1]=eventReciver->numlen[27]=1;
 				n=vertObj2->exec();
 				
@@ -4198,7 +4198,7 @@ Number Script::exec()
 		case MINUS:
 		{
 			Number n;
-			if(vertObj!=NULL)
+			if(vertObj!=nullptr)
 				value=vertObj->exec();
 			else
 			{
@@ -4212,7 +4212,7 @@ Number Script::exec()
 				
 				eventReciver->vars[27]= (Number*)malloc(sizeof(Number));
 				eventReciver->vars[27][0].type=NNONE;
-				eventReciver->vars[27][0].cval=NULL;
+				eventReciver->vars[27][0].cval=nullptr;
 				eventReciver->dimension[27][0]=eventReciver->dimension[27][1]=eventReciver->numlen[27]=1;
 				n=vertObj2->exec();
 				
@@ -4411,7 +4411,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)==0);
 					else value.bval=false;
 				}
@@ -4430,7 +4430,7 @@ Number Script::exec()
 			value=vertObj->exec();
 
 
-			if(vertObj2!=NULL)
+			if(vertObj2!=nullptr)
 			{
 				Number nIndex=vertObj2->exec();
 				if(nIndex.type==NBOOL)
@@ -4442,7 +4442,7 @@ Number Script::exec()
 				if(index<0)
 					index=0;
 				
-				if(vertObj3==NULL && eventReciver->vars[var][0].type==NCHAR && value.type!=NCHAR && eventReciver->numlen[var]==1)
+				if(vertObj3==nullptr && eventReciver->vars[var][0].type==NCHAR && value.type!=NCHAR && eventReciver->numlen[var]==1)
 				{
 					charOperation=true;
 					newlen=1;
@@ -4455,7 +4455,7 @@ Number Script::exec()
 					newlen=index+1;
 				}
 			}
-			if(vertObj3!=NULL)
+			if(vertObj3!=nullptr)
 			{
 				Number nIndex=vertObj3->exec();
 				if(nIndex.type==NBOOL)
@@ -4500,7 +4500,7 @@ Number Script::exec()
 				int oldEffIndex,newEffIndex;
 				Number nullNum;
 				nullNum.type=NONE;
-				nullNum.cval=NULL;
+				nullNum.cval=nullptr;
 				
 				for(int c=oldDimension2-1; c>=1; c--)
 				{
@@ -4524,7 +4524,7 @@ Number Script::exec()
 				
 				convertToInt(&value);
 				
-				if(eventReciver->vars[var][index].cval==NULL)
+				if(eventReciver->vars[var][index].cval==nullptr)
 					eventReciver->vars[var][index].cval=(char*)calloc(index2+2,1);
 				else if((signed)strlen(eventReciver->vars[var][index].cval)<index2+1)
 				{
@@ -4549,10 +4549,10 @@ Number Script::exec()
 					eventReciver->vars[var][effIndex].cval=value.cval; eventReciver->vars[var][effIndex].type=NBOOL; break;
 				case NCHAR:
 //					perror("effIndex: "+QString::number(effIndex)+" source text: "+QString(value.cval));
-					if(value.cval==NULL)
-						eventReciver->vars[var][effIndex].cval=NULL;
+					if(value.cval==nullptr)
+						eventReciver->vars[var][effIndex].cval=nullptr;
 					else {
-						if(eventReciver->vars[var][effIndex].cval==NULL)
+						if(eventReciver->vars[var][effIndex].cval==nullptr)
 							eventReciver->vars[var][effIndex].cval=(char*)malloc(strlen(value.cval)+1);
 						else eventReciver->vars[var][effIndex].cval=(char*)realloc(eventReciver->vars[var][effIndex].cval,strlen(value.cval)+1);
 						strcpy(eventReciver->vars[var][effIndex].cval,value.cval);
@@ -4585,7 +4585,7 @@ Number Script::exec()
 			else if(value.type==NFLOAT)
 				if(value.fval.real()!=0.0)
 					value=vertObj2->exec();
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
@@ -4606,7 +4606,7 @@ Number Script::exec()
 				else value=vertObj3->exec();
 			else value=vertObj3->exec();
 			
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
@@ -4647,17 +4647,17 @@ Number Script::exec()
 					}
 				}
 			}
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SFOR:
 		{
-			if(vertObj3!=NULL)
+			if(vertObj3!=nullptr)
 			{
 				for(vertObj->exec();;vertObj3->exec())
 				{
-					if(vertObj2!=NULL)
+					if(vertObj2!=nullptr)
 					{
 						value=vertObj2->exec();
 						if(value.type==NBOOL)
@@ -4691,7 +4691,7 @@ Number Script::exec()
 			else {
 				for(vertObj->exec();;)
 				{
-					if(vertObj2!=NULL)
+					if(vertObj2!=nullptr)
 					{
 						value=vertObj2->exec();
 						if(value.type==NBOOL)
@@ -4722,7 +4722,7 @@ Number Script::exec()
 					}
 				}
 			}
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
@@ -4768,7 +4768,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)!=0);
 					else value.bval=true;
 				}
@@ -4819,7 +4819,7 @@ Number Script::exec()
 				
 				eventReciver->vars[27]= (Number*)malloc(sizeof(Number));
 				eventReciver->vars[27][0].type=NNONE;
-				eventReciver->vars[27][0].cval=NULL;
+				eventReciver->vars[27][0].cval=nullptr;
 				eventReciver->dimension[27][0]=eventReciver->dimension[27][1]=eventReciver->numlen[27]=1;
 				n=vertObj2->exec();
 				
@@ -4893,7 +4893,7 @@ Number Script::exec()
 					for(int c=0; c<3;c++)
 					{
 						eventReciver->vars[27][c].type=NFLOAT;
-						eventReciver->vars[27][c].cval=NULL;
+						eventReciver->vars[27][c].cval=nullptr;
 						convertToFloat(&eventReciver->vars[index1][c]);
 						convertToFloat(&eventReciver->vars[index2][c]);
 					}
@@ -5073,7 +5073,7 @@ Number Script::exec()
 		}
 		case SPRINT:
 		{
-			char*eventContent=NULL;
+			char*eventContent=nullptr;
 			value=vertObj->exec();
 			switch(value.type)
 			{
@@ -5171,7 +5171,7 @@ Number Script::exec()
 			}
 
 #ifndef CONSOLE
-			QCustomEvent *ev=new QCustomEvent(SIGPRINT);
+			QEvent *ev=new QEvent(SIGPRINT);
 			ev->setData(eventContent);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -5182,15 +5182,15 @@ Number Script::exec()
 			free(eventContent);
 #endif
 
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 #ifndef CONSOLE
 		case SDRAW:
 		{
-			QCustomEvent *ev=new QCustomEvent(SIGDRAW);
-			char*eventContent=NULL;
+			QEvent *ev=new QEvent(SIGDRAW);
+			char*eventContent=nullptr;
 			int arg;
 			switch(var)
 			{
@@ -5283,7 +5283,7 @@ Number Script::exec()
 		{
 			if(var==0)
 			{
-				QCustomEvent *ev=new QCustomEvent(SIGCALLLIST);
+				QEvent *ev=new QEvent(SIGCALLLIST);
 				value=vertObj->exec();
 				convertToInt(&value);
 				int num=value.ival;
@@ -5297,7 +5297,7 @@ Number Script::exec()
 			}
 			else if(var==1)
 			{
-				QCustomEvent *ev=new QCustomEvent(SIGSTARTLIST);
+				QEvent *ev=new QEvent(SIGSTARTLIST);
 				QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 				eventReciver->eventCount++;
 				if(eventReciver->eventCount>200)
@@ -5305,15 +5305,15 @@ Number Script::exec()
 			}
 			else if(var==2)
 			{
-				eventReciver->data=NULL;
-				QCustomEvent*ev=new QCustomEvent(SIGENDLIST);
+				eventReciver->data=nullptr;
+				QEvent*ev=new QEvent(SIGENDLIST);
 				qApp->lock();
 				QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 				eventReciver->eventCount++;
 				if(eventReciver->eventCount>200)
 					eventReciver->status=1;
 				qApp->unlock();
-				while(eventReciver->data==NULL)
+				while(eventReciver->data==nullptr)
 				{
 					if(eventReciver->status)
 						if(eventReciver->exit)
@@ -5334,14 +5334,14 @@ Number Script::exec()
 		}
 		case SGRAPHCONTROL:
 		{
-			QCustomEvent *ev;
+			QEvent *ev;
 			if(var==0)
-				ev=new QCustomEvent(SIGGRAPHSHOW);
+				ev=new QEvent(SIGGRAPHSHOW);
 			else if(var==1)
-				ev=new QCustomEvent(SIGGRAPHCLEAR);
+				ev=new QEvent(SIGGRAPHCLEAR);
 			else if(var==2)
-				ev=new QCustomEvent(SIGGRAPHEND);
-			else ev=new QCustomEvent(SIGIDENTITY);
+				ev=new QEvent(SIGGRAPHEND);
+			else ev=new QEvent(SIGIDENTITY);
 			
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -5352,7 +5352,7 @@ Number Script::exec()
 		}
 		case SGRAPHPAINT:
 		{
-			QCustomEvent *ev=new QCustomEvent(SIGGRAPHBEGIN);
+			QEvent *ev=new QEvent(SIGGRAPHBEGIN);
 			int*eventContent=(int*)malloc(sizeof(int));
 			*eventContent=(int)value.ival;
 			ev->setData(eventContent);
@@ -5365,7 +5365,7 @@ Number Script::exec()
 		}
 		case SGRAPHVERTEX:
 		{
-			QCustomEvent *ev=new QCustomEvent(SIGGRAPHVERTEX);
+			QEvent *ev=new QEvent(SIGGRAPHVERTEX);
 			double*eventContent=(double*)malloc(sizeof(double)*3);
 			value=vertObj->exec();
 			convertToFloat(&value);
@@ -5386,7 +5386,7 @@ Number Script::exec()
 		}
 		case SGRAPHTRANSFORM:
 		{
-			QCustomEvent *ev;
+			QEvent *ev;
 			double*eventContent=(double*)malloc(sizeof(double)*4);
 			value=vertObj->exec();
 			convertToFloat(&value);
@@ -5402,11 +5402,11 @@ Number Script::exec()
 				value=vertObj4->exec();
 				convertToFloat(&value);
 				eventContent[3]=(double)value.fval.real();
-				ev=new QCustomEvent(SIGGRAPHROTATE);
+				ev=new QEvent(SIGGRAPHROTATE);
 			}
 			else if(var==1)
-				ev=new QCustomEvent(SIGGRAPHTRANSLATE);
-			else ev=new QCustomEvent(SIGGRAPHSCALE);
+				ev=new QEvent(SIGGRAPHTRANSLATE);
+			else ev=new QEvent(SIGGRAPHSCALE);
 
 			ev->setData(eventContent);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
@@ -5417,7 +5417,7 @@ Number Script::exec()
 		}
 		case SGRAPHCOLOR:
 		{
-			QCustomEvent *ev=new QCustomEvent(SIGGRAPHCOLOR);
+			QEvent *ev=new QEvent(SIGGRAPHCOLOR);
 			int*eventContent=(int*)malloc(sizeof(int)*3);
 			value=vertObj->exec();
 			convertToInt(&value);
@@ -5450,7 +5450,7 @@ Number Script::exec()
 		}
 		case SGRAPHTEXT:
 		{
-			QCustomEvent *ev=new QCustomEvent(SIGGRAPHTEXT);
+			QEvent *ev=new QEvent(SIGGRAPHTEXT);
 			char*eventContent;
 			
 			value=vertObj4->exec();
@@ -5525,7 +5525,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)<0);
 					else value.bval=false;
 				}
@@ -5579,7 +5579,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)>0);
 					else value.bval=false;
 				}
@@ -5634,7 +5634,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)<=0);
 					else value.bval=false;
 				}
@@ -5689,7 +5689,7 @@ Number Script::exec()
 			{
 				if(n2.type==NCHAR)
 				{
-					if(n1.cval!=NULL && n2.cval!=NULL)
+					if(n1.cval!=nullptr && n2.cval!=nullptr)
 						value.bval=(strcmp(n1.cval,n2.cval)>=0);
 					else value.bval=false;
 				}
@@ -6144,9 +6144,9 @@ Number Script::exec()
 							value.fval=Complex((long double)n.ival,0.0);
 							break;
 						case NCHAR:
-							if(n.cval==NULL || strlen(n.cval)<=0)
+							if(n.cval==nullptr || strlen(n.cval)<=0)
 								value.fval=Complex(NAN,0.0);
-							else value.fval=Complex(strtold(n.cval,NULL),0.0);
+							else value.fval=Complex(strtold(n.cval,nullptr),0.0);
 							break;
 						case NBOOL:
 							value.fval=Complex(n.bval,0.0);
@@ -6171,7 +6171,7 @@ Number Script::exec()
 								value.bval=true;
 							else if(strcmp(n.cval,"false")==0)
 								value.bval=false;
-							else value.bval=!(!((bool)strtoll(n.cval,NULL,10)));
+							else value.bval=!(!((bool)strtoll(n.cval,nullptr,10)));
 							break;
 						case NBOOL:
 							value.bval=n.bval;
@@ -6443,7 +6443,7 @@ Number Script::exec()
 		}
 		case SRUN:
 		{
-			if(eventReciver->subprograms[var]!=NULL)
+			if(eventReciver->subprograms[var]!=nullptr)
 				return ((Script*)eventReciver->subprograms[var])->exec();
 			else 
 			{
@@ -6467,7 +6467,7 @@ Number Script::exec()
 		case SSTOP:
 		{
 #ifndef CONSOLE
-			QCustomEvent*killEvent=new QCustomEvent(SIGFINISHED);
+			QEvent*killEvent=new QEvent(SIGFINISHED);
 			QCoreApplication::postEvent(eventReciver->eventReciver,killEvent);
 			pthread_exit(0);
 #else 
@@ -6500,7 +6500,7 @@ Number Script::exec()
 				
 				eventReciver->vars[27]= (Number*)malloc(sizeof(Number));
 				eventReciver->vars[27][0].type=NNONE;
-				eventReciver->vars[27][0].cval=NULL;
+				eventReciver->vars[27][0].cval=nullptr;
 				eventReciver->dimension[27][0]=eventReciver->dimension[27][1]=eventReciver->numlen[27]=1;
 				n=vertObj2->exec();
 				
@@ -6537,7 +6537,7 @@ Number Script::exec()
 		case SFREAD:
 		{
 			value=vertObj->exec();
-			if(value.type!=NCHAR || value.cval==NULL || value.cval[0]==(char)0)
+			if(value.type!=NCHAR || value.cval==nullptr || value.cval[0]==(char)0)
 			{
 				value.type=NNONE;
 				return value;
@@ -6546,8 +6546,8 @@ Number Script::exec()
 #ifndef CONSOLE
 			char*eventContent=(char*)malloc(pathlen+1);
 			memcpy(eventContent,value.cval,pathlen+1);
-			eventReciver->data=NULL;
-			QCustomEvent*fileEvent=new QCustomEvent(SIGFILEREAD);
+			eventReciver->data=nullptr;
+			QEvent*fileEvent=new QEvent(SIGFILEREAD);
 			fileEvent->setData(eventContent);
 
 			QCoreApplication::postEvent(eventReciver->eventReciver,fileEvent);
@@ -6555,7 +6555,7 @@ Number Script::exec()
 			if(eventReciver->eventCount>200)
 				eventReciver->status=1;
 
-			while(eventReciver->data==NULL)
+			while(eventReciver->data==nullptr)
 			{
 				if(eventReciver->status)
 					if(eventReciver->exit)
@@ -6577,18 +6577,18 @@ Number Script::exec()
 			if(strlen(value.cval)>0 && lstat(value.cval,&fileStat)==0)
 			{
 				f=fopen(value.cval,"r");
-				if(f!=NULL && fileStat.st_size>0 && S_ISREG(fileStat.st_mode))
+				if(f!=nullptr && fileStat.st_size>0 && S_ISREG(fileStat.st_mode))
 				{
 					fileData=new char[fileStat.st_size+1];
 					fileData[fileStat.st_size]=(char)0;
 					fread(fileData,fileStat.st_size,1,f);
 					fclose(f);
 				}
-				else fileData=NULL;
+				else fileData=nullptr;
 			}
-			else fileData=NULL;
+			else fileData=nullptr;
 				
-			if(fileData==NULL)
+			if(fileData==nullptr)
 				value.cval[0]=(char)0;
 			else {
 				free(value.cval);
@@ -6602,7 +6602,7 @@ Number Script::exec()
 		case SFAPPEND:
 		{
 			value=vertObj->exec();
-			if(value.type!=NCHAR || value.cval==NULL)
+			if(value.type!=NCHAR || value.cval==nullptr)
 			{
 				value.type=NNONE;
 				return value;
@@ -6623,7 +6623,7 @@ Number Script::exec()
 				strcpy(&eventContent[pathlen+1],n.cval);
 			}
 #ifndef CONSOLE
-			QCustomEvent *ev=new QCustomEvent(SIGFILEAPPEND);
+			QEvent *ev=new QEvent(SIGFILEAPPEND);
 			ev->setData(eventContent);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -6636,7 +6636,7 @@ Number Script::exec()
 			if(strlen(value.cval)>0)
 			{
 				f=fopen(value.cval,"a");
-				if(f!=NULL)
+				if(f!=nullptr)
 				{
 					int dataLen=strlen(&((char*)eventContent)[pathlen+1]);
 					fwrite(&((char*)eventContent)[pathlen+1],dataLen,1,f);
@@ -6673,7 +6673,7 @@ Number Script::exec()
 			}
 			
 #ifndef CONSOLE
-			QCustomEvent *ev=new QCustomEvent(SIGFILEWRITE);
+			QEvent *ev=new QEvent(SIGFILEWRITE);
 			ev->setData(eventContent);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -6686,7 +6686,7 @@ Number Script::exec()
 			if(strlen(value.cval)>0)
 			{
 				f=fopen(value.cval,"w");
-				if(f!=NULL)
+				if(f!=nullptr)
 				{
 					int dataLen=strlen(&((char*)eventContent)[pathlen+1]);
 					fwrite(&((char*)eventContent)[pathlen+1],dataLen,1,f);
@@ -6702,7 +6702,7 @@ Number Script::exec()
 		case SFREMOVE:
 		{
 			value=vertObj->exec();
-			if(value.type!=NCHAR || value.cval==NULL)
+			if(value.type!=NCHAR || value.cval==nullptr)
 			{
 				value.type=NNONE;
 				return value;
@@ -6710,7 +6710,7 @@ Number Script::exec()
 #ifndef CONSOLE
 			char*eventContent=(char*)malloc(strlen(value.cval)+1);
 			strcpy(eventContent,value.cval);
-			QCustomEvent *ev=new QCustomEvent(SIGFILEREMOVE);
+			QEvent *ev=new QEvent(SIGFILEREMOVE);
 			ev->setData(eventContent);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -6733,7 +6733,7 @@ Number Script::exec()
 			{
 				usleep(sleeptime);
 			}
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
@@ -6751,7 +6751,7 @@ Number Script::exec()
 			
 			
 #ifndef CONSOLE
-			QCustomEvent *ev=new QCustomEvent(SIGSETTEXTPOS);
+			QEvent *ev=new QEvent(SIGSETTEXTPOS);
 			ev->setData(coords);
 			QCoreApplication::postEvent(eventReciver->eventReciver,ev);
 			eventReciver->eventCount++;
@@ -6761,14 +6761,14 @@ Number Script::exec()
 			fprintf(stderr,"\033[%i;%iH",coords[1]+1,coords[0]+1);
 #endif
 
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SCLEARTEXT:
 		{
 #ifndef CONSOLE
-			QCustomEvent*clearEvent=new QCustomEvent(SIGCLEARTEXT);
+			QEvent*clearEvent=new QEvent(SIGCLEARTEXT);
 			QCoreApplication::postEvent(eventReciver->eventReciver,clearEvent);
 			eventReciver->eventCount++;
 			if(eventReciver->eventCount>200)
@@ -6778,22 +6778,22 @@ Number Script::exec()
 			fprintf(stderr,"\033[1;1H");
 #endif
 
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SGETKEY:
 		{
 #ifndef CONSOLE
-			eventReciver->data=NULL;
-			QCustomEvent*clearEvent=new QCustomEvent(SIGGETKEY);
+			eventReciver->data=nullptr;
+			QEvent*clearEvent=new QEvent(SIGGETKEY);
 
 			QCoreApplication::postEvent(eventReciver->eventReciver,clearEvent);
 			eventReciver->eventCount++;
 			if(eventReciver->eventCount>200)
 				eventReciver->status=1;
 
-			while(eventReciver->data==NULL)
+			while(eventReciver->data==nullptr)
 			{
 				if(eventReciver->status)
 					if(eventReciver->exit)
@@ -6809,22 +6809,22 @@ Number Script::exec()
 #else 
 			value.cval[0]=(char)getchar();
 #endif
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SKEYSTATE:
 		{
 #ifndef CONSOLE
-			eventReciver->data=NULL;
-			QCustomEvent*clearEvent=new QCustomEvent(SIGKEYSTATE);
+			eventReciver->data=nullptr;
+			QEvent*clearEvent=new QEvent(SIGKEYSTATE);
 
 			QCoreApplication::postEvent(eventReciver->eventReciver,clearEvent);
 			eventReciver->eventCount++;
 			if(eventReciver->eventCount>200)
 				eventReciver->status=1;
 
-			while(eventReciver->data==NULL)
+			while(eventReciver->data==nullptr)
 			{
 				if(eventReciver->status)
 					if(eventReciver->exit)
@@ -6863,22 +6863,22 @@ Number Script::exec()
 			if(tcsetattr(fileno(stdout),TCSANOW,&terminfo)!=0)
 				perror("tcsetattr fehler");
 #endif
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SGETLINE:
 		{
 #ifndef CONSOLE
-			eventReciver->data=NULL;
-			QCustomEvent*clearEvent=new QCustomEvent(SIGGETLINE);
+			eventReciver->data=nullptr;
+			QEvent*clearEvent=new QEvent(SIGGETLINE);
 
 			QCoreApplication::postEvent(eventReciver->eventReciver,clearEvent);
 			eventReciver->eventCount++;
 			if(eventReciver->eventCount>200)
 				eventReciver->status=1;
 
-			while(eventReciver->data==NULL)
+			while(eventReciver->data==nullptr)
 			{
 				if(eventReciver->status)
 					if(eventReciver->exit)
@@ -6916,17 +6916,17 @@ Number Script::exec()
 			free(input);			
 			
 #endif
-			if(horzObj==NULL)
+			if(horzObj==nullptr)
 				return value;
 			else return horzObj->exec();
 		}
 		case SINIT:
 		{
 
-			if(horzObj!=NULL)
+			if(horzObj!=nullptr)
 				value=horzObj->exec();
 #ifndef CONSOLE
-			QCustomEvent*killEvent=new QCustomEvent(SIGFINISHED);
+			QEvent*killEvent=new QEvent(SIGFINISHED);
 			QCoreApplication::postEvent(eventReciver->eventReciver,killEvent);
 #endif
 			return value;
@@ -6943,14 +6943,14 @@ Number Script::exec()
 
 Number Script::execVertObj()
 {
-	if(vertObj != NULL)
+	if(vertObj != nullptr)
 		return vertObj->exec();
 	else return value;
 }
 
 Number Script::execHorzObj()
 {
-	if(horzObj != NULL)
+	if(horzObj != nullptr)
 		return horzObj->exec();
 	else return value;
 }
@@ -6961,7 +6961,7 @@ bool Script::resizeVar(int var,int newlen)
 	for(int c=eventReciver->numlen[var]; c<newlen; c++)
 	{
 		eventReciver->vars[var][c].type=NNONE;
-		eventReciver->vars[var][c].cval=NULL;
+		eventReciver->vars[var][c].cval=nullptr;
 	}
 				
 	eventReciver->numlen[var]=newlen;
@@ -7134,7 +7134,7 @@ void printError(const char*string,int semicolonCount,ThreadSync*data)
 #else
 void printError(const char*text,int num,ThreadSync*eventReciver)
 {
-		QCustomEvent*debugEvent=new QCustomEvent(SIGDEBUG);
+		QEvent*debugEvent=new QEvent(SIGDEBUG);
 		char*debugData=(char*)malloc(strlen(text)+5);
 		memcpy(debugData,&num,4);
 		memcpy(&debugData[4],text,strlen(text)+1);

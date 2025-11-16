@@ -26,23 +26,23 @@ any later version.
 #include <QWheelEvent>
 
 
-ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(parent,p,va,NULL,true)
+ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(parent,p,va,nullptr,true)
 {
 //		pref=p;
 //		vars=va;
 //		menuBottom=mB;
 //		maximized=true;
 	currentTextChanged=false;
-	activeFileItem=NULL;
-	clickedFileItem=NULL;
+	activeFileItem=nullptr;
+	clickedFileItem=nullptr;
 
 //		standardButtons=new StandardButtons(this);void scriptSlot(QString*code);
 //		extButtons=new ExtButtons(this);
 	catalog=new Catalog(CATMATHSTD | CATMATHCOMPLEX | CATMATRIX | CATMATHLOGIC | CATSCRIPT,this);
 	splitter=new QSplitter(Qt::Horizontal,this);
-	fileBrowser=new Q3ListView(splitter);
+	fileBrowser=new QListWidget(splitter);
 	lineNumbers=new LineNumberView(splitter);
-	editor=new Q3TextEdit(splitter);
+	editor=new QTextEdit(splitter);
 
 
 	setMainWidget(splitter);
@@ -51,10 +51,10 @@ ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(
 	setDockArea(1);
 
 
-	fileBrowserMenu=new Q3PopupMenu(fileBrowser);
+	fileBrowserMenu=new QMenu(fileBrowser);
 	modifiedIcon=new QPixmap(QString(INSTALLDIR)+"/data/modified.png");
 //		dockArea=new Q3DockArea(Qt::Horizontal,Q3DockArea::Normal,this);
-	editorToolBar=new Q3ToolBar();
+	editorToolBar=new QToolBar();
 	dockArea->moveDockWindow(editorToolBar);
 
 
@@ -154,13 +154,13 @@ ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(
 	fontHeight=fm.height();
 	editor->setFont(*stdFont);
 	editor->setTextFormat(Qt::PlainText);
-	editor->setWordWrap(Q3TextEdit::NoWrap);
+	editor->setWordWrap(QTextEdit::NoWrap);
 
 	lineNumbers->setFont(*stdFont);
 	lineNumbers->setTextFormat(Qt::PlainText);
 	lineNumbers->setVScrollBarMode(Q3ScrollView::AlwaysOff);
 	lineNumbers->setHScrollBarMode(Q3ScrollView::AlwaysOff);
-	lineNumbers->setWordWrap(Q3TextEdit::NoWrap);
+	lineNumbers->setWordWrap(QTextEdit::NoWrap);
 	lineNumbers->setText(" 1");
 	lineNumbers->setPaper(backgroundBrush());
 	lineNumbers->setFixedWidth(fontWidth*3);
@@ -168,7 +168,7 @@ ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(
 
 
 
-	editor->setWrapPolicy(Q3TextEdit::AtWordOrDocumentBoundary);
+	editor->setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
 	splitter->setResizeMode(fileBrowser,QSplitter::KeepSize);
 
 	fileBrowser->addColumn(SCRIPTEDITH_STR11);
@@ -179,8 +179,8 @@ ScriptWidget::ScriptWidget(QWidget*parent,Preferences p,Variable*va) :TabWidget(
 	QObject::connect(extButtons,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
 	QObject::connect(calcButtons,SIGNAL(emitText(QString)),this,SLOT(buttonInputSlot(QString)));
 	QObject::connect(extButtons,SIGNAL(emitText(QString)),this,SLOT(buttonInputSlot(QString)));
-	QObject::connect(fileBrowser,SIGNAL(selectionChanged(Q3ListViewItem*)),this,SLOT(showFile(Q3ListViewItem*)));
-	QObject::connect(fileBrowser,SIGNAL(contextMenuRequested(Q3ListViewItem*,const QPoint&,int)),this,SLOT(createFileBrowserMenu(Q3ListViewItem*,const QPoint&,int)));
+	QObject::connect(fileBrowser,SIGNAL(selectionChanged(QListWidget*)),this,SLOT(showFile(QListWidget*)));
+	QObject::connect(fileBrowser,SIGNAL(contextMenuRequested(QListWidget*,const QPoint&,int)),this,SLOT(createFileBrowserMenu(QListWidget*,const QPoint&,int)));
 	QObject::connect(editor,SIGNAL(contentsMoving (int,int)),this,SLOT(lineNumSlot(int,int)));
 	QObject::connect(fileBrowserMenu,SIGNAL(activated(int)),this,SLOT(fileBrowserMenuSlot(int)));
 	QObject::connect(editor,SIGNAL(textChanged()),this,SLOT(textChangedSlot()));
@@ -248,11 +248,11 @@ void ScriptWidget::buttonInputSlot(QString text)
 {
 	if(text == "calculate")
 	{
-		editor->doKeyboardAction(Q3TextEdit::ActionReturn);
+		editor->doKeyboardAction(QTextEdit::ActionReturn);
 	}
 	else if(text == "backkey")
 	{
-		editor->doKeyboardAction(Q3TextEdit::ActionBackspace);
+		editor->doKeyboardAction(QTextEdit::ActionBackspace);
 	}
 	else if(text == "clearall")
 	{
@@ -321,7 +321,7 @@ void ScriptWidget::updateFileList()
 {
 //	perror("updateFileList");
 	QString activePath="";
-	if(activeFileItem!=NULL)
+	if(activeFileItem!=nullptr)
 	{
 		activePath=getFileName(activeFileItem);
 	}
@@ -331,14 +331,14 @@ void ScriptWidget::updateFileList()
 	struct stat itemStat;
 	QString startPath=pref.scriptPath+"/"+pref.scriptDirName;
 	scriptDir=opendir(startPath);
-	if(scriptDir==NULL)
+	if(scriptDir==nullptr)
 		return;
 
-	while((dirItem=readdir(scriptDir))!=NULL)
+	while((dirItem=readdir(scriptDir))!=nullptr)
 	{
 		if(lstat(startPath+QString("/")+QString(dirItem->d_name),&itemStat)==0 && dirItem->d_name[0]!='.')
 		{
-			Q3ListViewItem* newItem = new Q3ListViewItem(fileBrowser,dirItem->d_name);
+			QListWidget* newItem = new QListWidget(fileBrowser,dirItem->d_name);
 			fileBrowser->insertItem(newItem);
 			if(S_ISDIR(itemStat.st_mode))
 				readDir(startPath+QString("/")+QString(dirItem->d_name),newItem);
@@ -355,8 +355,8 @@ void ScriptWidget::updateFileList()
 			int slash=origFileString.findRev("/.tmp");
 			origFileString.remove(slash+1,4);
 //			MessageBox("origFileString: "+origFileString);
-			Q3ListViewItem*changedItem=getFileItem(origFileString);
-			if(changedItem!=NULL)
+			QListWidget*changedItem=getFileItem(origFileString);
+			if(changedItem!=nullptr)
 			{
 //				MessageBox("ChangedItem: "+changedItem->text(0));
 				changedItem->setPixmap(0,*modifiedIcon);
@@ -373,10 +373,10 @@ void ScriptWidget::updateFileList()
 	{
 //		perror("updateFileList: searching activeFileItem");
 		activeFileItem=getFileItem(activePath);
-		if(activeFileItem!=NULL)
+		if(activeFileItem!=nullptr)
 		{
 		//	showFile(activeFileItem);
-			if(activeFileItem->parent()!=NULL)
+			if(activeFileItem->parent()!=nullptr)
 				activeFileItem->parent()->setOpen(true);
 			if(currentTextChanged)
 				activeFileItem->setPixmap(0,*modifiedIcon);
@@ -387,23 +387,23 @@ void ScriptWidget::updateFileList()
 }
 
 
-void ScriptWidget::readDir(QString rootDir,Q3ListViewItem*parent)
+void ScriptWidget::readDir(QString rootDir,QListWidget*parent)
 {
 //	perror("readDir");
 	DIR*scriptDir;
 	struct dirent*dirItem;
 	struct stat itemStat;
 	scriptDir=opendir(rootDir);
-	if(scriptDir==NULL)
+	if(scriptDir==nullptr)
 		return;
 
-	while((dirItem=readdir(scriptDir))!=NULL)
+	while((dirItem=readdir(scriptDir))!=nullptr)
 	{
 		if(lstat(rootDir+QString("/")+QString(dirItem->d_name),&itemStat)==0 && dirItem->d_name[0]!='.')
 		{
 			if(!parent->isExpandable())
 				parent->setExpandable(true);
-			Q3ListViewItem* newItem = new Q3ListViewItem(parent,dirItem->d_name);
+			QListWidget* newItem = new QListWidget(parent,dirItem->d_name);
 			parent->insertItem(newItem);
 			if(S_ISDIR(itemStat.st_mode))
 				readDir(rootDir+QString("/")+QString(dirItem->d_name),newItem);
@@ -413,14 +413,14 @@ void ScriptWidget::readDir(QString rootDir,Q3ListViewItem*parent)
 }
 
 
-void ScriptWidget::showFile(Q3ListViewItem*activeItem)
+void ScriptWidget::showFile(QListWidget*activeItem)
 {
 //	perror("showFile");
 	QString completePath=activeItem->text(0);
-	Q3ListViewItem *parentItem=activeItem;
-	if(parentItem==NULL)
+	QListWidget *parentItem=activeItem;
+	if(parentItem==nullptr)
 		return;
-	while((parentItem=parentItem->parent())!=NULL)
+	while((parentItem=parentItem->parent())!=nullptr)
 	{
 		completePath.insert(0,'/');
 		completePath.insert(0,parentItem->text(0));
@@ -434,7 +434,7 @@ void ScriptWidget::showFile(Q3ListViewItem*activeItem)
 		return;
 	if(S_ISREG(fileStat.st_mode))
 	{
-		if(currentTextChanged && activeFileItem==NULL)
+		if(currentTextChanged && activeFileItem==nullptr)
 		{
 			int ret=YesNoCancelBox(SCRIPTEDITC_STR4);
 			if(ret==0)
@@ -451,9 +451,9 @@ void ScriptWidget::showFile(Q3ListViewItem*activeItem)
 		
 		bool exists=false;
 		char*fileContent;
-		FILE*codeFile=NULL;
+		FILE*codeFile=nullptr;
 		QString tempFilePath="";
-		if(activeFileItem!=NULL && currentTextChanged)
+		if(activeFileItem!=nullptr && currentTextChanged)
 		{
 			tempFilePath=pref.scriptPath+"/"+pref.scriptDirName+"/"+getFileName(activeFileItem);
 			int slash=tempFilePath.findRev('/');
@@ -466,7 +466,7 @@ void ScriptWidget::showFile(Q3ListViewItem*activeItem)
 		QString newTempPath=pref.scriptPath+"/"+pref.scriptDirName+"/"+getFileName(activeItem);
 		int slash=newTempPath.findRev('/');
 		newTempPath.insert(slash+1,".tmp");
-		activeFileItem=NULL;
+		activeFileItem=nullptr;
 		
 
 		
@@ -489,7 +489,7 @@ void ScriptWidget::showFile(Q3ListViewItem*activeItem)
 		else codeFile=fopen(completePath,"r");
 		
 		
-		if(codeFile==NULL)
+		if(codeFile==nullptr)
 			return;
 
 		editor->clear();
@@ -538,10 +538,10 @@ void ScriptWidget::createNumbers()
 	lineNumbers->setContentsPos(0,editor->contentsY());
 }
 
-void ScriptWidget::createFileBrowserMenu(Q3ListViewItem*item,const QPoint&pos,int col)
+void ScriptWidget::createFileBrowserMenu(QListWidget*item,const QPoint&pos,int col)
 {
 	
-	if(item!=NULL && col!=-1)
+	if(item!=nullptr && col!=-1)
 	{
 		fileBrowserMenu->setItemEnabled(FILEUPDATE,true);
 		fileBrowserMenu->setItemEnabled(FILERENAME,true);
@@ -593,7 +593,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 			break;
 		case FILERENAME:
 		{
-			if(clickedFileItem==NULL)
+			if(clickedFileItem==nullptr)
 				break;
 			bool answer;
 			QString oldPath=pref.scriptPath+"/"+pref.scriptDirName+"/"+getFileName(clickedFileItem);
@@ -634,7 +634,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 		}
 		case FILEDELETE:
 		{
-			if(clickedFileItem==NULL)
+			if(clickedFileItem==nullptr)
 				break;
 			QString path=getFileName(clickedFileItem);
 			if(YesNoBox(SCRIPTEDITC_STR9+path)==0)
@@ -647,7 +647,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 		}
 		case FILENEWSCRIPT:
 		{
-			if(activeFileItem==NULL && currentTextChanged)
+			if(activeFileItem==nullptr && currentTextChanged)
 			{
 				int ret=YesNoCancelBox(SCRIPTEDITC_STR12);
 				if(ret==0)
@@ -675,7 +675,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 					break;
 			}
 			FILE*editorFile=fopen(filePath,"w");
-			if(editorFile==NULL)
+			if(editorFile==nullptr)
 			{
 				ErrorBox(SCRIPTEDITC_STR16+activeFileItem->text(0)+"\n\n"+getErrorMessage());
 				break;
@@ -691,7 +691,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 		{
 			bool answer;
 			QString path=pref.scriptPath+"/"+pref.scriptDirName;
-			if(clickedFileItem!=NULL)
+			if(clickedFileItem!=nullptr)
 				path+="/"+getFileName(clickedFileItem);
 			QString dirName=QInputDialog::getText(SCRIPTEDITC_STR17,SCRIPTEDITC_STR18,
 					QLineEdit::Normal,QString::null,&answer,this );
@@ -715,7 +715,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 		}
 		case FILESAVE:
 		{
-			if(clickedFileItem==NULL)
+			if(clickedFileItem==nullptr)
 				break;
 			if(clickedFileItem==activeFileItem)
 			{
@@ -732,7 +732,7 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 			for(int c=0; c<activeFiles.GetLen(); c++)
 				if(QString::compare(activeFiles[c],tempFilePath)==0)
 					activeFiles.DeleteItem(c);
-			clickedFileItem->setPixmap(0,NULL);
+			clickedFileItem->setPixmap(0,nullptr);
 			break;
 		}
 		case FILESAVEALL:
@@ -748,12 +748,12 @@ void ScriptWidget::fileBrowserMenuSlot(int item)
 			updateFileList();
 			break;
 	}
-	clickedFileItem=NULL;
+	clickedFileItem=nullptr;
 }
 
 void ScriptWidget::textChangedSlot()
 {
-	if(!currentTextChanged && activeFileItem!=NULL)
+	if(!currentTextChanged && activeFileItem!=nullptr)
 		activeFileItem->setPixmap(0,*modifiedIcon);
 	currentTextChanged=true;
 	
@@ -764,12 +764,12 @@ void ScriptWidget::textChangedSlot()
 	}
 }
 
-QString ScriptWidget::getFileName(Q3ListViewItem*startItem)
+QString ScriptWidget::getFileName(QListWidget*startItem)
 {
 //	perror("getFilename");
 	QString completePath=startItem->text(0);
-	Q3ListViewItem *parentItem=startItem;
-	while((parentItem=parentItem->parent())!=NULL)
+	QListWidget *parentItem=startItem;
+	while((parentItem=parentItem->parent())!=nullptr)
 	{
 		completePath.insert(0,'/');
 		completePath.insert(0,parentItem->text(0));
@@ -778,7 +778,7 @@ QString ScriptWidget::getFileName(Q3ListViewItem*startItem)
 	return completePath;
 }
 
-Q3ListViewItem* ScriptWidget::getFileItem(QString path)
+QListWidget* ScriptWidget::getFileItem(QString path)
 {
 	//Search QListViewItem by path
 	//Use this to set activeFileItem after updateFileList()
@@ -801,14 +801,14 @@ Q3ListViewItem* ScriptWidget::getFileItem(QString path)
 	if(pos2==-1)
 		pos2=searchString.length();
 	QString searchPart=searchString.mid(pos1,pos2-pos1);
-	Q3ListViewItem *treeItem=fileBrowser->findItem(searchPart,0);
-	Q3ListViewItem *walkItem;
+	QListWidget *treeItem=fileBrowser->findItem(searchPart,0);
+	QListWidget *walkItem;
 	
 	while(true)
 	{
-		if(treeItem==NULL)
+		if(treeItem==nullptr)
 		{
-			return NULL;
+			return nullptr;
 		}
 		pos1=pos2+1;
 		pos2=searchString.find('/',pos1);
@@ -820,13 +820,13 @@ Q3ListViewItem* ScriptWidget::getFileItem(QString path)
 
 		
 		walkItem=treeItem->firstChild();
-		treeItem=NULL;
-		if(walkItem==NULL)
-			return NULL;
+		treeItem=nullptr;
+		if(walkItem==nullptr)
+			return nullptr;
 		else if(QString::compare(walkItem->text(0),searchPart)==0)
 			treeItem=walkItem;
 		else {
-			while((walkItem=walkItem->nextSibling()) !=NULL)
+			while((walkItem=walkItem->nextSibling()) !=nullptr)
 			{
 				if(QString::compare(walkItem->text(0),searchPart)==0)
 				{
@@ -838,7 +838,7 @@ Q3ListViewItem* ScriptWidget::getFileItem(QString path)
 		
 	}
 	//you can never reach this
-	return NULL;
+	return nullptr;
 }
 
 
@@ -847,7 +847,7 @@ void ScriptWidget::saveSlot()
 {
 	QString filePath;
 	bool fileCreated=false;
-	if(activeFileItem==NULL)
+	if(activeFileItem==nullptr)
 	{
 		filePath=Q3FileDialog::getSaveFileName(
 				pref.scriptPath+"/"+pref.scriptDirName,
@@ -870,7 +870,7 @@ void ScriptWidget::saveSlot()
 	
 /*	FILE*editorFile=fopen(filePath,"w");
 	
-	if(editorFile==NULL)
+	if(editorFile==nullptr)
 	{
 		return;
 	}
@@ -904,8 +904,8 @@ void ScriptWidget::saveSlot()
 		for(int c=0; c<activeFiles.GetLen(); c++)
 			if(QString::compare(activeFiles[c],tempFilePath)==0)
 				activeFiles.DeleteItem(c);
-		if(activeFileItem!=NULL)
-			activeFileItem->setPixmap(0,NULL);
+		if(activeFileItem!=nullptr)
+			activeFileItem->setPixmap(0,nullptr);
 		currentTextChanged=false;
 	}
 	else MessageBox(SCRIPTEDITC_STR23+filePath+"\n\n"+getErrorMessage());
@@ -961,7 +961,7 @@ bool ScriptWidget::saveFile(QString path,QString content)
 
 	FILE*editorFile=fopen(path,"w");
 	
-	if(editorFile==NULL)
+	if(editorFile==nullptr)
 	{
 		return false;
 	}

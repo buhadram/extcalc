@@ -35,32 +35,38 @@ dialog, the todo list and the bug list.
 #include "importdialog.h"
 #include "graphsetdialog.h"
 #include "screenshotdialog.h"
-#include <qtabwidget.h>
+#include <QTabWidget>
 #include <qtabbar.h>
 #include <qstring.h>
 #include <qmenubar.h>
-#include <q3process.h>
-#include <q3tabdialog.h>
+#include <QProcess>
+#include <QTabWidget>
 //Added by qt3to4:
 #include <QResizeEvent>
 #include <QLabel>
 #include <QPixmap>
 #include <QCloseEvent>
-#include <QCustomEvent>
-#include <Q3PopupMenu>
+#include <QEvent>
+#include <QMenu>
 #include <QTabWidget>
 #include <float.h>
-#include <qtranslator.h>
-#include <qinputdialog.h>
+#include <QTranslator>
+#include <QInputDialog>
 #include <locale.h>
-#include <q3textbrowser.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
-#include <qicon.h>
-#include <qtoolbutton.h>
-#include <qdir.h>
+#include <QTextBrowser>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
+#include <QIcon>
+#include <QToolButton>
+#include <QDir>
 #include <QActionGroup>
 #include <QGridLayout>
+#include <QSignalMapper>
+#include <QTextEdit>
+#include <QVBoxLayout>
 
 
 //Unicode characters:
@@ -163,8 +169,8 @@ dialog, the todo list and the bug list.
 //  - RPN                                                                                   //
 //  - Port to QT 4                                                                      ok  //
 //                use QMainWindow as main widget                                        ok  //
-//                replace Q3PopupMenu                                                       //
-//                replace Q3ToolBar                                                         //
+//                replace QMenu                                                       //
+//                replace QToolBar                                                         //
 //  - use QTranslator for internationalization                                          ok  //
 //  - symbolic calculation for systems of linear equations                                  //
 //  - logic operations for graph drawing                                                ok  //
@@ -319,9 +325,9 @@ class InfoDialog;
 class MainObject :public QMainWindow
 {
 	QMenuBar*mainMenu;
-	Q3PopupMenu *calcMenu,*helpMenu,*prefMenu,*graphMenu;
-	Q3PopupMenu *coordinateMenu,*tableMenu;
-	Q3PopupMenu *viewMenu,*fileMenu,*scriptMenu,*statisticsMenu;
+	QMenu *calcMenu,*helpMenu,*prefMenu,*graphMenu;
+	QMenu *coordinateMenu,*tableMenu;
+	QMenu *viewMenu,*fileMenu,*scriptMenu,*statisticsMenu;
 	QMenu *editMenu,*angleMenu,*floatPointMenu,*outputMenu;
 	QSignalMapper *editMapper,*angleMapper,*floatPointMapper,*outputMapper;
 	QActionGroup*floatPointActions,*angleActions,*outputActions;
@@ -350,9 +356,9 @@ class MainObject :public QMainWindow
 	MatrixWidget*matrix;
 	StatisticsWidget*statistics;
 	Preferences pref;
-	Q3Process*helpProcess;
+	QProcess*helpProcess;
 	InfoDialog*infoDialog;
-	Q3TextEdit*licenseWidget;
+	QTextEdit*licenseWidget;
 	QLabel*authorInfo;
 	QLabel*versionInfo;
 	QPixmap*appIcon;
@@ -391,7 +397,7 @@ void writeFunctionFile(QString);
 protected:
 
 virtual void closeEvent(QCloseEvent*);
-virtual void customEvent(QCustomEvent*);
+void customEvent(QEvent*) override;
 
 public slots:
 void fileMenuSlot(int item);
@@ -503,11 +509,11 @@ signals:
 
 class HelpBrowser :public QWidget
 {
-	Q3ToolBar*toolBar;
-	Q3DockArea*dockArea;
+	QToolBar*toolBar;
+	QVBoxLayout* dockArea;
 	QPixmap *forwardIcon,*backIcon,*zoominIcon,*zoomoutIcon;
 	QToolButton *forwardButton,*backButton,*zoominButton,*zoomoutButton;
-	Q3TextBrowser *browser;
+	QTextBrowser *browser;
 	QString currentSource;
 	Q_OBJECT
 	

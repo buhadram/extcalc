@@ -550,7 +550,7 @@ QString cleanConfigString(QString,QString);
 QString resetConfigString(QString);
 QString getUnicode(int code);
 QString formatOutput(long double num,Preferences*pref);
-QString formatOutput(Number num,Preferences*pref,ThreadSync*varData=NULL);
+QString formatOutput(Number num,Preferences*pref,ThreadSync*varData=nullptr);
 QColor getColor(QString colorName);
 QString getColorName(QColor col);
 QString getErrorMessage();
@@ -616,15 +616,15 @@ public:
 	}
 	virtual ~Math()
 	{
-		if(vertObj!=NULL)
+		if(vertObj!=nullptr)
 		{
 			delete vertObj;
-			vertObj=NULL;
+			vertObj=nullptr;
 		}
-		if(horzObj!=NULL)
+		if(horzObj!=nullptr)
 		{
 			delete horzObj;
-			horzObj=NULL;
+			horzObj=nullptr;
 		}
 	}
 	
@@ -656,13 +656,13 @@ public:
 	
 	Calculate(Math *par,char* line,int start, int end,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
 	{
-		horzObj=vertObj=NULL;
+		horzObj=vertObj=nullptr;
 		split(line,start,end);
 	}
 	Calculate(Math *par,char* line,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
 	{
-		horzObj=vertObj=NULL;
-		if(line==NULL)
+		horzObj=vertObj=nullptr;
+		if(line==nullptr)
 		{
 			operation=NONE;
 			number=NAN;
@@ -672,15 +672,15 @@ public:
 	}
 	~Calculate()
 	{
-		if(horzObj!=NULL)
+		if(horzObj!=nullptr)
 		{
 			delete horzObj;
-			horzObj=NULL;
+			horzObj=nullptr;
 		}
-		if(vertObj!=NULL)
+		if(vertObj!=nullptr)
 		{
 			delete vertObj;
-			vertObj=NULL;
+			vertObj=nullptr;
 		}
 	}
 
@@ -705,15 +705,15 @@ public:
 	Script(Script*par,char*line,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
 	{
 		parent=par;
-		horzObj=vertObj=vertObj2=vertObj3=vertObj4=NULL;
+		horzObj=vertObj=vertObj2=vertObj3=vertObj4=nullptr;
 		value.type=NNONE;
 		operation=SFAIL;
 		number=NAN;
 		eventReciver=evrec;
-		value.cval=NULL;
-		if(line!=NULL)
+		value.cval=nullptr;
+		if(line!=nullptr)
 		{
-			if(par==NULL)
+			if(par==nullptr)
 			{
 				split(line,0,strlen(line));
 			}
@@ -728,18 +728,18 @@ public:
 	
 	Script(Script*par,char*line,int start,int end,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
 	{
-		horzObj=vertObj=vertObj2=vertObj3=vertObj4=NULL;
+		horzObj=vertObj=vertObj2=vertObj3=vertObj4=nullptr;
 		value.type=NNONE;
 		operation=SFAIL;
 		eventReciver=evrec;
-		value.cval=NULL;
-		if(line!=NULL)
+		value.cval=nullptr;
+		if(line!=nullptr)
 		{
-			if(par==NULL)
+			if(par==nullptr)
 			{
 				split(line,start,end);
 			}
-			else if(line!=NULL)
+			else if(line!=nullptr)
 			{
 				int rest=parse(line,start,end);
 				if(rest!=-1)
@@ -749,35 +749,35 @@ public:
 	}
 	~Script()
 	{
-		if(value.type==SVALUE && value.type==NCHAR && value.cval!=NULL)
+		if(value.type==SVALUE && value.type==NCHAR && value.cval!=nullptr)
 		{
 			free(value.cval);
-			value.cval=NULL;
+			value.cval=nullptr;
 		}
-		if(horzObj!=NULL)
+		if(horzObj!=nullptr)
 		{
 			delete horzObj;
-			horzObj=NULL;
+			horzObj=nullptr;
 		}
-		if(vertObj!=NULL)
+		if(vertObj!=nullptr)
 		{
 			delete vertObj;
-			vertObj=NULL;
+			vertObj=nullptr;
 		}
-		if(vertObj2!=NULL)
+		if(vertObj2!=nullptr)
 		{
 			delete vertObj2;
-			vertObj2=NULL;
+			vertObj2=nullptr;
 		}
-		if(vertObj3!=NULL)
+		if(vertObj3!=nullptr)
 		{
 			delete vertObj3;
-			vertObj3=NULL;
+			vertObj3=nullptr;
 		}
-		if(vertObj4!=NULL)
+		if(vertObj4!=nullptr)
 		{
 			delete vertObj4;
-			vertObj4=NULL;
+			vertObj4=nullptr;
 		}
 	}
 	virtual int parse(char*line,int start,int end);

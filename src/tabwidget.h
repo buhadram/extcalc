@@ -21,8 +21,11 @@ This is the class provides an empty tab subwindow.
 
 #include "buttons.h"
 #include <QWidget>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <QGridLayout>
 
 

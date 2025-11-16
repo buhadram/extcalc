@@ -36,7 +36,7 @@ CalcWidget::CalcWidget(QWidget*parent,Preferences p,Variable *va,ThreadSync*td) 
 	baseIcon=new QPixmap(INSTALLDIR+QString("/data/binary.png"));
 	catalogIcon=new QPixmap(INSTALLDIR+QString("/data/catalog.png"));
 		
-	toolBar=new Q3ToolBar();
+	toolBar=new QToolBar();
 	dockArea->moveDockWindow(toolBar);
 		
 	viewButton=new QPushButton(*maximizeIcon,"",toolBar);

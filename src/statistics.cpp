@@ -57,13 +57,13 @@ StatisticsWidget::StatisticsWidget(QWidget*parent,Preferences p,Variable*va,Thre
         addSubWidget(toolFrame);
         setDockArea(1);
 
-        toolBar=new Q3ToolBar();
+        toolBar=new QToolBar();
         dockArea->moveDockWindow(toolBar);
 
         drawButton=new QPushButton(*printIcon,STATISTICSH_STR14,toolBar);
         drawButton->setFixedHeight(25);
         maximizeButton=new QPushButton(*maximizeIcon,"",toolBar);
-        lists=new Q3Table(horzSplit);
+        lists=new QTableWidget(horzSplit);
         lists->setNumRows(1);
         lists->setNumCols(2*LISTCOUNT);
         typeBox=new QComboBox(toolBar);
@@ -269,7 +269,7 @@ void StatisticsWidget::maximizeButtonSlot()
 
 void StatisticsWidget::calculateButtonSlot()
 {
-	long double *coordinatesList=NULL;
+	long double *coordinatesList=nullptr;
 	int listNum,c=0,lineNum=0,c1=0;
 	long double x,y;
 
@@ -282,13 +282,13 @@ void StatisticsWidget::calculateButtonSlot()
 		{
 			if(lists->text(c,2*listNum).length()>0 && lists->text(c,2*listNum+1).length()>0 &&
 					!((functionTypeBox->currentItem()==3 || functionTypeBox->currentItem()==4)
-					&& type==STATAPPROX && strtold(lists->text(c,2*listNum+1),NULL)<=0.0))
+					&& type==STATAPPROX && strtold(lists->text(c,2*listNum+1),nullptr)<=0.0))
 			{
 				lineNum++;
 				coordinatesList=(long double*)realloc(coordinatesList,sizeof(long double)*lineNum*2);
 				c1=lineNum-2;
-				x=strtold(lists->text(c,2*listNum),NULL);
-				y=strtold(lists->text(c,2*listNum+1),NULL);
+				x=strtold(lists->text(c,2*listNum),nullptr);
+				y=strtold(lists->text(c,2*listNum+1),nullptr);
 				while(c1>=0 && coordinatesList[c1*2]>x)
 				{
 					coordinatesList[c1*2+2]=coordinatesList[c1*2];
@@ -319,7 +319,7 @@ void StatisticsWidget::calculateButtonSlot()
 			{
 				lineNum++;
 				coordinatesList=(long double*)realloc(coordinatesList,sizeof(long double)*lineNum);
-				coordinatesList[lineNum-1]=strtold(lists->text(c,listNum),NULL);
+				coordinatesList[lineNum-1]=strtold(lists->text(c,listNum),nullptr);
 				if(coordinatesList[lineNum-1]>xmax)
 					xmax=coordinatesList[lineNum-1];
 			}
@@ -730,7 +730,7 @@ void StatisticsWidget::typeBoxSlot(int index)
 void StatisticsWidget::copyButtonSlot()
 {
 	int index=copyFunction->currentItem();
-	if(pref.functions==NULL || result->text().length()<=0)
+	if(pref.functions==nullptr || result->text().length()<=0)
 		return;
 	if(pref.functions[index].length()>0)
 	{
@@ -814,7 +814,7 @@ void StatisticsWidget::writeListsFile()
 
 	chdir(getenv("HOME"));
 	configFile = fopen(LISTSFILE,"w");
-	if(configFile == NULL)
+	if(configFile == nullptr)
 	{
 		ErrorBox(STATISTICSC_STR4+QString(LISTSFILE));
 		return;
@@ -853,7 +853,7 @@ void StatisticsWidget::readListsFile()
 
 	
 	FILE*varFile = fopen(LISTSFILE,"r");
-	if(varFile == NULL)
+	if(varFile == nullptr)
 	{
 		MessageBox(STATISTICSC_STR5+QString(LISTSFILE));
 		return;

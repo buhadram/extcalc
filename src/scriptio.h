@@ -27,14 +27,18 @@ The ScriptGL class provides the 3D-graphics window for scripts with GL commands.
 #include <qmutex.h>
 #include <QScrollArea>
 #include <qtimer.h>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qtooltip.h>
 #include <QApplication>
 #include <QKeyEvent>
-#include <QCustomEvent>
+#include <QEvent>
 #include <QPixmap>
 #include <QResizeEvent>
 #include <QMouseEvent>
@@ -44,8 +48,10 @@ The ScriptGL class provides the 3D-graphics window for scripts with GL commands.
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/resource.h>
-#include <q3popupmenu.h>
-#include <qgl.h>
+#include <QMenu>
+#include <QAction>
+#include <QOpenGLWidget>
+#include <QOpenGLFunctions>
 #include "list.h"
 #include "tabwidget.h"
 #include "scriptdisplay.h"
@@ -85,7 +91,7 @@ class ScriptThread :public QThread
 		}
 };
 
-class ScriptGL :public QGLWidget
+class ScriptGL : public QOpenGLWidget, protected QOpenGLFunctions
 {
 	GLuint axes;
 	int xRotation,yRotation,mouseX,mouseY,zMove;
@@ -101,7 +107,7 @@ class ScriptGL :public QGLWidget
 	
 	Q_OBJECT
 	public:
-		ScriptGL(QWidget*parent,Preferences p,QGLWidget*shareWidget=NULL) :QGLWidget(parent,0,shareWidget)
+		ScriptGL(QWidget*parent,Preferences p,QGLWidget*shareWidget=nullptr) :QOpenGLWidget(parent,0,shareWidget)
 		{
 			pref=p;
 			pref.xmin=pref.ymin=pref.zmin=-10.0;
@@ -311,9 +317,9 @@ class ScriptGL :public QGLWidget
 		}
 
 	protected:
-		void initializeGL();
-		void paintGL();
-		void resizeGL(int,int);
+		void initializeGL() override;
+		void paintGL() override;
+		void resizeGL(int,int) override;
 		void mousePressEvent(QMouseEvent*);
 		void mouseMoveEvent(QMouseEvent*);
 		void mouseReleaseEvent(QMouseEvent*);
@@ -350,7 +356,7 @@ class ScriptIOWidget :public TabWidget
   /// Start button to execute script
   QPushButton*runButton;
   /// Context menu for text area
-	Q3PopupMenu*contextMenu;
+	QMenu *contextMenu;
 	
   ///
   int ioFieldWidth;
@@ -370,7 +376,7 @@ class ScriptIOWidget :public TabWidget
 	int countDifference;
 	bool errorFlag;
 
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 
 	bool scriptExec;
 	ScriptThread*script;

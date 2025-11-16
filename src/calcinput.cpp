@@ -16,7 +16,7 @@ any later version.
 #include "calcinput.h"
 //Added by qt3to4:
 #include <QResizeEvent>
-#include <Q3PopupMenu>
+#include <QMenu>
 #include <QKeyEvent>
 #include <QEvent>
 
@@ -152,10 +152,10 @@ void CalcInput::keyPressEvent(QKeyEvent*e)
 }
 
 
-Q3PopupMenu* CalcInput::createPopupMenu(const QPoint&)
+QMenu* CalcInput::createPopupMenu(const QPoint&)
 {
 	
-	Q3PopupMenu*menu = new Q3PopupMenu(this);
+	QMenu*menu = new QMenu(this);
 	menu->insertItem(CALCWIDGETC_MENU1,1);
 	menu->insertItem(CALCWIDGETC_MENU2,2);
 	menu->insertSeparator();
@@ -208,7 +208,7 @@ void CalcInput::calculateKey()
 	{
 		para--;
 		setCursorPosition(para,0);
-		char*cleanString=NULL;
+		char*cleanString=nullptr;
 		int c;
 		for(c=resultParagraphs.GetLen()-1; c>=1; c--)
 			if(resultParagraphs[c]-1 != resultParagraphs[c-1])
@@ -222,9 +222,9 @@ void CalcInput::calculateKey()
 			QString input=text(0);
 			cleanString=preprocessor(&input,&pref,false);
 		}
-		Script s(NULL,cleanString,&pref,vars,threadData);
+		Script s(nullptr,cleanString,&pref,vars,threadData);
 		nResult=s.exec();
-		if(cleanString!=NULL)
+		if(cleanString!=nullptr)
 			free(cleanString);
 		setCursorPosition(paragraphs()-1,0);
 	}
@@ -232,9 +232,9 @@ void CalcInput::calculateKey()
 		insert(QString("\n"));
 		QString input=text(para);
 		char*cleanString=preprocessor(&input,&pref,false);
-		Script s(NULL,cleanString,&pref,vars,threadData);
+		Script s(nullptr,cleanString,&pref,vars,threadData);
 		nResult=s.exec();
-		if(cleanString!=NULL)
+		if(cleanString!=nullptr)
 			free(cleanString);
 	}
 	
@@ -262,7 +262,7 @@ void CalcInput::calculateKey()
 		{
 			convertToFloat(&threadData->vars[nResult.ival][c]);
 			threadData->vars[26][c].type=NFLOAT;
-			threadData->vars[26][c].cval=NULL;
+			threadData->vars[26][c].cval=nullptr;
 			threadData->vars[26][c].fval=threadData->vars[nResult.ival][c].fval;
 		}
 		threadData->numlen[26]=threadData->numlen[nResult.ival];
@@ -379,9 +379,9 @@ void CalcInput::resizeEvent(QResizeEvent*)
 
 }
 /*
-void CalcInput::customEvent(QCustomEvent*ev)
+void CalcInput::customEvent(QEvent *ev)
 {
-	if(scriptExec && script!=NULL)
+	if(scriptExec && script!=nullptr)
 	{
 		if(ev->type() == 50000)
 		{
@@ -397,7 +397,7 @@ void CalcInput::customEvent(QCustomEvent*ev)
 			scriptExec=false;
 			script->wait();
 			delete script;
-			script=NULL;
+			script=nullptr;
 		}
 	}
 }
@@ -495,7 +495,7 @@ void CalcInput::scriptSlot(QString*code)
 
 	char*cleanString=checkString(*code,&pref,vars);
 	perror("cleanString: "+QString(cleanString));
-	scriptObject=new Script(NULL,cleanString,&pref,vars,this);
+	scriptObject=new Script(nullptr,cleanString,&pref,vars,this);
 //	Number result=testScript.exec();
 	scriptExec=true;
 	script=new ScriptThread(scriptObject,this);

@@ -19,9 +19,10 @@ math classes and shows the user output.
 
 
 #include "global.h"
-#include <q3textedit.h>
+#include <QTextEdit>
 #include <qfont.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qthread.h>
 #include <qevent.h>
 //Added by qt3to4:
@@ -52,7 +53,7 @@ protected:
 
 
 
-class CalcInput :public Q3TextEdit
+class CalcInput :public QTextEdit
 {
 	int lineLength;
 	int charLength;
@@ -72,13 +73,13 @@ class CalcInput :public Q3TextEdit
 	
 	Q_OBJECT
 	public:
-		CalcInput(QWidget*parentWin,Variable*va,ThreadSync*td,bool aB=false) :Q3TextEdit((QWidget*)parentWin)
+		CalcInput(QWidget*parentWin,Variable*va,ThreadSync*td,bool aB=false) :QTextEdit((QWidget*)parentWin)
 		{
 			vars=va;
 			threadData=td;
 			scriptExec=false;
 			autoBrace=aB;
-//			script=NULL;
+//			script=nullptr;
       stdFont=new QFont("monospace",10);
 			stdFont->setFixedPitch(true);
 			setFont(*stdFont);
@@ -89,7 +90,7 @@ class CalcInput :public Q3TextEdit
 
 			QFontMetrics fontSize=fontMetrics();
 			charLength=fontSize.size(0,QString("m")).width();
-			setWrapPolicy(Q3TextEdit::AtWordOrDocumentBoundary);
+			setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
 
 			lineLength=width()/charLength-1;
 
@@ -115,8 +116,8 @@ class CalcInput :public Q3TextEdit
 	protected:
 		virtual void keyPressEvent(QKeyEvent*);
 		virtual void resizeEvent(QResizeEvent*);
-//		virtual void customEvent(QCustomEvent*ev);
-		virtual Q3PopupMenu *createPopupMenu(const QPoint&);
+//		virtual void customEvent(QEvent *ev);
+		virtual QMenu *createPopupMenu(const QPoint&);
 	
 	public slots:
 		void cursorSlot(int para,int pos);

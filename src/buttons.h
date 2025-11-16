@@ -22,7 +22,8 @@ ExtButtons for scientific functions
 
 #include "global.h"
 #include <qpushbutton.h>
-#include <q3buttongroup.h>
+#include <QButtonGroup>
+#include <QGroupBox>
 #include <qstring.h>
 #include <qfont.h>
 //Added by qt3to4:
@@ -30,7 +31,7 @@ ExtButtons for scientific functions
 #include <stdio.h>
 
 
-class StandardButtons :public Q3ButtonGroup
+class StandardButtons :public QGroupBox
 {
 //	QPushButton * buttons;
 	int cols,rows;
@@ -38,10 +39,12 @@ class StandardButtons :public Q3ButtonGroup
 	QFont stdFont;
 
 	Q_OBJECT
-	
+	QButtonGroup* group_;
+
 public:
 
-	StandardButtons(QWidget *parent) :Q3ButtonGroup(parent)
+	//StandardButtons(QWidget *parent) :QButtonGroup(parent)
+	StandardButtons(QWidget *parent) :QGroupBox(parent), group_(new QButtonGroup(this))
 	{
 		cols=5;
 		rows=4;
@@ -53,9 +56,10 @@ public:
 								"0",	".",	"EXP",	"ANS",	"=",
 		};
 
+		group_->setExclusive(true);
 
 		for(int c=0; c<20; c++)
-			insert(new QPushButton(buttonName[c],this));
+			group_->addButton(new QPushButton(buttonName[c],this));
 	
 		setMinimumWidth(280);
 		setMaximumWidth(280);
@@ -141,7 +145,7 @@ public slots:
 };
 
 
-class ExtButtons :public Q3ButtonGroup
+class ExtButtons :public QButtonGroup
 {
 //	QPushButton * buttons;
 	int cols,rows;
@@ -151,7 +155,7 @@ class ExtButtons :public Q3ButtonGroup
 	
 public:
 
-	ExtButtons(QWidget *parent) :Q3ButtonGroup(parent)
+	ExtButtons(QWidget *parent) :QButtonGroup(parent)
 	{
 		cols=6;
 		rows=4;
@@ -303,7 +307,7 @@ public:
 	void setBaseStandardSet()
 	{
 		QString buttonName[] ={	"Shift","Rand",	"!",	"%",	"x",	"^",
-								"Alpha","x²",	"&&",	"|",	"~",	"xor",
+								"Alpha","xï¿½",	"&&",	"|",	"~",	"xor",
 								"A",	"B",	"C",	"D",	"E",	"F",
 								"==",	"X",	"(",	")",	",",	"->",
 		};

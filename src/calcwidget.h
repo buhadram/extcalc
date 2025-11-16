@@ -25,10 +25,14 @@ This is the class for the calculator tab window.
 #include <qcombobox.h>
 
 #include <QWidget>
-#include <q3toolbar.h>
-#include <q3dockarea.h>
+#include <QToolBar>
+#include <QAction>
+#include <QIcon>
+#include <QDockWidget>
+#include <QMainWindow>
 #include <qicon.h>
-#include <q3popupmenu.h>
+#include <QMenu>
+#include <QAction>
 #include <qtooltip.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -49,7 +53,7 @@ class CalcWidget :public TabWidget
 //	Variable *vars;
 //	ThreadSync*threadData;
 	
-	Q3ToolBar*toolBar;
+	QToolBar*toolBar;
 //	Q3DockArea*dockArea;
 	QComboBox *angleBox,*baseBox,*typeBox;
 	QPixmap *minimizeIcon,*angleIcon,*maximizeIcon,*scientificIcon,*baseIcon,*catalogIcon;

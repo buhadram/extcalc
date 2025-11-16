@@ -69,7 +69,7 @@ void FunctionTable::cellChangedSlot(int row,int col)
 				else functionStrings[tableFunctionMap[c]]="";
 			}
 	}
-	if(pref.functions != NULL)
+	if(pref.functions != nullptr)
 		delete[]pref.functions;
 	pref.functions=functionStrings;
 	
@@ -138,7 +138,7 @@ void FunctionTable::setPref(Preferences newPref)
 			}
 		}
 		Q3ComboTableItem *typeItem=(Q3ComboTableItem*)item(c,3);
-		if(typeItem!=NULL)
+		if(typeItem!=nullptr)
 		{
 			switch(pref.functionTypes[tableFunctionMap[c]])
 			{
@@ -175,7 +175,7 @@ void FunctionTable::setPref(Preferences newPref)
 			}
 		}
 	}
-	if(pref.functions!=NULL)
+	if(pref.functions!=nullptr)
 	{
 		int tableIndex=0;
 		for(int c=0; c<20;c++)
@@ -210,29 +210,29 @@ void FunctionTable::setPref(Preferences newPref)
 			}
 		}
 	}
-	if(pref.activeFunctions!=NULL)
+	if(pref.activeFunctions!=nullptr)
 		for(int c=0; c<tableFunctionMap.GetLen();c++)
 	{
 		Q3CheckTableItem *checkItem=(Q3CheckTableItem*)item(c,2);
-		if(checkItem!=NULL)
+		if(checkItem!=nullptr)
 			checkItem->setChecked(pref.activeFunctions[tableFunctionMap[c]]);
 		checkItem=(Q3CheckTableItem*)item(c,4);
-		if(checkItem!=NULL)
+		if(checkItem!=nullptr)
 			checkItem->setChecked(pref.dynamicFunctions[tableFunctionMap[c]]);
 		checkItem=(Q3CheckTableItem*)item(c,5);
-		if(checkItem!=NULL)
+		if(checkItem!=nullptr)
 			checkItem->setChecked(pref.logicFunctions[tableFunctionMap[c]]);
 	}
 	for(int c=0;c<tableFunctionMap.GetLen(); c++)
 	{
 		Q3ComboTableItem *colorItem=(Q3ComboTableItem*)item(c,1);
-		if(colorItem!=NULL)
+		if(colorItem!=nullptr)
 		{
 			colorItem->setCurrentItem(getColorName(pref.functionColors[tableFunctionMap[c]]));
 			changeColor(c,pref.functionColors[tableFunctionMap[c]]);
 		}
 	}
-	if(pref.functionComments!=NULL)
+	if(pref.functionComments!=nullptr)
 	{
 		for(int c=0;c<tableFunctionMap.GetLen(); c++)
 		{
@@ -244,7 +244,7 @@ void FunctionTable::setPref(Preferences newPref)
 
 
 	repaint();
-//	resizeEvent(NULL);
+//	resizeEvent(nullptr);
 //	adjustColumn(0);
 //	adjustColumn(1);
 //	adjustColumn(2);
