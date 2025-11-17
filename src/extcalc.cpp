@@ -20,6 +20,11 @@ any later version.
 #include <QCloseEvent>
 #include <QTranslator>
 #include <QEvent>
+#include <QVBoxLayout>
+#include <QToolBar>
+#include <QToolButton>
+#include <QTextBrowser>
+#include <QIcon>
 
 
 MainObject *mainObj;
@@ -3584,35 +3589,74 @@ void MainObject::readGraphsDir()
 
 
 
-HelpBrowser::HelpBrowser(QWidget*parent) :QWidget(parent,"Help Browser",Qt::WType_TopLevel)
+HelpBrowser::HelpBrowser(QWidget *parent)
+: QWidget(parent)
 {
-    currentSource="";
-    toolBar=new QToolBar();
-    dockArea=new Q3DockArea(Qt::Horizontal,Q3DockArea::Normal,this);
-    dockArea->moveDockWindow(toolBar);
-    toolBar->setMovingEnabled(false);
-    
-    forwardIcon=new QPixmap(INSTALLDIR+QString("/data/forward.png"));
-    backIcon=new QPixmap(INSTALLDIR+QString("/data/back.png"));
-    zoominIcon=new QPixmap(INSTALLDIR+QString("/data/zoomin.png"));
-    zoomoutIcon=new QPixmap(INSTALLDIR+QString("/data/zoomout.png"));
-    
-    browser=new QTextBrowser(this);
-    
-    backButton=new QToolButton(*backIcon,"","",browser,SLOT(backward()),toolBar);    
-    forwardButton=new QToolButton(*forwardIcon,"","",browser,SLOT(forward()),toolBar);
-    zoominButton=new QToolButton(*zoominIcon,"","",this,SLOT(zoominSlot()),toolBar);
-    zoomoutButton=new QToolButton(*zoomoutIcon,"","",this,SLOT(zoomoutSlot()),toolBar);
-    
-    forwardButton->setOn(false);
-    backButton->setOn(false);
+    setWindowTitle(tr("Help Browser"));
+    currentSource = "";
 
-    connect(browser,SIGNAL(forwardAvailable(bool)),forwardButton,SLOT(setOn(bool)));
-    connect(browser,SIGNAL(backwardAvailable(bool)),backButton,SLOT(setOn(bool)));
-    connect(browser,SIGNAL(sourceChanged(const QString&)),this,SLOT(sourceSlot(const QString&)));
+    // Toolbar
+    toolBar = new QToolBar(this);
+    toolBar->setMovable(false);
 
-    
+    // Icons
+    forwardIcon = new QPixmap(INSTALLDIR + QString("/data/forward.png"));
+    backIcon    = new QPixmap(INSTALLDIR + QString("/data/back.png"));
+    zoominIcon  = new QPixmap(INSTALLDIR + QString("/data/zoomin.png"));
+    zoomoutIcon = new QPixmap(INSTALLDIR + QString("/data/zoomout.png"));
+
+    // Browser
+    browser = new QTextBrowser(this);
+
+    // Layout: toolbar on top, browser below
+    QVBoxLayout *layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
+    layout->addWidget(toolBar);
+    layout->addWidget(browser);
+
+    // Buttons on toolbar
+    backButton = new QToolButton(toolBar);
+    backButton->setIcon(QIcon(*backIcon));
+    toolBar->addWidget(backButton);
+
+    forwardButton = new QToolButton(toolBar);
+    forwardButton->setIcon(QIcon(*forwardIcon));
+    toolBar->addWidget(forwardButton);
+
+    zoominButton = new QToolButton(toolBar);
+    zoominButton->setIcon(QIcon(*zoominIcon));
+    toolBar->addWidget(zoominButton);
+
+    zoomoutButton = new QToolButton(toolBar);
+    zoomoutButton->setIcon(QIcon(*zoomoutIcon));
+    toolBar->addWidget(zoomoutButton);
+
+    // Initially disabled (no history yet)
+    forwardButton->setEnabled(false);
+    backButton->setEnabled(false);
+
+    // New-style connects for button clicks
+    connect(backButton,   &QToolButton::clicked,
+            browser,      &QTextBrowser::backward);
+    connect(forwardButton,&QToolButton::clicked,
+            browser,      &QTextBrowser::forward);
+    connect(zoominButton, &QToolButton::clicked,
+            this,         &HelpBrowser::zoominSlot);
+    connect(zoomoutButton,&QToolButton::clicked,
+            this,         &HelpBrowser::zoomoutSlot);
+
+    // Keep old-style connects for QTextBrowser signals (these still work in Qt6)
+    connect(browser, SIGNAL(forwardAvailable(bool)),
+            forwardButton, SLOT(setEnabled(bool)));
+    connect(browser, SIGNAL(backwardAvailable(bool)),
+            backButton, SLOT(setEnabled(bool)));
+    connect(browser, SIGNAL(sourceChanged(const QString&)),
+            this, SLOT(sourceSlot(const QString&)));
 }
+
+
+
 void HelpBrowser::setContent(QString path)
 {
     browser->setSource(path);
@@ -3638,11 +3682,12 @@ void HelpBrowser::sourceSlot(const QString &source)
         browser->setSource(currentSource);
 }
 
-void HelpBrowser::resizeEvent(QResizeEvent*)
+
+void HelpBrowser::resizeEvent(QResizeEvent *event)
 {
-    dockArea->setGeometry(0,0,width(),35);
-    browser->setGeometry(0,35,width(),height()-35);
+    QWidget::resizeEvent(event);
 }
+
 
 
 InfoDialog::InfoDialog(QWidget*parent) : QDialog(parent)

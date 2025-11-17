@@ -20,6 +20,18 @@ any later version.
 #include <QPixmap>
 #include <QMouseEvent>
 #include <QWheelEvent>
+#include <QLineEdit>
+#include <QImage>
+#include <QApplication>
+#include <QFont>
+#include <QFontMetrics>
+#include <QPen>
+
+
+static inline void glSetColor(const QColor &c)
+{
+    glColor4f(c.redF(), c.greenF(), c.blueF(), 1.0f);
+}
 
 ////////////////////////////////////////initializeGL/////////////////////////////////////////
 
@@ -148,7 +160,7 @@ GLuint GraphOutput::drawStdAxes()
         else if(pref.ymin > 0.0f)
             yNull=pref.ymin;
         
-        qglColor( QColor(220,220,220) );    
+        glSetColor( QColor(220,220,220) );
         for(float c=0.0; c<pref.xmax; c+=pref.rasterSizeX)
         {
             glVertex3f(c,yNull-yLineLen,0.0f);
@@ -171,7 +183,7 @@ GLuint GraphOutput::drawStdAxes()
         }
     }
     else{
-        qglColor( QColor(220,220,220) );    
+        glSetColor( QColor(220,220,220) );
         for(float c=0.0; c<pref.xmax; c+=pref.rasterSizeX)
         {
             glVertex3f(c,pref.ymin,0.0f);
@@ -197,7 +209,7 @@ GLuint GraphOutput::drawStdAxes()
     
     if(pref.axis)
     {
-        qglColor( QColor(150,150,150) );
+        glSetColor( QColor(150,150,150) );
         glVertex3f(pref.xmin,0.0f,0.0f);
         glVertex3f(pref.xmax,0.0f,0.0f);
         
@@ -255,7 +267,7 @@ GLuint GraphOutput::drawPolarAxes()
 
     if(pref.raster)
     {
-        qglColor( QColor(220,220,220) );
+        glSetColor( QColor(220,220,220) );
         double angleStep=pref.angleMax/400.0;
         double radiusStep=pref.radiusMax/400.0;
         if(angleStep==0.0)
@@ -286,7 +298,7 @@ GLuint GraphOutput::drawPolarAxes()
     if(pref.axis)
     {
         glBegin(GL_LINES);
-        qglColor( QColor(150,150,150) );
+        glSetColor( QColor(150,150,150) );
         glVertex3f(-pref.radiusMax,0.0f,0.0f);
         glVertex3f(pref.radiusMax,0.0f,0.0f);
         
@@ -347,7 +359,7 @@ GLuint GraphOutput::draw3dAxes()
     if(pref.raster)
     {
 
-        qglColor( QColor(220,220,220) );
+        glSetColor( QColor(220,220,220) );
 
         for(float c=pref.xmin-fmod(pref.xmin,pref.rasterSizeX)+pref.rasterSizeX; c<pref.xmax; c+=pref.rasterSizeX)        
         {
@@ -391,8 +403,8 @@ GLuint GraphOutput::draw3dAxes()
         else if(pref.xmax < 0.0)
             zAxes=pref.zmax;
         
-        qglColor( QColor(150,150,150) );
-    //    qglColor( QColor(0,0,0) );
+        glSetColor( QColor(150,150,150) );
+    //    glSetColor( QColor(0,0,0) );
         glVertex3f(pref.xmin,yAxes,zAxes);
         glVertex3f(pref.xmax,yAxes,zAxes);
         
@@ -429,7 +441,7 @@ GLuint GraphOutput::draw3dAxes()
 
 void GraphOutput::mouseMoveEvent(QMouseEvent*e)
 {
-    if(e->state() == Qt::LeftButton)
+    if (e->buttons() & Qt::LeftButton)
     {
         int width=geometry().right()-geometry().left();
         int height=geometry().bottom()-geometry().top();
@@ -506,7 +518,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
             repaint();
         }
     }
-    else if(e->state() == Qt::RightButton)
+    else if (e->buttons() & Qt::RightButton)
     {
         if(pref.graphType==GRAPH3D)
         {
@@ -574,7 +586,7 @@ void GraphOutput::mousePressEvent(QMouseEvent*e)
     double ySteps=(pref.ymax-pref.ymin)/200.0;
     mouseX=e->x();
     mouseY=e->y();
-    if(e->stateAfter()==Qt::LeftButton)
+    if (e->button() == Qt::LeftButton)
     {
         if(drawState!=DRAWNONE)
         {
@@ -654,7 +666,7 @@ void GraphOutput::mousePressEvent(QMouseEvent*e)
             emit leftMButtonPressed(angle,radius);
         }
     }
-    else if(e->stateAfter()==Qt::RightButton)
+    else if(e->button()==Qt::RightButton)
     {
         if(pref.graphType==GRAPH3D)
         unlock=true;
@@ -665,7 +677,7 @@ void GraphOutput::mousePressEvent(QMouseEvent*e)
 
 void GraphOutput::mouseReleaseEvent(QMouseEvent*e)
 {
-    if(e->state() == Qt::LeftButton)
+    if(e->button() == Qt::LeftButton)
     {
         unlock=false;
         if(drawState!=DRAWNONE)
@@ -723,25 +735,28 @@ void GraphOutput::mouseReleaseEvent(QMouseEvent*e)
 
         }
     }
-    if(e->state() == Qt::RightButton && pref.graphType==GRAPHSTD)
+    if(e->button() == Qt::RightButton && pref.graphType==GRAPHSTD)
         emit prefChange(pref);
 }
 
-void GraphOutput::wheelEvent(QWheelEvent*e)
+void GraphOutput::wheelEvent(QWheelEvent *e)
 {
-    if(pref.graphType==GRAPH3D)
+    int degrees = e->angleDelta().y() / 8;
+    int steps   = degrees / 15; // same 120 “click” as old code
+    auto delta = e->angleDelta().y();
+
+    if (pref.graphType == GRAPH3D)
     {
-        zMove+=e->delta()/120;
+        zMove += steps;
         e->accept();
         repaint();
-        if(zMove<-27)
-            zMove=-27;
+        if (zMove < -27)
+            zMove = -27;
     }
     else if(pref.graphType==GRAPHPOLAR)
     {
         
-        
-        pref.radiusMax+=pref.radiusMax/(e->delta()/4);
+        pref.radiusMax+=pref.radiusMax/(delta / 4);
         pref.xmin=pref.radiusMax*-1.0;
         pref.xmax=pref.radiusMax;
         pref.ymin=pref.radiusMax*-1.0;
@@ -759,11 +774,11 @@ void GraphOutput::wheelEvent(QWheelEvent*e)
     {
         double xSize=(pref.xmax-pref.xmin);
         double ySize=(pref.ymax-pref.ymin);
-        pref.xmin+=xSize/(e->delta()/4);
-        pref.xmax-=xSize/(e->delta()/4);
+        pref.xmin+=xSize/(delta/4);
+        pref.xmax-=xSize/(delta/4);
         
-        pref.ymin+=ySize/(e->delta()/4);
-        pref.ymax-=ySize/(e->delta()/4);
+        pref.ymin+=ySize/(delta/4);
+        pref.ymax-=ySize/(delta/4);
         oldXMin=pref.xmin;
         oldXMax=pref.xmax;
         glDeleteLists(axes,1);
@@ -777,7 +792,7 @@ void GraphOutput::wheelEvent(QWheelEvent*e)
 }
 
 
-void GraphOutput::customEvent(QEvent*ev)
+void GraphOutput::customEvent(QEvent *ev)
 {
 
     switch(ev->type())
@@ -785,12 +800,15 @@ void GraphOutput::customEvent(QEvent*ev)
         case SIGTHREADSYNC:
 //            qDebug("main process "+QString::number(pthread_self()));
             threadTimerSlot();
+
             break;
         case SIGPRINT:    
-            free(ev->data());
+            // TODO: free any heap data associated with this event if you still attach some
             break;
+
         case SIGCLEARTEXT:
             break;
+
         case SIGGETKEY:
         {
             char*strBuf=new char[2];
@@ -806,6 +824,7 @@ void GraphOutput::customEvent(QEvent*ev)
             threadData->data=strBuf;
             break;
         }
+
         case SIGGETLINE:
         {
             char*strBuf=new char[2];
@@ -815,17 +834,15 @@ void GraphOutput::customEvent(QEvent*ev)
             break;
         }
         case SIGSETTEXTPOS:
-            free(ev->data());
             break;
+
         case SIGFINISHED:        //script stopped
             {
                 break;
             }
         case SIGDEBUG:
-        {
-            free(ev->data());
             break;
-        }
+
         default:
         {
             break;
@@ -833,6 +850,7 @@ void GraphOutput::customEvent(QEvent*ev)
     }
 
 }
+
 
 void GraphOutput::processStdFunction(ObjectInfo*obj, int index,ThreadSync*td,Variable*va)
 {
@@ -1351,14 +1369,14 @@ void GraphOutput::paintGL()
     
     if(graphProcess)
     {
-        qglColor(QColor(100,100,100));
+        glSetColor(QColor(100,100,100));
         QFont waitFont("Helvetica");
         QString text=tr("Processing ...");
         waitFont.setPixelSize(16);
         QFontMetrics f(waitFont);
         
         int x=(width()-f.width(text))/2;
-        renderText(x,height()/2,text,waitFont);
+        //renderText(x,height()/2,text,waitFont); // TODO:
         return;
     }
     
@@ -1408,7 +1426,7 @@ void GraphOutput::paintGL()
         }
     }
 
-    qglColor(QColor(100,100,255));
+    glSetColor(QColor(100,100,255));
     for(int c=0; c<additionalObjects.GetLen(); c++)
         glCallList(additionalObjects[c]);
 
@@ -1441,7 +1459,7 @@ void GraphOutput::paintGL()
         if(pref.graphType!=GRAPH3D)
             staticZ=0.0;
                 
-        qglColor( QColor(220,220,220) );
+        glSetColor( QColor(220,220,220) );
         
         for(float c=pref.xmin-fmod(pref.xmin,pref.rasterSizeX)+pref.rasterSizeX; c<pref.xmax; c+=pref.rasterSizeX)
             renderText(c-xTrans,staticY,staticZ,QString::number(c,'g',3),stdFont);
@@ -1564,20 +1582,20 @@ void GraphOutput::clearGL()
 void GraphOutput::setPref(Preferences newPref)
 {
     pref=newPref;
-    if(pref.solvePrec!=currentSolvePrec)
+    if (pref.solvePrec != currentSolvePrec)
     {
         delete drawImage;
         delete drawMap;
         delete[] backMap;
-        drawImage=new QImage(TEXTURESIZE,TEXTURESIZE,32);
-        drawImage->fill(0x00000000);
-        drawImage->setAlphaBuffer(true);
-        drawMap=new QPixmap(*drawImage);
-        backCursor=0;
-        backMap=new QPixmap*[BACKSTEPS];
-        for(int c=0; c<BACKSTEPS; c++)
-            backMap[c]=nullptr;
-        
+
+        drawImage = new QImage(TEXTURESIZE, TEXTURESIZE, QImage::Format_ARGB32);
+        drawImage->fill(Qt::transparent);
+
+        drawMap = new QPixmap(QPixmap::fromImage(*drawImage));
+        backCursor = 0;
+        backMap = new QPixmap*[BACKSTEPS];
+        for (int c = 0; c < BACKSTEPS; c++)
+            backMap[c] = nullptr;
     }
     currentSolvePrec=pref.solvePrec;
     oldXMin=pref.xmin;
@@ -1840,12 +1858,12 @@ void GraphOutput::processFunction(QString function,QString function2, int type, 
     info->function2=nullptr;
   }
 
-    if(dynamic)
+  if (dynamic)
   {
-    info->dataLength=pref.dynamicSteps;
-    if(pref.dynamicDelay>0)
-      timer->start(pref.dynamicDelay*10,false);
-    isDynamic=true;
+      info->dataLength = pref.dynamicSteps;
+      if (pref.dynamicDelay > 0)
+          timer->start(pref.dynamicDelay * 10);  // timer should be non-single-shot
+          isDynamic = true;
   }
   else info->dataLength=1;
 
@@ -2062,7 +2080,7 @@ GLuint GraphOutput::generateGLList(ObjectInfo*obj,int index)
 
   if(obj->color==QColor(1,1,1))
         colored=1;
-  else qglColor( obj->color );
+  else glSetColor( obj->color );
 
   if(obj->type==GRAPH3D)
     {
@@ -2614,7 +2632,7 @@ void GraphOutput::drawPoints(long double *coordinates,int num,bool con)
     double radiusX=(pref.xmax-pref.xmin)/200,radiusY=(pref.ymax-pref.ymin)/200;
     
     glNewList(list, GL_COMPILE);
-    qglColor(QColor(0,0,0));
+    glSetColor(QColor(0,0,0));
     for(int c1=0; c1<num; c1++)
     {
         glBegin(GL_LINE_STRIP);
@@ -2624,7 +2642,7 @@ void GraphOutput::drawPoints(long double *coordinates,int num,bool con)
     }
     if(con)
     {
-        qglColor(QColor(100,0,0));
+        glSetColor(QColor(100,0,0));
         glBegin(GL_LINE_STRIP);
         for(int c=0; c<num; c++)
                 glVertex3f(coordinates[2*c],coordinates[2*c+1],0.0f);
@@ -2675,13 +2693,13 @@ void GraphOutput::generateTexture()
 //        seconds--;
 //        usecs=1000000+usecs;
 //    }
-//    perror("convertToImage: "+QString::number(seconds)+" "+QString::number(usecs));
+//    perror("toImage: "+QString::number(seconds)+" "+QString::number(usecs));
     glEnable(GL_TEXTURE_2D);
 
 //    if(drawState==DRAWFREE)
-        (*drawImage)=drawMap->convertToImage();
+        (*drawImage)=drawMap->toImage();
 //    else if(drawState!=DRAWNONE)
-//        (*drawImage)=overlayMap->convertToImage();
+//        (*drawImage)=overlayMap->toImage();
 
     glBindTexture(GL_TEXTURE_2D,texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -2730,13 +2748,15 @@ void GraphOutput::timerSlot()
     repaint();
 }
 
+
 void GraphOutput::timerStartSlot(bool start)
 {
-    if(start && isDynamic)
+    if (start && isDynamic)
     {
-        timer->start(pref.dynamicDelay*10,false);
+        timer->start(pref.dynamicDelay * 10);
     }
-    else {
+    else
+    {
         timer->stop();
     }
 }
@@ -2744,18 +2764,25 @@ void GraphOutput::timerStartSlot(bool start)
 
 void GraphOutput::screenshotSlot(int x, int y)
 {
-    drawScreenshot=true;
-    if(x<=0)
-        x=geometry().width();
-    if(y<=0)
-        y=geometry().height();
-    
-    scr=renderPixmap(x,y,false);
-    emit screenshotSignal(&scr);
-    drawScreenshot=false;
-//    initializeGL();
-//    repaint();
+    void GraphOutput::screenshotSlot(int x, int y)
+    {
+        drawScreenshot = true;
 
+        if (x <= 0)
+            x = width();
+        if (y <= 0)
+            y = height();
+
+        // Grab current framebuffer as image
+        QImage img = grabFramebuffer();
+        if (img.width() != x || img.height() != y) {
+            img = img.scaled(x, y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+        }
+        scr = QPixmap::fromImage(img);
+
+        emit screenshotSignal(&scr);
+        drawScreenshot = false;
+    }
 }
 
 
@@ -2813,8 +2840,15 @@ void GraphOutput::drawSlot(int state,QColor color,int pen)
         if(drawState==DRAWTEXT)
         {
             bool ret;
-            drawString = QInputDialog::getText(GRAPHOUTC_STR1,GRAPHOUTC_STR2,
-                    QLineEdit::Normal,drawString,&ret,this );
+            QString QInputDialog::getText(QWidget *parent,
+                                          const QString &title,
+                                          const QString &label,
+                                          QLineEdit::EchoMode mode = QLineEdit::Normal,
+                                          const QString &text = QString(),
+                                          bool *ok = nullptr,
+                                          Qt::WindowFlags flags = Qt::WindowFlags(),
+                                          Qt::InputMethodHints hints = Qt::ImhNone);
+
             if(!ret)
                 drawString="";
         }
@@ -2872,6 +2906,7 @@ void GraphOutput::threadTimerSlot()
     }
 //    qDebug("threadTimer end");
 }
+
 
 void GraphicsThread::run()
 {

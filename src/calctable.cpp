@@ -11,82 +11,58 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////*/
-#include "calctable.h"   
 
+#include "calctable.h"
 
+#include <QTableWidgetItem>
+#include <QEvent>
 
-void CalcTable::paintCell( QPainter * p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg )
+void CalcTable::changeColor(int row, const QColor &color)
 {
-    QTableWidgetItem*paintItem=item(row,col);
-    if(paintItem==nullptr)
-    {
-        setText(row,col," ");
-        paintItem=item(row,col);
+    int rowNum = rowCount();
+
+    // Keep behavior similar to original colorTable logic
+    if (rowNum != colorTable.GetLen()) {
+        // Original code only ever appended; we mimic that pattern
+        for (int c = 0; c < rowNum; ++c)
+            colorTable.NewItem(QColor(0, 0, 0));
     }
-    QColorGroup g(cg);
 
+    if (row < colorTable.GetLen())
+        colorTable[row] = color;
 
-    
-    if(col == coloredCol && row < colorTable.GetLen())
-    {
-        g.setColor(QColorGroup::Text,colorTable[row]);
+    // Apply the color to the actual cell in the colored column
+    if (row < 0 || row >= rowCount())
+        return;
+
+    if (coloredCol < 0 || coloredCol >= columnCount())
+        return;
+
+    QTableWidgetItem *item = this->item(row, coloredCol);
+    if (!item) {
+        item = new QTableWidgetItem;
+        setItem(row, coloredCol, item);
     }
-    
-    
-    paintItem->paint(p,g,cr,selected);
-//    paintCell(p,row,col,cr,selected,g);
 
-        
+    // In the original code, the QColorGroup::Text was modified → text color
+    item->setForeground(color);
 }
 
-
-QWidget *CalcTable::beginEdit( int row, int col, bool replace )
+bool CalcTable::edit(const QModelIndex &index,
+                     EditTrigger trigger,
+                     QEvent *event)
 {
-    emit cellEditStarted(row,col);
-    if ( isReadOnly() || isRowReadOnly( row ) || isColumnReadOnly( col ) || (!editable&&col==coloredCol))
-        return 0;
-    QTableWidgetItem *itm = item( row, col );
-    if ( itm && !itm->isEnabled() )
-        return 0;
-    if ( cellWidget( row, col ) )
-        return 0;
-    ensureCellVisible( row, col );
-    QWidget *e = createEditor( row, col, !replace );
-    if ( !e )
-        return 0;
-    setCellWidget( row, col, e );
-    e->setActiveWindow();
-    e->setFocus();
-    updateCell( row, col );
-    return e;
+    if (!index.isValid())
+        return false;
+
+    // Replaces the old beginEdit() logic:
+    // if (!editable && col == coloredCol) -> don't allow editing that column
+    if (!editable && index.column() == coloredCol)
+        return false;
+
+    // Notify like the old beginEdit() did with cellEditStarted(row, col)
+    emit cellEditStarted(index.row(), index.column());
+
+    return QTableWidget::edit(index, trigger, event);
 }
-
-
-
-
-
-
-
-
-
-void CalcTable::changeColor(int row,QColor color)
-{
-    int rowNum=numRows();
-    if(rowNum != colorTable.GetLen())
-    {
-        for(int c=0; c<rowNum; c++)
-            colorTable.NewItem(QColor(0,0,0));
-    }
-    
-    if(row < colorTable.GetLen())
-        colorTable[row]=color;
-}
-
-
-
-
-
-
-

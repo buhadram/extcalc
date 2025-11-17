@@ -375,40 +375,41 @@ class MainObject :public QMainWindow
 
 Q_OBJECT
 public:
-MainObject();
+  MainObject();
 
-~MainObject()
-{
-    delete[]vars;
-}
-int readConfigFile();
-void readVarFile();
-void writeConfigFile();
-void writeVarFile();
-void initConstants();
-void writeConstants();
-void writeUIState();
-void readUIState();
-void readGraphsDir();
-void readFunctionFile(QString);
-void writeFunctionFile(QString);
+  ~MainObject()
+  {
+      delete[]vars;
+  }
+
+  int readConfigFile();
+  void readVarFile();
+  void writeConfigFile();
+  void writeVarFile();
+  void initConstants();
+  void writeConstants();
+  void writeUIState();
+  void readUIState();
+  void readGraphsDir();
+  void readFunctionFile(QString);
+  void writeFunctionFile(QString);
 
 
 protected:
 
-virtual void closeEvent(QCloseEvent*);
-void customEvent(QEvent*) override;
+  virtual void closeEvent(QCloseEvent*);
+  void customEvent(QEvent*) override;
 
 public slots:
-void fileMenuSlot(int item);
+  void fileMenuSlot(int item);
   //void quitSlot()
-void editMenuSlot(int item);
+  void editMenuSlot(int item);
   //void undoSlot()
   //void redoSlot()
   //void cutSlot()
   //void copySlot()
   //void pasteSlot()
-void viewMenuSlot(int item);
+  void viewMenuSlot(int item);
   //void viewCalc1Slot()
   //void viewCalc2Slot()
   //void viewGraphSlot()
@@ -417,67 +418,67 @@ void viewMenuSlot(int item);
   //void viewStatisticsSlot()
   //void viewScriptingSlot()
   //void viewScriptIOSlot()
-void angleMenuSlot(int type);
+  void angleMenuSlot(int type);
   //void degSlot()
   //void radSlot()
   //void graSlot()
-void outputMenuSlot(int item);
+  void outputMenuSlot(int item);
   //void fixedNumSlot()
   //void variableNumSlot()
   //void expSymSlot()
-void coordinateMenuSlot(int item);
+  void coordinateMenuSlot(int item);
   //void standardCoordinateSlot()
   //void trigonimectricCoordinateSlot()
   //void showAxesSlot()
   //void showLabelsSlot()
   //void showRasterSlot()
   //void constRationSlot()
-void graphTypeMenuSlot(int item);
+  void graphTypeMenuSlot(int item);
   //void graphStdSlot()
   //void graphPolarSlot()
   //void graph3DSlot();
-void graphMenuSlot(int item);
+  void graphMenuSlot(int item);
   //void graphsetManageSlot()
   //void graphsetSaveSlot()
   //void graphsetCreateSlot()
   //void graphsetImportSlot()
   //void graphsetExportSlot()
-void calcModeMenuSlot(int item);
-void calcComplexSlot();
+  void calcModeMenuSlot(int item);
+  void calcComplexSlot();
   //void calcScientificSlot()
   //void calcBaseSlot()
   //void calcComplexSlot()
-void baseMenuSlot(int item);
+  void baseMenuSlot(int item);
   //void baseBinSlot()
   //void baseOctSlot()
   //void baseDecSlot()
   //void baseHexSlot()
-void helpMenuSlot(int item);
+  void helpMenuSlot(int item);
   //void helpSlot()
   //void infoSlot()
-void prefMenuSlot(int item);
+  void prefMenuSlot(int item);
   //void prefCalculatorSlot()
   //void prefGraphicsSlot()
   //void prefTableSlot()
   //void prefScriptSlot()  
-void languageMenuSlot(int item);
+  void languageMenuSlot(int item);
   //void langEnSlot()
   //void langFrSlot()
   //void langDeSlot()
-void tableMenuSlot(int item);
+  void tableMenuSlot(int item);
   //void tableStandardSlot()
   //void tableResetSlot()
-void scriptMenuSlot(int item);
+  void scriptMenuSlot(int item);
   //void scriptExportSlot()
   //void scriptImportSlot()
   //void scriptMemAutoSlot()
   //void scripMemClearSlot()
-void statisticsMenuSlot(int item);
+  void statisticsMenuSlot(int item);
   //void statClearSlot()
   //void statAutoclearSlot()
   //void statPointsSlot()
   //void statLinesSlot()
-void tableTypeMenuSlot(int item);
+  void tableTypeMenuSlot(int item);
   //void tableNormalSlot()
   //void tablePolarSlot()
   //void tableParameterSlot()
@@ -485,13 +486,13 @@ void tableTypeMenuSlot(int item);
   //void table3dSlot()
   //void tableComplexSlot()
 
-void graphSetMenuSlot(int item);
-void floatPointMenuSlot(int item);
-void updateGraphSetMenuSlot();
+  void graphSetMenuSlot(int item);
+  void floatPointMenuSlot(int item);
+  void updateGraphSetMenuSlot();
 
-void runScriptSlot(QString*);
-void changeTabSlot(int);
-void tabChangeSlot(int index);
+  void runScriptSlot(QString*);
+  void changeTabSlot(int);
+  void tabChangeSlot(int index);
 
 
 void getPref(Preferences newPref);
@@ -507,43 +508,34 @@ signals:
 
 
 
-class HelpBrowser :public QWidget
+class HelpBrowser : public QWidget
 {
-    QToolBar*toolBar;
-    QVBoxLayout* dockArea;
-    QPixmap *forwardIcon,*backIcon,*zoominIcon,*zoomoutIcon;
-    QToolButton *forwardButton,*backButton,*zoominButton,*zoomoutButton;
-    QTextBrowser *browser;
-    QString currentSource;
-    Q_OBJECT
-    
-    public:
-    HelpBrowser(QWidget*parent);
-    void setContent(QString);
-    
-    public slots:
-    void zoominSlot();
-    void zoomoutSlot();
-    void sourceSlot(const QString&);
-    
-    protected:
-    void resizeEvent(QResizeEvent*);
+  Q_OBJECT
+public:
+  explicit HelpBrowser(QWidget *parent = nullptr);
+  void setContent(QString path);
+
+protected:
+  void resizeEvent(QResizeEvent *event) override;
+
+private slots:
+  void zoominSlot();
+  void zoomoutSlot();
+  void sourceSlot(const QString &source);
+
+private:
+  QTextBrowser *browser;
+  QToolBar     *toolBar;
+  QToolButton  *backButton;
+  QToolButton  *forwardButton;
+  QToolButton  *zoominButton;
+  QToolButton  *zoomoutButton;
+  QPixmap      *forwardIcon;
+  QPixmap      *backIcon;
+  QPixmap      *zoominIcon;
+  QPixmap      *zoomoutIcon;
+  QString       currentSource;
 };
-
-
-class InfoDialog :public QDialog
-{
-    Q_OBJECT
-    QTabWidget *tabWidget;
-    QDialogButtonBox *buttonBox;
-    QTextEdit *licenseWidget;
-    QLabel *authorInfo,*versionInfo;
-    QGridLayout*layout;
-
-    public:
-        InfoDialog(QWidget*parent);
-};
-
 
 
 

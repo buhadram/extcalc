@@ -84,6 +84,9 @@ class GraphicsThread :public QThread
     ThreadSync*threadData;
     Variable*vars;
     public:
+
+    static const QEvent::Type SIGTHREADSYNC = static_cast<QEvent::Type>(QEvent::User + 1);
+
     GraphicsThread(QGLWidget*p) :QThread()
     {
         
@@ -116,7 +119,7 @@ class GraphicsThread :public QThread
                 threadData->dimension[c][c1]=1;
         }
     }
-    
+
     ~GraphicsThread()
     {
         delete[] vars;
@@ -126,7 +129,7 @@ class GraphicsThread :public QThread
         }
         free(threadData->vars);
     }
-    
+
   void setObjectData(ObjectInfo*o,int i)
     {
         index=i;
@@ -144,7 +147,7 @@ class GraphOutput : public QOpenGLWidget, protected QOpenGLFunctions
     GLuint axes;
     Preferences pref;
     List <GLuint> additionalObjects;
-  QList <ObjectInfo*> objectInfo;
+    QList <ObjectInfo*> objectInfo;
     Variable*vars;
     ThreadSync*threadData;
     int xRotation,yRotation,mouseX,mouseY,zMove;
@@ -211,6 +214,8 @@ public:
         dynamicPos=0;
         timer = new QTimer(this);
         threadTimer=new QTimer(this);
+        timer->setSingleShot(false);
+        threadTimer->setSingleShot(false);
         for(int c=0; c<THREADS; c++)
             threads[c]=new GraphicsThread((QGLWidget*)this);
         QObject::connect(timer,SIGNAL(timeout()),this,SLOT(timerSlot()));

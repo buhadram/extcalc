@@ -11,58 +11,45 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
-Overloaded QTable class that supports colored cells.
+Overloaded QTableWidget class that supports colored cells.
 
 ////////////////////////////////////////////////////////////////////////////////////////////*/
 #ifndef CALCTABLE
 #define CALCTABLE
 
-
-
 #include <QTableWidget>
 #include <QHeaderView>
-#include <global.h>
+#include <QColor>
+#include <QAbstractItemView>
+#include <QEvent>
+
+#include "global.h"
 #include "list.h"
 
-
-
-class CalcTable :public QTableWidget
+class CalcTable : public QTableWidget
 {
-    
-    int coloredCol;
-    bool editable;
-    List <QColor> colorTable;
-    
     Q_OBJECT
+
+    int  coloredCol;
+    bool editable;
+    List<QColor> colorTable;
+
 public:
-    
-    
-    CalcTable(QWidget*parent,int coloredColumn=0,bool isEditable=true) :QTableWidget(parent)
-    {
-        coloredCol=coloredColumn;
-        editable=isEditable;
-    }
-    
-    void changeColor(int row,QColor color);
-    
-    
+    explicit CalcTable(QWidget *parent,
+                       int coloredColumn = 0,
+                       bool isEditable   = true);
+
+    // Change the color of the "colored column" for a given row
+    void changeColor(int row, const QColor &color);
+
 protected:
-    
-    virtual void paintCell( QPainter * p, int row, int col, const QRect & cr, bool selected, const QColorGroup & cg );
-    QWidget* beginEdit( int row, int col, bool replace );
+    // Hook into edit start to emit cellEditStarted (replacement for old beginEdit)
+    bool edit(const QModelIndex &index,
+              EditTrigger trigger,
+              QEvent *event) override;
 
-    
-    signals:
-    void cellEditStarted(int,int);
-    
-    
-}; 
+signals:
+    void cellEditStarted(int row, int col);
+};
 
-
-
-
-#endif
-
-
-
-
+#endif // CALCTABLE
