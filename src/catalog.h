@@ -11,7 +11,7 @@ it under the terms of the GNU General Public License as published by
 the Free Software Foundation; either version 2, or (at your option)
 any later version.
 
-This is a overloaded popup menu that serves a complete function catalog.
+This is an overloaded popup menu that serves a complete function catalog.
 
 ////////////////////////////////////////////////////////////////////////////////////////////*/
 #ifndef CATALOGH
@@ -19,315 +19,345 @@ This is a overloaded popup menu that serves a complete function catalog.
 
 #include <QMenu>
 #include <QAction>
-#include <qlabel.h>
-#include <qpushbutton.h>
+#include <QLabel>
+#include <QPushButton>
 #include <QListWidget>
 #include <QListWidgetItem>
-#include <qlineedit.h>
-#include <qdialog.h>
+#include <QLineEdit>
+#include <QDialog>
+
 #include "global.h"
 
-
-/*
-math
-pi                                            3,14159 26535 89793 23846 26433 83279 50288
-euler                                        2,71828 18284 59045 23536 02874 71352 66249
-(C)gamma (Euler-Mascheroni-Konstante)            0,57721 56649 01532 86060 65120 90082 40243
-
-physics
-c0    vacuum light speed                        299 792 458                        m/s
-my0 magnetic field                            12.566 370 614...x10^7            N/A^2
-epsilon0 electric field                        8.854 187 817...x10^12            F/m
-Z0    Wellenwiderstand                        376.730 313 461                    Ohm
-G (Gravitation)                                6.6742x10^11                    m^3/(kg s^2)
-h (plancksches Wirkungsquantum                6.626 069 3x10^-34
-
-e (Elementraladung)                            1.602 176 53x10^-19                C
-alpha (Feinstrukturkonstante)                7.297 352 568x10^-3
-
-m_e Elektronenmasse                            9.109 381 88(72)x10^-31            kg
-m_p Protonenmasse                            1.672 621 58(13)x10^-27            kg
-m_n Neutronenmasse                            1.674 927 16(13)x10^-27            kg
-
-conversation
-*/
-
-class ConstantDialog :public QDialog
+// ---------------------------------------------------------------------
+// ConstantDialog (Qt6 version: uses QListWidget instead of Q3ListBox)
+// ---------------------------------------------------------------------
+class ConstantDialog : public QDialog
 {
-    QLabel *constLabel,*descriptionLabel,*valueLabel,*identifierLabel;
-    QLineEdit *descriptionLine,*valueLine,*identifierLine;
-    QPushButton *okButton,*cancelButton,*addButton,*removeButton;
-    Q3ListBox *variablesBox;
-    Preferences pref;
     Q_OBJECT
-    
-    
-    public:
-    ConstantDialog(QWidget*parent,QString name,Preferences p);
-    
-    public slots:
-        
+
+    QLabel      *constLabel;
+    QLabel      *descriptionLabel;
+    QLabel      *valueLabel;
+    QLabel      *identifierLabel;
+    QLineEdit   *descriptionLine;
+    QLineEdit   *valueLine;
+    QLineEdit   *identifierLine;
+    QPushButton *okButton;
+    QPushButton *cancelButton;
+    QPushButton *addButton;
+    QPushButton *removeButton;
+    QListWidget *variablesList;       // was Q3ListBox
+    Preferences  pref;
+
+public:
+    ConstantDialog(QWidget *parent, const QString &name, Preferences p);
+
+public slots:
     void boxSlot();
     void applySlot();
     void removeSlot();
     void setPref(Preferences newPref);
-    
-    signals:
-        void prefChange(Preferences);
-    
+
+signals:
+    void prefChange(Preferences);
 };
 
-
-class Catalog :public QMenu
+// ---------------------------------------------------------------------
+// Catalog (Qt6 version: uses addMenu/addAction + QAction::data)
+// ---------------------------------------------------------------------
+class Catalog : public QMenu
 {
-    QMenu *mathStandard,*mathTrigonometric,*mathExtended,*mathLogic,*matrix,*scriptStandard,*scriptText,*scriptGraphics,*scriptGL,*scriptFile,
-     *constantsMath,*constantsPhysics,*constantsConv,*constantsUser;
-    Preferences pref;
-    int mathConstLen,physicsConstLen,convConstLen;
-    int state;
-    ConstantDialog*cDialog;
     Q_OBJECT
 
+    QMenu *mathStandard;
+    QMenu *mathTrigonometric;
+    QMenu *mathExtended;
+    QMenu *mathLogic;
+    QMenu *matrix;
+    QMenu *scriptStandard;
+    QMenu *scriptText;
+    QMenu *scriptGraphics;
+    QMenu *scriptGL;
+    QMenu *scriptFile;
+    QMenu *constantsMath;
+    QMenu *constantsPhysics;
+    QMenu *constantsConv;
+    QMenu *constantsUser;
 
-    public:
-    
-    Catalog(int st, QWidget*parent,Preferences *p=nullptr) :QMenu(parent)
+    Preferences pref;
+    int mathConstLen;
+    int physicsConstLen;
+    int convConstLen;
+    int state;
+    ConstantDialog *cDialog;
+
+public:
+    explicit Catalog(int st, QWidget *parent, Preferences *p = nullptr)
+    : QMenu(parent),
+    mathStandard(nullptr),
+    mathTrigonometric(nullptr),
+    mathExtended(nullptr),
+    mathLogic(nullptr),
+    matrix(nullptr),
+    scriptStandard(nullptr),
+    scriptText(nullptr),
+    scriptGraphics(nullptr),
+    scriptGL(nullptr),
+    scriptFile(nullptr),
+    constantsMath(nullptr),
+    constantsPhysics(nullptr),
+    constantsConv(nullptr),
+    constantsUser(nullptr),
+    mathConstLen(0),
+    physicsConstLen(0),
+    convConstLen(0),
+    state(st),
+    cDialog(nullptr)
     {
-        state=st;
-        if(p==nullptr)
-        {
-            if(state&CATCONSTANTS)
-                state&=~CATCONSTANTS;
-            pref.constList=nullptr;
-        }
-        else pref=*p;
-        mathStandard=new QMenu(this);
-        mathTrigonometric=new QMenu(this);
-        mathExtended=new QMenu(this);
-        mathLogic=new QMenu(this);
-        matrix=new QMenu(this);
-        scriptStandard=new QMenu(this);
-        scriptText=new QMenu(this);
-        scriptGraphics=new QMenu(this);
-        scriptGL=new QMenu(this);
-        scriptFile=new QMenu(this);
-
-        constantsMath=new QMenu(this);
-        constantsPhysics=new QMenu(this);
-        constantsConv=new QMenu(this);
-        constantsUser=new QMenu(this);
-        
-        cDialog=new ConstantDialog(parent,"Mofify Constants",pref);
-
-        if(state&CATCONSTANTS)
-        {
-            insertItem(tr("Mathematics Constants"),constantsMath);
-            insertItem(tr("Physics Constants"),constantsPhysics);
-            insertItem(tr("Conversation Constants"),constantsConv);
-            insertItem(tr("Userdefined Constants"),constantsUser);
-        }
-        if(state&CATMATHSTD)
-        {
-            mathStandard->insertItem("+",1);
-            mathStandard->insertItem("-",2);
-            mathStandard->insertItem("*",3);
-            mathStandard->insertItem("/",4);
-            
-            mathStandard->insertItem("^2",5);
-            mathStandard->insertItem("^3",6);
-            mathStandard->insertItem("^-1",7);
-            mathStandard->insertItem("^",8);
-            mathStandard->insertItem("sqrt",9);
-            mathStandard->insertItem("curt",10);
-            mathStandard->insertItem("root",11);
-
-            mathStandard->insertItem("log",12);
-            mathStandard->insertItem("ln",13);
-            
-            mathStandard->insertItem("set ->",14);
-            mathStandard->insertItem("set =",15);
-
-            
-            mathTrigonometric->insertItem("sin",1);
-            mathTrigonometric->insertItem("cos",2);
-            mathTrigonometric->insertItem("tan",3);
-            mathTrigonometric->insertItem("asin",4);
-            mathTrigonometric->insertItem("acos",5);
-            mathTrigonometric->insertItem("atan",6);
-            mathTrigonometric->insertItem("sinh",7);
-            mathTrigonometric->insertItem("cosh",8);
-            mathTrigonometric->insertItem("tanh",9);
-            mathTrigonometric->insertItem("asinh",10);
-            mathTrigonometric->insertItem("acosh",11);
-            mathTrigonometric->insertItem("atanh",12);
-            
-            mathExtended->insertItem("abs",1);
-            mathExtended->insertItem("faculty !",6);
-            mathExtended->insertItem("modulo %",7);
-            mathExtended->insertItem("rnd",8);
-            mathExtended->insertItem("d/dx",9);
-            mathExtended->insertItem("integral",10);
-
-
-            
-            insertItem(tr("Math Standard"),mathStandard);
-            insertItem(tr("Math Trigonometric"),mathTrigonometric);
-            insertItem(tr("Math Extended"),mathExtended);
-        }
-        if(state&CATMATHLOGIC)
-        {
-            mathLogic->insertItem("logic and &&&&",1);
-            mathLogic->insertItem("logic or ||",2);
-            mathLogic->insertItem("logic not !",3);
-            mathLogic->insertItem("==",4);
-            mathLogic->insertItem(">=",5);
-            mathLogic->insertItem("<=",6);
-            mathLogic->insertItem("!=",7);
-            mathLogic->insertItem("<",8);
-            mathLogic->insertItem(">",9);
-            mathLogic->insertItem("binary and &&",10);
-            mathLogic->insertItem("binary or |",11);
-            mathLogic->insertItem("binary not ~",12);
-            mathLogic->insertItem("left shift <<",13);
-            mathLogic->insertItem("right shift >>",14);
-
-            insertItem(tr("Math Logic"),mathLogic);
-        }
-        if(state&CATMATHCOMPLEX)
-        {
-            
-            mathExtended->insertItem("arg",2);
-            mathExtended->insertItem("conj",3);
-            mathExtended->insertItem("real",4);
-            mathExtended->insertItem("imag",5);
-
-        }
-        if(state&CATMATRIX)
-        {
-            matrix->insertItem("[]",1);
-            matrix->insertItem("sprod",2);
-            matrix->insertItem("^-1",3);
-
-            insertItem(tr("Matrix/Vector"),matrix);
-        }
-        if(state&CATSCRIPT)
-        {
-            scriptStandard->insertItem("if",1);
-            scriptStandard->insertItem("for",2);
-            scriptStandard->insertItem("while",3);
-            scriptStandard->insertItem("break",4);
-            scriptStandard->insertItem("continue",5);
-            scriptStandard->insertItem("stop",6);
-            scriptStandard->insertItem("sleep",7);
-            scriptStandard->insertItem("run",8);
-            scriptStandard->insertItem("(bool)",9);
-            scriptStandard->insertItem("(int)",10);
-            scriptStandard->insertItem("(float)",11);
-            scriptStandard->insertItem("(string)",12);
-            scriptStandard->insertItem(";",13);
-            scriptStandard->insertItem("{",14);
-            scriptStandard->insertItem("}",15);
-            
-            scriptText->insertItem("print",1);
-            scriptText->insertItem("clear",2);
-            scriptText->insertItem("setcursor",3);
-            scriptText->insertItem("getline",4);
-            scriptText->insertItem("getkey",5);
-            scriptText->insertItem("keystate",6);
-
-            
-            scriptGraphics->insertItem("drawpoint",1);
-            scriptGraphics->insertItem("drawline",2);
-            scriptGraphics->insertItem("drawrect",3);
-            scriptGraphics->insertItem("drawcircle",4);
-            scriptGraphics->insertItem("drawstring",5);
-            scriptGraphics->insertItem("drawcolor",6);
-            scriptGraphics->insertItem("drawclear",7);
-            
-            
-            scriptGL->insertItem("glbegin",1);
-            scriptGL->insertItem("glendlist",2);
-            scriptGL->insertItem("glend",3);
-            scriptGL->insertItem("glshow",4);
-            scriptGL->insertItem("glclear",5);
-            scriptGL->insertItem("glloadidentity",6);
-            scriptGL->insertItem("glstartlist",7);
-            scriptGL->insertItem("glcalllist",8);
-            scriptGL->insertItem("glpoint",9);
-            scriptGL->insertItem("glscale",10);
-            scriptGL->insertItem("glmove",11);
-            scriptGL->insertItem("glrotate",12);
-            scriptGL->insertItem("glcolor",13);
-            scriptGL->insertItem("glstring",14);
-            
-            scriptFile->insertItem("readfile",1);
-            scriptFile->insertItem("writefile",2);
-            scriptFile->insertItem("removefile",3);
-            scriptFile->insertItem("appendfile",4);
-
-            
-            insertItem(tr("Script Standard"),scriptStandard);
-            insertItem(tr("Script Text"),scriptText);
-            insertItem(tr("Script Graphics"),scriptGraphics);
-            insertItem(tr("Script GL"),scriptGL);
-            insertItem(tr("Script File"),scriptFile);
-            
+        if (p == nullptr) {
+            if (state & CATCONSTANTS)
+                state &= ~CATCONSTANTS;
+            pref.constList = nullptr;
+        } else {
+            pref = *p;
         }
 
-        QObject::connect(mathStandard,SIGNAL(activated(int)),this,SLOT(mathStandardSlot(int)));
-        QObject::connect(mathTrigonometric,SIGNAL(activated(int)),this,SLOT(mathTrigonometricSlot(int)));
-        QObject::connect(mathExtended,SIGNAL(activated(int)),this,SLOT(mathExtendedSlot(int)));
-        QObject::connect(mathLogic,SIGNAL(activated(int)),this,SLOT(mathLogicSlot(int)));
-        QObject::connect(matrix,SIGNAL(activated(int)),this,SLOT(matrixSlot(int)));
-        QObject::connect(scriptStandard,SIGNAL(activated(int)),this,SLOT(scriptStandardSlot(int)));
-        QObject::connect(scriptText,SIGNAL(activated(int)),this,SLOT(scriptTextSlot(int)));
-        QObject::connect(scriptGraphics,SIGNAL(activated(int)),this,SLOT(scriptGraphicsSlot(int)));
-        QObject::connect(scriptGL,SIGNAL(activated(int)),this,SLOT(scriptGLSlot(int)));
-        QObject::connect(scriptFile,SIGNAL(activated(int)),this,SLOT(scriptFileSlot(int)));
-        QObject::connect(constantsPhysics,SIGNAL(activated(int)),this,SLOT(constantsSlot(int)));
-        QObject::connect(constantsMath,SIGNAL(activated(int)),this,SLOT(constantsSlot(int)));
-        QObject::connect(constantsConv,SIGNAL(activated(int)),this,SLOT(constantsSlot(int)));
-        QObject::connect(constantsUser,SIGNAL(activated(int)),this,SLOT(constantsSlot(int)));
-        QObject::connect(cDialog,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
-        
+        // --- Create submenus ---
+        mathStandard      = new QMenu(this);
+        mathTrigonometric = new QMenu(this);
+        mathExtended      = new QMenu(this);
+        mathLogic         = new QMenu(this);
+        matrix            = new QMenu(this);
+        scriptStandard    = new QMenu(this);
+        scriptText        = new QMenu(this);
+        scriptGraphics    = new QMenu(this);
+        scriptGL          = new QMenu(this);
+        scriptFile        = new QMenu(this);
 
+        constantsMath     = new QMenu(this);
+        constantsPhysics  = new QMenu(this);
+        constantsConv     = new QMenu(this);
+        constantsUser     = new QMenu(this);
+
+        cDialog = new ConstantDialog(parent, QStringLiteral("Modify Constants"), pref);
+
+        // Helper lambda: create an action with a numeric ID
+        auto addItemWithId = [](QMenu *menu, const QString &text, int id) {
+            QAction *act = menu->addAction(text);
+            act->setData(id);
+            return act;
+        };
+
+        // ---- Constants menus ----
+        if (state & CATCONSTANTS) {
+            addMenu(constantsMath)->setText(tr("Mathematics Constants"));
+            addMenu(constantsPhysics)->setText(tr("Physics Constants"));
+            addMenu(constantsConv)->setText(tr("Conversation Constants"));
+            addMenu(constantsUser)->setText(tr("Userdefined Constants"));
+        }
+
+        // ---- Math standard / trig / extended ----
+        if (state & CATMATHSTD) {
+            // Math Standard
+            addItemWithId(mathStandard, "+",   1);
+            addItemWithId(mathStandard, "-",   2);
+            addItemWithId(mathStandard, "*",   3);
+            addItemWithId(mathStandard, "/",   4);
+            addItemWithId(mathStandard, "^2",  5);
+            addItemWithId(mathStandard, "^3",  6);
+            addItemWithId(mathStandard, "^-1", 7);
+            addItemWithId(mathStandard, "^",   8);
+            addItemWithId(mathStandard, "sqrt",9);
+            addItemWithId(mathStandard, "curt",10);
+            addItemWithId(mathStandard, "root",11);
+            addItemWithId(mathStandard, "log", 12);
+            addItemWithId(mathStandard, "ln",  13);
+            addItemWithId(mathStandard, "set ->",14);
+            addItemWithId(mathStandard, "set =", 15);
+
+            // Math Trigonometric
+            addItemWithId(mathTrigonometric, "sin",  1);
+            addItemWithId(mathTrigonometric, "cos",  2);
+            addItemWithId(mathTrigonometric, "tan",  3);
+            addItemWithId(mathTrigonometric, "asin", 4);
+            addItemWithId(mathTrigonometric, "acos", 5);
+            addItemWithId(mathTrigonometric, "atan", 6);
+            addItemWithId(mathTrigonometric, "sinh", 7);
+            addItemWithId(mathTrigonometric, "cosh", 8);
+            addItemWithId(mathTrigonometric, "tanh", 9);
+            addItemWithId(mathTrigonometric, "asinh",10);
+            addItemWithId(mathTrigonometric, "acosh",11);
+            addItemWithId(mathTrigonometric, "atanh",12);
+
+            // Math Extended
+            addItemWithId(mathExtended, "abs",        1);
+            addItemWithId(mathExtended, "faculty !",  6);
+            addItemWithId(mathExtended, "modulo %",   7);
+            addItemWithId(mathExtended, "rnd",        8);
+            addItemWithId(mathExtended, "d/dx",       9);
+            addItemWithId(mathExtended, "integral",  10);
+
+            // attach submenus to this menu
+            addMenu(mathStandard)->setText(tr("Math Standard"));
+            addMenu(mathTrigonometric)->setText(tr("Math Trigonometric"));
+            addMenu(mathExtended)->setText(tr("Math Extended"));
+        }
+
+        // ---- Math Logic ----
+        if (state & CATMATHLOGIC) {
+            addItemWithId(mathLogic, "logic and &&&&", 1);
+            addItemWithId(mathLogic, "logic or ||",    2);
+            addItemWithId(mathLogic, "logic not !",    3);
+            addItemWithId(mathLogic, "==",             4);
+            addItemWithId(mathLogic, ">=",             5);
+            addItemWithId(mathLogic, "<=",             6);
+            addItemWithId(mathLogic, "!=",             7);
+            addItemWithId(mathLogic, "<",              8);
+            addItemWithId(mathLogic, ">",              9);
+            addItemWithId(mathLogic, "binary and &&", 10);
+            addItemWithId(mathLogic, "binary or |",  11);
+            addItemWithId(mathLogic, "binary not ~", 12);
+            addItemWithId(mathLogic, "left shift <<",13);
+            addItemWithId(mathLogic, "right shift >>",14);
+
+            addMenu(mathLogic)->setText(tr("Math Logic"));
+        }
+
+        // ---- Complex operations ----
+        if (state & CATMATHCOMPLEX) {
+            addItemWithId(mathExtended, "arg",   2);
+            addItemWithId(mathExtended, "conj",  3);
+            addItemWithId(mathExtended, "real",  4);
+            addItemWithId(mathExtended, "imag",  5);
+        }
+
+        // ---- Matrix ----
+        if (state & CATMATRIX) {
+            addItemWithId(matrix, "[]",   1);
+            addItemWithId(matrix, "sprod",2);
+            addItemWithId(matrix, "^-1",  3);
+
+            addMenu(matrix)->setText(tr("Matrix/Vector"));
+        }
+
+        // ---- Script menus ----
+        if (state & CATSCRIPT) {
+            // Script Standard
+            addItemWithId(scriptStandard, "if",        1);
+            addItemWithId(scriptStandard, "for",       2);
+            addItemWithId(scriptStandard, "while",     3);
+            addItemWithId(scriptStandard, "break",     4);
+            addItemWithId(scriptStandard, "continue",  5);
+            addItemWithId(scriptStandard, "stop",      6);
+            addItemWithId(scriptStandard, "sleep",     7);
+            addItemWithId(scriptStandard, "run",       8);
+            addItemWithId(scriptStandard, "(bool)",    9);
+            addItemWithId(scriptStandard, "(int)",    10);
+            addItemWithId(scriptStandard, "(float)",  11);
+            addItemWithId(scriptStandard, "(string)", 12);
+            addItemWithId(scriptStandard, ";",        13);
+            addItemWithId(scriptStandard, "{",        14);
+            addItemWithId(scriptStandard, "}",        15);
+
+            // Script Text
+            addItemWithId(scriptText, "print",     1);
+            addItemWithId(scriptText, "clear",     2);
+            addItemWithId(scriptText, "setcursor", 3);
+            addItemWithId(scriptText, "getline",   4);
+            addItemWithId(scriptText, "getkey",    5);
+            addItemWithId(scriptText, "keystate",  6);
+
+            // Script Graphics
+            addItemWithId(scriptGraphics, "drawpoint",  1);
+            addItemWithId(scriptGraphics, "drawline",   2);
+            addItemWithId(scriptGraphics, "drawrect",   3);
+            addItemWithId(scriptGraphics, "drawcircle", 4);
+            addItemWithId(scriptGraphics, "drawstring", 5);
+            addItemWithId(scriptGraphics, "drawcolor",  6);
+            addItemWithId(scriptGraphics, "drawclear",  7);
+
+            // Script GL
+            addItemWithId(scriptGL, "glbegin",        1);
+            addItemWithId(scriptGL, "glendlist",      2);
+            addItemWithId(scriptGL, "glend",          3);
+            addItemWithId(scriptGL, "glshow",         4);
+            addItemWithId(scriptGL, "glclear",        5);
+            addItemWithId(scriptGL, "glloadidentity", 6);
+            addItemWithId(scriptGL, "glstartlist",    7);
+            addItemWithId(scriptGL, "glcalllist",     8);
+            addItemWithId(scriptGL, "glpoint",        9);
+            addItemWithId(scriptGL, "glscale",       10);
+            addItemWithId(scriptGL, "glmove",        11);
+            addItemWithId(scriptGL, "glrotate",      12);
+            addItemWithId(scriptGL, "glcolor",       13);
+            addItemWithId(scriptGL, "glstring",      14);
+
+            // Script File
+            addItemWithId(scriptFile, "readfile",   1);
+            addItemWithId(scriptFile, "writefile",  2);
+            addItemWithId(scriptFile, "removefile", 3);
+            addItemWithId(scriptFile, "appendfile", 4);
+
+            addMenu(scriptStandard)->setText(tr("Script Standard"));
+            addMenu(scriptText)->setText(tr("Script Text"));
+            addMenu(scriptGraphics)->setText(tr("Script Graphics"));
+            addMenu(scriptGL)->setText(tr("Script GL"));
+            addMenu(scriptFile)->setText(tr("Script File"));
+        }
+
+        // ---- Connections (Qt5/6: triggered(QAction*)) ----
+        auto connectMenu = [this](QMenu *menu, auto slotFunc) {
+            QObject::connect(menu, &QMenu::triggered,
+                             this, [this, slotFunc](QAction *act) {
+                                 bool ok = false;
+                                 int id = act->data().toInt(&ok);
+                                 if (ok)
+                                     (this->*slotFunc)(id);
+                             });
+        };
+
+        connectMenu(mathStandard,       &Catalog::mathStandardSlot);
+        connectMenu(mathTrigonometric,  &Catalog::mathTrigonometricSlot);
+        connectMenu(mathExtended,       &Catalog::mathExtendedSlot);
+        connectMenu(mathLogic,          &Catalog::mathLogicSlot);
+        connectMenu(matrix,             &Catalog::matrixSlot);
+        connectMenu(scriptStandard,     &Catalog::scriptStandardSlot);
+        connectMenu(scriptText,         &Catalog::scriptTextSlot);
+        connectMenu(scriptGraphics,     &Catalog::scriptGraphicsSlot);
+        connectMenu(scriptGL,           &Catalog::scriptGLSlot);
+        connectMenu(scriptFile,         &Catalog::scriptFileSlot);
+        connectMenu(constantsPhysics,   &Catalog::constantsSlot);
+        connectMenu(constantsMath,      &Catalog::constantsSlot);
+        connectMenu(constantsConv,      &Catalog::constantsSlot);
+        connectMenu(constantsUser,      &Catalog::constantsSlot);
+
+        QObject::connect(cDialog, &ConstantDialog::prefChange,
+                         this,    &Catalog::getPref);
     }
-    
+
     void setPref(Preferences newPref);
-    
 
-
-    
-    public slots:
-        
+public slots:
     void mathStandardSlot(int);
     void mathTrigonometricSlot(int);
     void mathExtendedSlot(int);
     void mathLogicSlot(int);
-    
+
     void matrixSlot(int);
-    
+
     void scriptStandardSlot(int);
     void scriptTextSlot(int);
     void scriptGraphicsSlot(int);
     void scriptGLSlot(int);
     void scriptFileSlot(int);
-    
-    void constantsSlot(int);
-    
-    void getPref(Preferences pref)
-    {emit prefChange(pref);}
 
-    
-    signals:
-    
+    void constantsSlot(int);
+
+    void getPref(Preferences pref) { emit prefChange(pref); }
+
+signals:
     void menuSignal(QString);
     void prefChange(Preferences);
-    
-    
 };
 
-
-
-
-#endif
+#endif // CATALOGH

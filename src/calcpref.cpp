@@ -14,55 +14,63 @@ any later version.
 
 ////////////////////////////////////////////////////////////////////////////////////////////*/
 #include "calcpref.h"
+#include <QEvent>
 
 void CalcPreferences::saveSlot()
 {
-    if(angleBox->currentItem() == 0)
-        pref.angle=DEG;
-    else if(angleBox->currentItem() == 1)
-        pref.angle=RAD;
-    else if(angleBox->currentItem() == 2)
-        pref.angle=GRA;
-    
-    if(outputBox->currentItem() == 0)
-        pref.outputType=FIXEDNUM;
-    else if(outputBox->currentItem() == 1)
-        pref.outputType=VARIABLENUM;
-    else if(outputBox->currentItem() == 2)
-        pref.outputType=EXPSYM;
-    
-    if(calcModeBox->currentItem() == 0)
-        pref.calcType=SCIENTIFIC;
-    else if(calcModeBox->currentItem() == 1)
-        pref.calcType=BASE;
-    
-    if(baseBox->currentItem() == 0)
-        pref.base=HEX;
-    else if(baseBox->currentItem() == 1)
-        pref.base=DEC;
-    else if(baseBox->currentItem() == 2)
-        pref.base=OCT;
-    else if(baseBox->currentItem() == 3)
-        pref.base=BIN;
-    
-    pref.complex=complexBox->isChecked();
-    
-    
-    pref.outputLength=outputLenBox->value();
-        
+    // angle
+    switch (angleBox->currentIndex()) {
+        case 0:  pref.angle = DEG; break;
+        case 1:  pref.angle = RAD; break;
+        case 2:  pref.angle = GRA; break;
+        default: pref.angle = DEG; break;
+    }
+
+    // output type
+    switch (outputBox->currentIndex()) {
+        case 0:  pref.outputType = FIXEDNUM;    break;
+        case 1:  pref.outputType = VARIABLENUM; break;
+        case 2:  pref.outputType = EXPSYM;      break;
+        default: pref.outputType = FIXEDNUM;    break;
+    }
+
+    // calculator mode
+    switch (calcModeBox->currentIndex()) {
+        case 0:  pref.calcType = SCIENTIFIC; break;
+        case 1:  pref.calcType = BASE;       break;
+        default: pref.calcType = SCIENTIFIC; break;
+    }
+
+    // base
+    switch (baseBox->currentIndex()) {
+        case 0:  pref.base = HEX; break;
+        case 1:  pref.base = DEC; break;
+        case 2:  pref.base = OCT; break;
+        case 3:  pref.base = BIN; break;
+        default: pref.base = DEC; break;
+    }
+
+    pref.complex      = complexBox->isChecked();
+    pref.outputLength = outputLenBox->value();
+
     emit prefChange(pref);
     close();
 }
 
-
-void CalcPreferences::windowActivationChange(bool)
+void CalcPreferences::changeEvent(QEvent *event)
 {
-
-    if(!isActiveWindow())
-    {
-        setActiveWindow();
+    // Replacement for old windowActivationChange(bool)
+    if (event->type() == QEvent::WindowDeactivate) {
+        if (!isActiveWindow()) {
+            // Qt3: setActiveWindow();
+            // Qt5/6:
+            activateWindow();
+        }
     }
+
+    QWidget::changeEvent(event);
 }
+
 
 
 
