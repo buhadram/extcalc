@@ -59,8 +59,8 @@ int main( int argc, char **argv ) {
     {
         if(trans.load("data/german.qm",INSTALLDIR))
             a.installTranslator(&trans);
-        else MessageBox("Extcalc-Sprachpaket konnte nicht geladen werden");
-        
+		else MessageBox("Extcalc-Sprachpaket konnte nicht geladen werden");
+
         if(qtTrans.load("data/qt_de.qm",INSTALLDIR))
             a.installTranslator(&qtTrans);
         else MessageBox("QT-Sprachpaket konnte nicht geladen werden");

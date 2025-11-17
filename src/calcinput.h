@@ -1,138 +1,119 @@
-/*/////////////////////////////////////////Extcalc////////////////////////////////////////////
-/////////////////////////////////Scientific Graphic Calculator////////////////////////////////
-
-File:         calcinput.h
-Author:       Rainer Strobel
-Email:        rainer1223@users.sourceforge.net
-Homepage:     http://extcalc-linux.sourceforge.net
-
-This program is free software; you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation; either version 2, or (at your option)
-any later version.
-
-This class creates the normal calculator user interface. It receives the user input, runs the
-math classes and shows the user output.
-////////////////////////////////////////////////////////////////////////////////////////////*/
 #ifndef CALCINPUT_H
 #define CALCINPUT_H
 
-
 #include "global.h"
+
 #include <QTextEdit>
-#include <qfont.h>
+#include <QFont>
 #include <QMenu>
 #include <QAction>
-#include <qthread.h>
-#include <qevent.h>
-//Added by qt3to4:
+#include <QThread>
+#include <QEvent>
 #include <QResizeEvent>
 #include <QKeyEvent>
+#include <QTextOption>
+
 #include "list.h"
 
-/*
-class ScriptThread :public QThread
+class CalcInput : public QTextEdit
 {
-    Script* script;
-    QObject*parent;
-//    Q_OBJECT
-public:
-    ScriptThread(Script* s,QObject*p) :QThread()
-    {
-        script=s;
-        parent=p;
-    }
-protected:
-    virtual void run()
-    {
-        script->exec();
-    }
-};
-*/
+    Q_OBJECT
 
-
-
-
-class CalcInput :public QTextEdit
-{
     int lineLength;
     int charLength;
     QString line;
     int lineCursor;
     QFont *stdFont;
     int lineCount;
-    Variable*vars;
+    Variable *vars;
     bool scriptExec;
-    List <int>resultParagraphs; 
-//    ScriptThread*script;
-    Script*scriptObject;
-    ThreadSync*threadData;
-    bool ansAvailable,ansDone,autoBrace;
+    List<int> resultParagraphs;
+    Script *scriptObject;
+    ThreadSync *threadData;
+    bool ansAvailable, ansDone, autoBrace;
 
     Preferences pref;
-    
-    Q_OBJECT
-    public:
-        CalcInput(QWidget*parentWin,Variable*va,ThreadSync*td,bool aB=false) :QTextEdit((QWidget*)parentWin)
-        {
-            vars=va;
-            threadData=td;
-            scriptExec=false;
-            autoBrace=aB;
-//            script=nullptr;
-      stdFont=new QFont("monospace",10);
-            stdFont->setFixedPitch(true);
-            setFont(*stdFont);
-            setTextFormat(Qt::PlainText);
-            ansAvailable=false;
-            ansDone=false;
 
+public:
+    explicit CalcInput(QWidget *parentWin,
+                       Variable *va,
+                       ThreadSync *td,
+                       bool aB = false)
+    : QTextEdit(parentWin),
+    lineLength(0),
+    charLength(0),
+    lineCursor(0),
+    stdFont(nullptr),
+    lineCount(0),
+    vars(va),
+    scriptExec(false),
+    scriptObject(nullptr),
+    threadData(td),
+    ansAvailable(false),
+    ansDone(false),
+    autoBrace(aB)
+    {
+        stdFont = new QFont(QStringLiteral("monospace"), 10);
+        stdFont->setFixedPitch(true);
+        setFont(*stdFont);
 
-            QFontMetrics fontSize=fontMetrics();
-            charLength=fontSize.size(0,QString("m")).width();
-            setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
+        // Qt3: setTextFormat(Qt::PlainText);
+        // Qt5/6 equivalent:
+        setAcceptRichText(false);
 
-            lineLength=width()/charLength-1;
+        QFontMetrics fontSize = fontMetrics();
+        charLength = fontSize.size(0, QStringLiteral("m")).width();
 
-            line="";
-            lineCursor=0;
-            lineCount=0;
-            connect(this,SIGNAL(clicked(int,int)),this,SLOT(cursorSlot(int,int)));
-        }
+        // Qt3: setWrapPolicy(QTextEdit::AtWordOrDocumentBoundary);
+        setWordWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
 
+        lineLength = width() / charLength - 1;
 
-        void calculateKey();
-        void deleteKey();
-        void backKey();
-        void clearAll();
-        void cursorKey(int key);
-        void textInput(QString text);
-        void setPref(Preferences newPref)
-        {
-            pref=newPref;
-        }
+        line.clear();
+        lineCursor = 0;
+        lineCount = 0;
 
+        // Qt3: clicked(int,int) signal is gone.
+        // Use cursorPositionChanged() and compute para/pos in a slot.
+        connect(this, &QTextEdit::cursorPositionChanged,
+                this, &CalcInput::cursorSlot);
+    }
 
-    protected:
-        virtual void keyPressEvent(QKeyEvent*);
-        virtual void resizeEvent(QResizeEvent*);
-//        virtual void customEvent(QEvent *ev);
-        virtual QMenu *createPopupMenu(const QPoint&);
-    
-    public slots:
-        void cursorSlot(int para,int pos);
-        void menuSlot(int item);
-//        void scriptSlot(QString*code);
+    void calculateKey();
+    void deleteKey();
+    void backKey();
+    void clearAll();
+    void cursorKey(int key);
+    void textInput(const QString &text);
 
-    signals:
-        void prefChange(Preferences);
-        void calcSignal();
+    void setPref(Preferences newPref)
+    {
+        pref = newPref;
+    }
+
+protected:
+    void keyPressEvent(QKeyEvent *event) override;
+    void resizeEvent(QResizeEvent *event) override;
+
+    // In Qt5/6 there is no virtual createPopupMenu(const QPoint&).
+    // If your implementation relies on this being called automatically,
+    // you probably want to override contextMenuEvent(QContextMenuEvent*) instead.
+    QMenu *createPopupMenu(const QPoint &pos);  // keep declaration for your .cpp
+
+public slots:
+    // New signature: we will compute para/pos ourselves from textCursor()
+    void cursorSlot();
+
+    void menuSlot(int item);
+    //  void scriptSlot(QString *code);
+
+signals:
+    void prefChange(Preferences);
+    void calcSignal();
+
+    // Optional: if you still want the old (para,pos) semantics,
+    // you can expose this signal and emit it from cursorSlot().
+    void cursorMoved(int para, int pos);
 };
 
-
-
-
-
-#endif
-
-
+#endif // CALCINPUT_H
