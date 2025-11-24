@@ -108,6 +108,8 @@ set(src_cxx
   src/global.cpp
   src/scriptdisplay.cpp
   src/screenshotdialog.cpp
+  src/infodialog.cpp
+  src/helpbrowser.cpp
 )
 
 set(src_ui
