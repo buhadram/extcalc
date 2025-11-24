@@ -80,14 +80,12 @@ class GraphicsThread :public QThread
 {
     int index;
   ObjectInfo*obj;
-    QGLWidget*parent;
+    QWidget*parent;
     ThreadSync*threadData;
     Variable*vars;
     public:
 
-    static const QEvent::Type SIGTHREADSYNC = static_cast<QEvent::Type>(QEvent::User + 1);
-
-    GraphicsThread(QGLWidget*p) :QThread()
+    GraphicsThread(QWidget*p) :QThread()
     {
         
         parent=p;
@@ -182,15 +180,14 @@ class GraphOutput : public QOpenGLWidget, protected QOpenGLFunctions
 
 Q_OBJECT
 public:
-    GraphOutput(QWidget*parent,Variable*va,ThreadSync*td,QGLWidget*shareWidget=nullptr) :QOpenGLWidget(parent,0,shareWidget)
+    GraphOutput(QWidget*parent,Variable*va,ThreadSync*td) :QOpenGLWidget(parent)
     {
         graphProcess=false;
         axes=0xffffffff;
         pref.solvePrec=currentSolvePrec=1;
-        drawImage=new QImage(TEXTURESIZE,TEXTURESIZE,32);
+        drawImage=new QImage(TEXTURESIZE,TEXTURESIZE,QImage::Format_ARGB32);
         drawImage->fill(0x00000000);
-        drawImage->setAlphaBuffer(true);
-        drawMap=new QPixmap(*drawImage);
+        drawMap = new QPixmap(QPixmap::fromImage(*drawImage));
         backCursor=0;
         backMap=new QPixmap*[BACKSTEPS];
         for(int c=0; c<BACKSTEPS; c++)
@@ -217,9 +214,9 @@ public:
         timer->setSingleShot(false);
         threadTimer->setSingleShot(false);
         for(int c=0; c<THREADS; c++)
-            threads[c]=new GraphicsThread((QGLWidget*)this);
-        QObject::connect(timer,SIGNAL(timeout()),this,SLOT(timerSlot()));
-        QObject::connect(threadTimer,SIGNAL(timeout()),this,SLOT(threadTimerSlot()));
+            threads[c]=new GraphicsThread((QWidget*)this);
+        QObject::connect(timer, &QTimer::timeout, this, &GraphOutput::timerSlot);
+        QObject::connect(threadTimer, &QTimer::timeout, this, &GraphOutput::threadTimerSlot);
         
     }
 

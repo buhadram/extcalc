@@ -18,6 +18,7 @@ any later version.
 #include <QResizeEvent>
 //#include <QList>
 #include <QVector>
+#include <QTableWidgetItem>
 
 /*
 void TableWidget::resizeEvent(QResizeEvent*)
@@ -45,7 +46,7 @@ void TableWidget::resizeEvent(QResizeEvent*)
         horzSplit->setGeometry(20,50,width-40,height-290);
     
         standardButtons->setGeometry(20,height-220,280,200);
-        extButtons->setGeometry(width/2+10,height-180,300,160);
+        m_extButtons->setGeometry(width/2+10,height-180,300,160);
         
 //        calculateButton->setGeometry(width/2+15,height-220,90,35);
 //        typeBox->setGeometry(width/2+115,height-220,90,35);
@@ -58,65 +59,65 @@ void TableWidget::resizeEvent(QResizeEvent*)
 
 void TableWidget::setPref(Preferences p)
 {
-    pref=p;
-    if(pref.tableType==TABLENORMAL)
+    m_pref=p;
+    if(m_pref.tableType==TABLENORMAL)
         typeBox->setCurrentText(TABLEH_STR3);
-    else if(pref.tableType==TABLEPOLAR)
+    else if(m_pref.tableType==TABLEPOLAR)
         typeBox->setCurrentText(TABLEH_STR4);
-    else if(pref.tableType==TABLEPARAMETER)
+    else if(m_pref.tableType==TABLEPARAMETER)
         typeBox->setCurrentText(TABLEH_STR5);
-    else if(pref.tableType==TABLEINEQUALITY)
+    else if(m_pref.tableType==TABLEINEQUALITY)
         typeBox->setCurrentText(TABLEH_STR6);
-    else if(pref.tableType==TABLE3D)
+    else if(m_pref.tableType==TABLE3D)
         typeBox->setCurrentText(TABLEH_STR7);
-    else if(pref.tableType==TABLECOMPLEX)
+    else if(m_pref.tableType==TABLECOMPLEX)
         typeBox->setCurrentText(TABLEH_STR9);
     
     
-    outputTable->setNumRows(pref.tableXSteps);
-    double tableXStep=(pref.tableXEnd-pref.tableXStart)/(pref.tableXSteps-1);
-    double tableZStep=(pref.tableZEnd-pref.tableZStart)/(pref.tableZSteps-1);
+    outputTable->setRowCount(m_pref.tableXSteps);
+    double tableXStep=(m_pref.tableXEnd-m_pref.tableXStart)/(m_pref.tableXSteps-1);
+    double tableZStep=(m_pref.tableZEnd-m_pref.tableZStart)/(m_pref.tableZSteps-1);
 
     int oldNum=vertValues.GetLen();
     
-    if(oldNum<pref.tableXSteps)
+    if(oldNum<m_pref.tableXSteps)
     {
-        for(int c=oldNum; c<pref.tableXSteps; c++)
-            vertValues.NewItem(c*tableXStep+pref.tableXStart);
+        for(int c=oldNum; c<m_pref.tableXSteps; c++)
+            vertValues.NewItem(c*tableXStep+m_pref.tableXStart);
     }
     else {
-        for(int c=pref.tableXSteps; c<oldNum; c++)
-            vertValues.DeleteItem(pref.tableXSteps);
+        for(int c=m_pref.tableXSteps; c<oldNum; c++)
+            vertValues.DeleteItem(m_pref.tableXSteps);
     }
-    for(int c=0; c<pref.tableXSteps; c++)
+    for(int c=0; c<m_pref.tableXSteps; c++)
     {
-        vertValues[c]=c*tableXStep+pref.tableXStart;
-        vertHeader->setLabel(c,QString::number(vertValues[c],'g',5));
+        vertValues[c]=c*tableXStep+m_pref.tableXStart;
+        outputTable->setVerticalHeaderItem(c, new QTableWidgetItem(QString::number(vertValues[c],'g',5)));
     }
     
     oldNum=horzValues.GetLen();
-    if(oldNum<pref.tableZSteps)
+    if(oldNum<m_pref.tableZSteps)
     {
-        for(int c=oldNum; c<pref.tableZSteps; c++)
-            horzValues.NewItem(c*tableZStep+pref.tableZStart);
+        for(int c=oldNum; c<m_pref.tableZSteps; c++)
+            horzValues.NewItem(c*tableZStep+m_pref.tableZStart);
     }
     else {
-        for(int c=pref.tableZSteps; c<oldNum; c++)
-            horzValues.DeleteItem(pref.tableZSteps);
+        for(int c=m_pref.tableZSteps; c<oldNum; c++)
+            horzValues.DeleteItem(m_pref.tableZSteps);
     }
-    for(int c=0; c<pref.tableZSteps; c++)
-        horzValues[c]=c*tableZStep+pref.tableZStart;
+    for(int c=0; c<m_pref.tableZSteps; c++)
+        horzValues[c]=c*tableZStep+m_pref.tableZStart;
 
 
-    calcButtons->setPref(pref);
-    extButtons->setPref(pref);
-    functionTable->setPref(pref);
+    m_calcButtons->setPref(m_pref);
+    m_extButtons->setPref(m_pref);
+    functionTable->setPref(m_pref);
 }
 
 void TableWidget::getPref(Preferences p)
 {
-    pref=p;
-    emit prefChange(pref);
+    m_pref=p;
+    emit prefChange(m_pref);
 }
 
 void TableWidget::inputTextChanged()
@@ -137,78 +138,77 @@ void TableWidget::tableEditSlot(QString string)
     if(string.length() > 0)
         inputLine->setText(string);
     else inputLine->clear();
-    inputLine->setActiveWindow();
     inputLine->setFocus();
 }
 
 void TableWidget::calculateButtonSlot()
 {
-    outputTable->setNumCols(0);
+    outputTable->setColumnCount(0);
     
-    if(pref.tableType==TABLENORMAL)
+    if(m_pref.tableType==TABLENORMAL)
     {
-        vars[0]=pref.tableAValue;
+        m_vars[0]=m_pref.tableAValue;
         for(int c=0; c<20;c++)
         {
-            if(pref.functionTypes[c]==GRAPHSTD &&pref.activeFunctions[c])
+            if(m_pref.functionTypes[c]==GRAPHSTD &&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+1);
-                horzHeader->setLabel(outputTable->numCols()-1,"y"+QString::number(c+1)+"(x)");
-                char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-                Calculate ca(nullptr,cleanString,&pref,vars);
+                outputTable->setColumnCount(outputTable->columnCount()+1);
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-1, new QTableWidgetItem("y"+QString::number(c+1)+"(x)"));
+                char*cleanString=preprocessor(&m_pref.functions[c],&m_pref,false);
+                Calculate ca(nullptr,cleanString,&m_pref,m_vars);
                 
-                for(int c=0; c<pref.tableXSteps;c++)
+                for(int c=0; c<m_pref.tableXSteps;c++)
                 {
-                    vars[23]=vertValues[c];
-                    outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
+                    m_vars[23]=vertValues[c];
+                    outputTable->setText(c,outputTable->columnCount()-1,formatOutput(ca.calc(),&m_pref));
                 }
                 if(cleanString!=nullptr)
                     free(cleanString);
             }
         }
     }
-    else if(pref.tableType==TABLEPOLAR)
+    else if(m_pref.tableType==TABLEPOLAR)
     {
-        vars[0]=pref.tableAValue;
+        m_vars[0]=m_pref.tableAValue;
         for(int c=0; c<20;c++)
         {
-            if(pref.functionTypes[c]==GRAPHPOLAR &&pref.activeFunctions[c])
+            if(m_pref.functionTypes[c]==GRAPHPOLAR &&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+1);
-                outputTable->horizontalHeader()->setLabel(outputTable->numCols()-1,"r"+QString::number(c+1)+"(x)");
-                char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-                Calculate ca(nullptr,cleanString,&pref,vars);
-                for(int c=0; c<pref.tableXSteps;c++)
+                outputTable->setColumnCount(outputTable->columnCount()+1);
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-1, new QTableWidgetItem("r"+QString::number(c+1)+"(x)"));
+                char*cleanString=preprocessor(&m_pref.functions[c],&m_pref,false);
+                Calculate ca(nullptr,cleanString,&m_pref,m_vars);
+                for(int c=0; c<m_pref.tableXSteps;c++)
                 {
-                    vars[23]=vertValues[c];
-                    outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
+                    m_vars[23]=vertValues[c];
+                    outputTable->setText(c,outputTable->columnCount()-1,formatOutput(ca.calc(),&m_pref));
                 }
                 if(cleanString!=nullptr)
                     free(cleanString);
             }
         }
     }
-    else if(pref.tableType==TABLEPARAMETER)
+    else if(m_pref.tableType==TABLEPARAMETER)
     {
-        vars[0]=pref.tableAValue;
+        m_vars[0]=m_pref.tableAValue;
         for(int c=0; c<20;c++)
         {
-            if(pref.functionTypes[c]==GRAPHPARAMETER &&pref.activeFunctions[c])
+            if(m_pref.functionTypes[c]==GRAPHPARAMETER &&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+2);
-                outputTable->horizontalHeader()->setLabel(outputTable->numCols()-2,"X"+QString::number(c+1)+"(T)");
-                outputTable->horizontalHeader()->setLabel(outputTable->numCols()-1,"Y"+QString::number(c+1)+"(T)");
-                QString input=pref.functions[c].left(pref.functions[c].find("\\"));
-                char*cleanStringX=preprocessor(&input,&pref,false);
-                input=pref.functions[c].right(pref.functions[c].length()-1-pref.functions[c].find("\\"));
-                char*cleanStringY=preprocessor(&input,&pref,false);
-                Calculate caX(nullptr,cleanStringX,&pref,vars);
-                Calculate caY(nullptr,cleanStringY,&pref,vars);
-                for(int c=0; c<pref.tableXSteps;c++)
+                outputTable->setColumnCount(outputTable->columnCount()+2);
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-2, new QTableWidgetItem("X"+QString::number(c+1)+"(T)"));
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-1, new QTableWidgetItem("Y"+QString::number(c+1)+"(T)"));
+                QString input=m_pref.functions[c].left(m_pref.functions[c].indexOf("\\"));
+                char*cleanStringX=preprocessor(&input,&m_pref,false);
+                input=m_pref.functions[c].right(m_pref.functions[c].length()-1-m_pref.functions[c].indexOf("\\"));
+                char*cleanStringY=preprocessor(&input,&m_pref,false);
+                Calculate caX(nullptr,cleanStringX,&m_pref,m_vars);
+                Calculate caY(nullptr,cleanStringY,&m_pref,m_vars);
+                for(int c=0; c<m_pref.tableXSteps;c++)
                 {
-                    vars[19]=vertValues[c];
-                    outputTable->setText(c,outputTable->numCols()-2,formatOutput(caX.calc(),&pref));
-                    outputTable->setText(c,outputTable->numCols()-1,formatOutput(caY.calc(),&pref));
+                    m_vars[19]=vertValues[c];
+                    outputTable->setText(c,outputTable->columnCount()-2,formatOutput(caX.calc(),&m_pref));
+                    outputTable->setText(c,outputTable->columnCount()-1,formatOutput(caY.calc(),&m_pref));
                 }
                 if(cleanStringX!=nullptr)
                     free(cleanStringX);
@@ -217,49 +217,49 @@ void TableWidget::calculateButtonSlot()
             }
         }
     }
-    else if(pref.tableType==TABLEINEQUALITY)
+    else if(m_pref.tableType==TABLEINEQUALITY)
     {
-        vars[0]=pref.tableAValue;
+        m_vars[0]=m_pref.tableAValue;
         for(int c=0; c<20;c++)
         {
-            if((pref.functionTypes[c]==GRAPHIEGE || 
-                         pref.functionTypes[c]==GRAPHIEG || 
-                         pref.functionTypes[c]==GRAPHIELE || 
-                         pref.functionTypes[c]==GRAPHIEG )&&pref.activeFunctions[c])
+            if((m_pref.functionTypes[c]==GRAPHIEGE || 
+                         m_pref.functionTypes[c]==GRAPHIEG || 
+                         m_pref.functionTypes[c]==GRAPHIELE || 
+                         m_pref.functionTypes[c]==GRAPHIEG )&&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+1);
-                outputTable->horizontalHeader()->setLabel(outputTable->numCols()-1,"y"+QString::number(c+1)+"(x)");
-                char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-                Calculate ca(nullptr,cleanString,&pref,vars);
-                for(int c=0; c<pref.tableXSteps;c++)
+                outputTable->setColumnCount(outputTable->columnCount()+1);
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-1, new QTableWidgetItem("y"+QString::number(c+1)+"(x)"));
+                char*cleanString=preprocessor(&m_pref.functions[c],&m_pref,false);
+                Calculate ca(nullptr,cleanString,&m_pref,m_vars);
+                for(int c=0; c<m_pref.tableXSteps;c++)
                 {
-                    vars[23]=vertValues[c];
-                    outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.calc(),&pref));
+                    m_vars[23]=vertValues[c];
+                    outputTable->setText(c,outputTable->columnCount()-1,formatOutput(ca.calc(),&m_pref));
                 }
                 if(cleanString!=nullptr)
                     free(cleanString);
             }
         }
     }
-    else if(pref.tableType==TABLE3D)  
+    else if(m_pref.tableType==TABLE3D)  
     {
-        vars[0]=pref.tableAValue;
+        m_vars[0]=m_pref.tableAValue;
         for(int c=0; c<20;c++)
         {
-            if(pref.functionTypes[c]==GRAPH3D &&pref.activeFunctions[c])
+            if(m_pref.functionTypes[c]==GRAPH3D &&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+pref.tableZSteps);
-                for(int c1=0; c1<pref.tableZSteps;c1++)
-                    outputTable->horizontalHeader()->setLabel(outputTable->numCols()-pref.tableZSteps+c1,"y"+QString::number(c+1)+"(x"+QString::number(horzValues[c1],'g',5)+")");
-                char*cleanString=preprocessor(&pref.functions[c],&pref,false);
-                Calculate ca(nullptr,cleanString,&pref,vars);
-                for(int c2=0; c2<pref.tableXSteps;c2++)
+                outputTable->setColumnCount(outputTable->columnCount()+m_pref.tableZSteps);
+                for(int c1=0; c1<m_pref.tableZSteps;c1++)
+                    outputTable->setHorizontalHeaderItem(outputTable->columnCount()-m_pref.tableZSteps+c1, new QTableWidgetItem("y"+QString::number(c+1)+"(x"+QString::number(horzValues[c1],'g',5)+")"));
+                char*cleanString=preprocessor(&m_pref.functions[c],&m_pref,false);
+                Calculate ca(nullptr,cleanString,&m_pref,m_vars);
+                for(int c2=0; c2<m_pref.tableXSteps;c2++)
                 {
-                    for(int c1=0; c1<pref.tableZSteps;c1++)
+                    for(int c1=0; c1<m_pref.tableZSteps;c1++)
                     {
-                        vars[23]=vertValues[c2];
-                        vars[25]=horzValues[c1];
-                        outputTable->setText(c2,outputTable->numCols()-pref.tableZSteps+c1,formatOutput(ca.calc(),&pref));
+                        m_vars[23]=vertValues[c2];
+                        m_vars[25]=horzValues[c1];
+                        outputTable->setText(c2,outputTable->columnCount()-m_pref.tableZSteps+c1,formatOutput(ca.calc(),&m_pref));
                     }
                 }
                 if(cleanString!=nullptr)
@@ -267,36 +267,36 @@ void TableWidget::calculateButtonSlot()
             }
         }
     }
-    else if(pref.tableType==TABLECOMPLEX)
+    else if(m_pref.tableType==TABLECOMPLEX)
     {
-        threadData->vars[0][0].fval=Complex(pref.tableAValue);
-        bool complexPref=pref.complex;
-        pref.complex=true;
+        m_threadData->vars[0][0].fval=Complex(m_pref.tableAValue);
+        bool complexPref=m_pref.complex;
+        m_pref.complex=true;
         for(int c=0; c<20;c++)
         {
-            if((pref.functionTypes[c]==GRAPHCOMPLEX || pref.functionTypes[c]==GRAPHCOMP3D) &&pref.activeFunctions[c])
+            if((m_pref.functionTypes[c]==GRAPHCOMPLEX || m_pref.functionTypes[c]==GRAPHCOMP3D) &&m_pref.activeFunctions[c])
             {
-                outputTable->setNumCols(outputTable->numCols()+1);
-                horzHeader->setLabel(outputTable->numCols()-1,"F"+QString::number(c+1)+"(z)");
-                char*cleanString=preprocessor(&pref.functions[c],&pref,false);
+                outputTable->setColumnCount(outputTable->columnCount()+1);
+                outputTable->setHorizontalHeaderItem(outputTable->columnCount()-1, new QTableWidgetItem("F"+QString::number(c+1)+"(z)"));
+                char*cleanString=preprocessor(&m_pref.functions[c],&m_pref,false);
                 if(cleanString==nullptr || strlen(cleanString)<=0)
                 {
-                    for(int c=0; c<pref.tableXSteps; c++)
-                        outputTable->setText(c,outputTable->numCols()-1,"nan");
+                    for(int c=0; c<m_pref.tableXSteps; c++)
+                        outputTable->setText(c,outputTable->columnCount()-1,"nan");
                     continue;
                 }
-                Script ca(nullptr,cleanString,&pref,vars,threadData);
-                threadData->vars[25][0].type=NFLOAT;
-                for(int c=0; c<pref.tableXSteps;c++)
+                Script ca(nullptr,cleanString,&m_pref,m_vars,m_threadData);
+                m_threadData->vars[25][0].type=NFLOAT;
+                for(int c=0; c<m_pref.tableXSteps;c++)
                 {
-                    threadData->vars[25][0].fval=Complex(vertValues[c]);
-                    outputTable->setText(c,outputTable->numCols()-1,formatOutput(ca.exec(),&pref));
+                    m_threadData->vars[25][0].fval=Complex(vertValues[c]);
+                    outputTable->setText(c,outputTable->columnCount()-1,formatOutput(ca.exec(),&m_pref));
                 }
                 if(cleanString!=nullptr)
                     free(cleanString);
             }
         }
-        pref.complex=complexPref;
+        m_pref.complex=complexPref;
     }
 }
 
@@ -307,58 +307,31 @@ void TableWidget::maximizeButtonSlot()
     if(isMaximized())
     {
         maximizeSlot(false);
-        maximizeButton->setIconSet(*maximizeIcon);
+        maximizeButton->setIcon(*maximizeIcon);
     }
     else {
         maximizeSlot(true);
-        maximizeButton->setIconSet(*minimizeIcon);
+        maximizeButton->setIcon(*minimizeIcon);
     }
-/*    if(fullscreen)
-    {
 
-        
-        standardButtons->show();
-        extButtons->show();
-        Q3ValueList<int> s = horzSplit->sizes();
-        s[1]=(s[0]+s[1])/2;
-        s[0]=s[1];
-        horzSplit->setSizes(s);
-//        functionTable->show();
-//        inputLine->show();
-    }
-    else 
-    {
-        
-        standardButtons->hide();
-        extButtons->hide();
-        Q3ValueList<int> s = horzSplit->sizes();
-        s[1]=s[0]+s[1];
-        s[0]=0;
-        horzSplit->setSizes(s);
-//        functionTable->hide();
-//        inputLine->hide();
-    }
-    fullscreen=!fullscreen;
-    resizeEvent(nullptr);
-    */
 }
 
 void TableWidget::typeBoxSlot(const QString&str)
 {
 
     if(str==TABLEH_STR3)
-        pref.tableType=TABLENORMAL;
+        m_pref.tableType=TABLENORMAL;
     else if(str==TABLEH_STR4)
-        pref.tableType=TABLEPOLAR;
+        m_pref.tableType=TABLEPOLAR;
     else if(str==TABLEH_STR5)
-        pref.tableType=TABLEPARAMETER;
+        m_pref.tableType=TABLEPARAMETER;
     else if(str==TABLEH_STR6)
-        pref.tableType=TABLEINEQUALITY;
+        m_pref.tableType=TABLEINEQUALITY;
     else if(str==TABLEH_STR7)
-        pref.tableType=TABLE3D;
+        m_pref.tableType=TABLE3D;
     else if(str==TABLEH_STR9)
-        pref.tableType=TABLECOMPLEX;
-    emit prefChange(pref);
+        m_pref.tableType=TABLECOMPLEX;
+    emit prefChange(m_pref);
 }
 
 
@@ -377,8 +350,8 @@ void TableWidget::buttonInputSlot(QString text)
         functionTable->setText(functionTable->currentRow(),0,inputLine->text());
         if((inputLine->text().length())<=0)
         {
-            Q3CheckTableItem *checkItem=(Q3CheckTableItem*)functionTable->item(functionTable->currentRow(),2);
-            checkItem->setChecked(false);
+            QTableWidgetItem *checkItem=functionTable->item(functionTable->currentRow(),2);
+            if(checkItem) checkItem->setCheckState(Qt::Unchecked);
         }
     }
     else if(text == "clearall")
@@ -396,8 +369,8 @@ void TableWidget::buttonInputSlot(QString text)
         inputLine->setText(fullText);
         inputLine->setCursorPosition(cursorPos+text.length());
         functionTable->setText(functionTable->currentRow(),0,inputLine->text());
-        Q3CheckTableItem *checkItem=(Q3CheckTableItem*)functionTable->item(functionTable->currentRow(),2);
-        checkItem->setChecked(true);
+        QTableWidgetItem *checkItem=functionTable->item(functionTable->currentRow(),2);
+        if(checkItem) checkItem->setCheckState(Qt::Checked);
     }
 
 }
@@ -432,11 +405,11 @@ void TableWidget::editSlot(int type)
             if(functionTable->hasFocus())
             {
                 if(functionTable->currentColumn()==0)
-                    (qApp->clipboard())->setText(functionTable->text(functionTable->currentRow(),0),QClipboard::Clipboard);
+                    (QApplication::clipboard())->setText(functionTable->text(functionTable->currentRow(),0),QClipboard::Clipboard);
             }
             else if(outputTable->hasFocus())
             {
-                (qApp->clipboard())->setText(outputTable->text(outputTable->currentRow(),outputTable->currentColumn()),QClipboard::Clipboard);
+                (QApplication::clipboard())->setText(outputTable->text(outputTable->currentRow(),outputTable->currentColumn()),QClipboard::Clipboard);
             }
         }
     }
@@ -446,15 +419,15 @@ void TableWidget::horzHeaderSlot(int index)
 {
     bool ok;
 
-    if(pref.tableType!=TABLE3D)
+    if(m_pref.tableType!=TABLE3D)
         return;
-    index=index%pref.tableZSteps;
+    index=index%m_pref.tableZSteps;
     QString input = QInputDialog::getText(
-            TABLEH_STR10, TABLEH_STR11+QString::number(index+1)+":", QLineEdit::Normal,
-    QString::null, &ok, this );
+            this, TABLEH_STR10, TABLEH_STR11+QString::number(index+1)+":", QLineEdit::Normal,
+    QString(), &ok );
     if ( ok && input.length()>0 )
     {
-        horzValues[index]=runCalc(input,&pref,vars);
+        horzValues[index]=runCalc(input,&m_pref,m_vars);
         calculateButtonSlot();
     }
     
@@ -464,12 +437,12 @@ void TableWidget::vertHeaderSlot(int index)
 {
     bool ok;
     QString input = QInputDialog::getText(
-            TABLEH_STR10, TABLEH_STR12+QString::number(index+1)+":", QLineEdit::Normal,
-    QString::null, &ok, this );
+            this, TABLEH_STR10, TABLEH_STR12+QString::number(index+1)+":", QLineEdit::Normal,
+    QString(), &ok );
     if ( ok && input.length()>0 )
     {
-        vertValues[index]=runCalc(input,&pref,vars);
-        vertHeader->setLabel(index,QString::number(vertValues[index],'g',5));
+        vertValues[index]=runCalc(input,&m_pref,m_vars);
+        outputTable->setVerticalHeaderItem(index, new QTableWidgetItem(QString::number(vertValues[index],'g',5)));
         calculateButtonSlot();
     }
 }
@@ -478,23 +451,22 @@ void TableWidget::tableMenuSlot(int item)
 {
     if(item==RESETTABLE)
     {
-        double tableXStep=(pref.tableXEnd-pref.tableXStart)/(pref.tableXSteps-1);
-        double tableZStep=(pref.tableZEnd-pref.tableZStart)/(pref.tableZSteps-1);
+        double tableXStep=(m_pref.tableXEnd-m_pref.tableXStart)/(m_pref.tableXSteps-1);
+        double tableZStep=(m_pref.tableZEnd-m_pref.tableZStart)/(m_pref.tableZSteps-1);
         
         for(int c=0; c<vertValues.GetLen(); c++)
         {
-            vertValues[c]=pref.tableXStart+c*tableXStep;
-            vertHeader->setLabel(c,QString::number(vertValues[c],'g',5));
+            vertValues[c]=m_pref.tableXStart+c*tableXStep;
+            outputTable->setVerticalHeaderItem(c, new QTableWidgetItem(QString::number(vertValues[c],'g',5)));
         }
         for(int c=0; c<horzValues.GetLen(); c++)
-            horzValues[c]=pref.tableZStart+c*tableZStep;
+            horzValues[c]=m_pref.tableZStart+c*tableZStep;
         calculateButtonSlot();
     }
 }
 
 void TableWidget::dockWindowSlot()
 {
-    dockArea->moveDockWindow(toolBar);
 }
 
 
@@ -502,5 +474,3 @@ void TableWidget::catalogSlot()
 {
     catalog->exec(toolBar->mapToGlobal(QPoint(catalogButton->x(),catalogButton->y()+catalogButton->height())));
 }
-
-

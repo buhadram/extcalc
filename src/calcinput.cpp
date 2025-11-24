@@ -20,152 +20,170 @@ any later version.
 #include <QTextCharFormat>
 #include <QKeyEvent>
 #include <QEvent>
+#include <QContextMenuEvent>
+#include <QTextBlock>
+#include <QTextCursor>
+#include <QTextDocument>
+#include <QtGlobal>
 
-void CalcInput::keyPressEvent(QKeyEvent*e)
+void CalcInput::keyPressEvent(QKeyEvent *e)
 {
     int para;
     int pos;
-    bool noCheck=false;
+    bool noCheck = false;
 
-    getCursorPosition(&para,&pos);
-    if(para != paragraphs()-1 && 
-          !((e->modifiers() == Qt::ControlModifier)
-          && e->key() != Qt::Key_V && e->key() != Qt::Key_X ) &&
-          !(e->key() == Qt::Key_Right || e->key() == Qt::Key_Left ||
-          e->key() == Qt::Key_Up || e->key() == Qt::Key_Down)) 
+    getCursorPosition(&para, &pos);
+    if (para != paragraphs() - 1 &&
+        !((e->modifiers() == Qt::ControlModifier)
+          && e->key() != Qt::Key_V && e->key() != Qt::Key_X) &&
+        !(e->key() == Qt::Key_Right || e->key() == Qt::Key_Left ||
+          e->key() == Qt::Key_Up || e->key() == Qt::Key_Down))
     {
-        QString content=text(para);
-        content=content.trimmed();
+        QString content = text(para).trimmed();
 
-        if(hasSelectedText())
+        if (hasSelectedText())
         {
-            int startPara,endPara,startPos,endPos;
-            getSelection(&startPara,&startPos,&endPara,&endPos,0);
-            if(startPara != endPara)
+            int startPara, endPara, startPos, endPos;
+            getSelection(&startPara, &startPos, &endPara, &endPos, 0);
+            if (startPara != endPara)
             {
-                setSelection(-1,-1,-1,-1,0);
+                setSelection(-1, -1, -1, -1, 0);
                 return;
             }
-            else {
-                setSelection(-1,-1,-1,-1,0);
-                content.remove(startPos,endPos-startPos);
-                pos=startPos;
-                if(e->ascii()==8 || e->ascii()==127)
-                                        noCheck=true;
-            }
+            setSelection(-1, -1, -1, -1, 0);
+            content.remove(startPos, endPos - startPos);
+            pos = startPos;
+            const int ascii = e->text().isEmpty() ? 0 : e->text().at(0).unicode();
+            if (ascii == 8 || ascii == 127)
+                noCheck = true;
         }
 
-        para=paragraphs()-1;
-        setCursorPosition(para,0);
-        while(text(para).length() > 1)
+        para = paragraphs() - 1;
+        setCursorPosition(para, 0);
+        while (text(para).length() > 1)
             del();
         setBold(false);
         setAlignment(Qt::AlignLeft);
         insert(content);
-        setCursorPosition(para,pos);
+        setCursorPosition(para, pos);
     }
 
-    if(!noCheck)
-    switch(e->key())
+    const QString keyText = e->text();
+    const int ascii = keyText.isEmpty() ? 0 : keyText.at(0).unicode();
+
+    if (!noCheck)
     {
-        case Qt::Key_Return:                                //enter
+        switch (e->key())
         {
+        case Qt::Key_Return:
+        case Qt::Key_Enter:
             calculateKey();
             break;
-        }
-        case Qt::Key_Backspace:                                    //backspace
-                backKey();
+        case Qt::Key_Backspace:
+            backKey();
             break;
-        case Qt::Key_Delete:                                //delete
+        case Qt::Key_Delete:
             deleteKey();
             break;
-        case Qt::Key_Tab:                                    //tab
+        case Qt::Key_Tab:
             insert(" ");
             line.append(" ");
             lineCursor++;
             break;
-        case 0:                                    //special keys
-            if(e->key() == Qt::Key_Right)
-                cursorKey(1);
-            if(e->key() == Qt::Key_Left)
-                cursorKey(3);
-            if(e->key() == Qt::Key_Up)
-                cursorKey(0);
-            if(e->key() == Qt::Key_Down && para < paragraphs())
-                cursorKey(2);
+        case Qt::Key_Right:
+            cursorKey(1);
+            break;
+        case Qt::Key_Left:
+            cursorKey(3);
+            break;
+        case Qt::Key_Up:
+            cursorKey(0);
+            break;
+        case Qt::Key_Down:
+            cursorKey(2);
             break;
         default:
-        {
             setBold(false);
-            if(e->modifiers() == Qt::ControlModifier)
+            if (e->modifiers() == Qt::ControlModifier)
             {
-                switch(e->key())
+                switch (e->key())
                 {
-                    case Qt::Key_V:
-                        paste();
-                        break;
-                
-                    case Qt::Key_C:
-                
-//                    MessageBox("copy");
-                        copy();
-                        break;
-                
-                    case Qt::Key_X:
-                        cut();
-                        break;
-                    case Qt::Key_Y:
-                        redo();
-                        break;
-                    case Qt::Key_Z:
-                        undo();
-                        break;
+                case Qt::Key_V:
+                    paste();
+                    break;
+                case Qt::Key_C:
+                    copy();
+                    break;
+                case Qt::Key_X:
+                    cut();
+                    break;
+                case Qt::Key_Y:
+                    redo();
+                    break;
+                case Qt::Key_Z:
+                    undo();
+                    break;
+                default:
+                    break;
                 }
             }
-            else {
-                if(pos==0 && ( e->text() == "+" || e->text() == "^" || e->text() == "*" ||
-                               e->text() == "/" || e->text() == QChar(0xb2) || e->text() == QChar(0xb3) ||
-                               e->text() == "-" || e->text() == getUnicode(ROOTSTRING) ||
-                               e->text() == "%" || e->text() == "!"))
+            else
+            {
+                if (pos == 0 && (keyText == "+" || keyText == "^" || keyText == "*" ||
+                                 keyText == "/" || keyText == QString(QChar(0xb2)) || keyText == QString(QChar(0xb3)) ||
+                                 keyText == "-" || keyText == getUnicode(ROOTSTRING) ||
+                                 keyText == "%" || keyText == "!"))
                 {
-                    if(!ansDone && ansAvailable)
+                    if (!ansDone && ansAvailable)
                     {
                         insert("ans");
-                        ansDone=true;
+                        ansDone = true;
                     }
                 }
-                if(e->state()==Qt::Keypad && e->ascii()==',')
+                if ((e->modifiers() & Qt::KeypadModifier) && ascii == ',')
                     insert(".");
-                else insert(e->text());
-                
-                if(autoBrace && (e->ascii()>='A' && e->ascii()<='Z' || e->ascii()=='s' && pos>1 && text(para)[pos-2]=='a' && text(para)[pos-1]=='n'))
+                else
+                    insert(keyText);
+
+                const QString paraText = text(para);
+                if (autoBrace && ((ascii >= 'A' && ascii <= 'Z') ||
+                                  (ascii == 's' && pos > 1 && pos <= paraText.size() &&
+                                   paraText[pos - 2] == 'a' && paraText[pos - 1] == 'n')))
                 {
-                    int var=(int)(e->ascii())-65;
-                    if(threadData->dimension[var][0]!=1)
+                    int var = ascii - 65;
+                    if (threadData->dimension[var][0] != 1)
                         insert("[]");
-                    if(threadData->dimension[var][1]!=1)
+                    if (threadData->dimension[var][1] != 1)
                         insert("[]");
                 }
             }
         }
     }
-    getCursorPosition(&para,&pos);
+    getCursorPosition(&para, &pos);
 }
 
 
 QMenu* CalcInput::createPopupMenu(const QPoint&)
 {
-    
-    QMenu*menu = new QMenu(this);
-    menu->insertItem(CALCWIDGETC_MENU1,1);
-    menu->insertItem(CALCWIDGETC_MENU2,2);
-    menu->insertSeparator();
-    menu->insertItem(CALCWIDGETC_MENU3,3);
-    menu->insertItem(CALCWIDGETC_MENU4,4);
-    menu->insertItem(CALCWIDGETC_MENU5,5);    
-    QObject::connect(menu, &QMenu::activated, this, &CalcInput::menuSlot);
-    
+    auto *menu = new QMenu(this);
+    menu->addAction(CALCWIDGETC_MENU1, this, [this]{ menuSlot(1); });
+    menu->addAction(CALCWIDGETC_MENU2, this, [this]{ menuSlot(2); });
+    menu->addSeparator();
+    menu->addAction(CALCWIDGETC_MENU3, this, [this]{ menuSlot(3); });
+    menu->addAction(CALCWIDGETC_MENU4, this, [this]{ menuSlot(4); });
+    menu->addAction(CALCWIDGETC_MENU5, this, [this]{ menuSlot(5); });
+
     return menu;
+}
+
+void CalcInput::contextMenuEvent(QContextMenuEvent *event)
+{
+    QMenu *menu = createPopupMenu(event->pos());
+    if (menu)
+    {
+        menu->exec(event->globalPos());
+        delete menu;
+    }
 }
 
 void CalcInput::menuSlot(int item)
@@ -179,13 +197,13 @@ void CalcInput::menuSlot(int item)
             redo();
             break;
         case 3:
-            keyPressEvent(new QKeyEvent(QEvent::KeyPress,Qt::Key_X,(int)'x',Qt::ControlButton));
+            cut();
             break;
         case 4:
-            keyPressEvent(new QKeyEvent(QEvent::KeyPress,Qt::Key_C,(int)'c',Qt::ControlButton));
+            copy();
             break;
         case 5:
-            keyPressEvent(new QKeyEvent(QEvent::KeyPress,Qt::Key_V,(int)'v',Qt::ControlButton));
+            paste();
             break;
     }
 
@@ -365,7 +383,7 @@ void CalcInput::cursorKey(int key)
     }
     if(key==0)
         setCursorPosition(para-1,pos);
-    if(key==2 && para < paragraphs())
+    if(key==2 && para < paragraphs()-1)
         setCursorPosition(para+1,pos);
 }
 
@@ -403,17 +421,20 @@ void CalcInput::customEvent(QEvent *ev)
     }
 }
 */
-void CalcInput::cursorSlot(int para,int pos)
+void CalcInput::cursorSlot()
 {
+    int para;
+    int pos;
     getCursorPosition(&para,&pos);
     lineCursor=pos;
+    emit cursorMoved(para, pos);
 }
 
 
 
 
 
-void CalcInput::textInput(QString inputText)
+void CalcInput::textInput(const QString &inputText)
 {
     int para;
     int pos;
@@ -446,7 +467,7 @@ void CalcInput::textInput(QString inputText)
         insert(content);
         setCursorPosition(para,pos);
     }
-    if(pos==0 && ( inputText == "+" || inputText[0] == '^' || inputText == "*" ||
+    if(!inputText.isEmpty() && pos==0 && ( inputText == "+" || inputText[0] == '^' || inputText == "*" ||
           inputText == "/" || inputText == "\xb2" || inputText == "\xb3" ||
           inputText[0] == '-' || inputText == getUnicode(ROOTSTRING) ||
           inputText == "%" || inputText == "!"))
@@ -460,7 +481,7 @@ void CalcInput::textInput(QString inputText)
 
     insert(inputText);
     
-    if(autoBrace && (inputText[0]>='A' && inputText[0]<='Z' || inputText=="ans"))
+    if(autoBrace && !inputText.isEmpty() && ((inputText[0]>='A' && inputText[0]<='Z') || inputText=="ans"))
     {
         int var=(int)(inputText.at(0).unicode())-65;
 
@@ -512,4 +533,124 @@ void CalcInput::scriptSlot(QString*code)
 void CalcInput::setPref(Preferences newPref)
 {
     pref = newPref;
+}
+
+int CalcInput::paragraphs() const
+{
+    return document()->blockCount();
+}
+
+QString CalcInput::text(int para) const
+{
+    QTextBlock block = document()->findBlockByNumber(para);
+    return block.isValid() ? block.text() : QString();
+}
+
+int CalcInput::paragraphLength(int para) const
+{
+    return text(para).length();
+}
+
+void CalcInput::getCursorPosition(int *para, int *pos) const
+{
+    QTextCursor cur = textCursor();
+    if (para)
+        *para = cur.blockNumber();
+    if (pos)
+        *pos = cur.position() - cur.block().position();
+}
+
+void CalcInput::setCursorPosition(int para, int pos)
+{
+    QTextBlock block = document()->findBlockByNumber(para);
+    if (!block.isValid())
+        return;
+
+    const int clampedPos = qBound(0, pos, block.length());
+    QTextCursor cur(block);
+    cur.setPosition(block.position() + clampedPos);
+    setTextCursor(cur);
+}
+
+bool CalcInput::hasSelectedText() const
+{
+    return textCursor().hasSelection();
+}
+
+void CalcInput::getSelection(int *startPara, int *startPos, int *endPara, int *endPos, int) const
+{
+    QTextCursor cur = textCursor();
+    if (!cur.hasSelection())
+    {
+        if (startPara)
+            *startPara = cur.blockNumber();
+        if (endPara)
+            *endPara = cur.blockNumber();
+        const int localPos = cur.position() - cur.block().position();
+        if (startPos)
+            *startPos = localPos;
+        if (endPos)
+            *endPos = localPos;
+        return;
+    }
+
+    const int start = cur.selectionStart();
+    const int end = cur.selectionEnd();
+    QTextBlock startBlock = document()->findBlock(start);
+    QTextBlock endBlock = document()->findBlock(end);
+    if (startPara)
+        *startPara = startBlock.isValid() ? startBlock.blockNumber() : 0;
+    if (startPos)
+        *startPos = start - (startBlock.isValid() ? startBlock.position() : 0);
+    if (endPara)
+        *endPara = endBlock.isValid() ? endBlock.blockNumber() : 0;
+    if (endPos)
+        *endPos = end - (endBlock.isValid() ? endBlock.position() : 0);
+}
+
+void CalcInput::setSelection(int startPara, int startPos, int endPara, int endPos, int)
+{
+    QTextCursor cur = textCursor();
+    if (startPara < 0 || endPara < 0)
+    {
+        cur.clearSelection();
+        setTextCursor(cur);
+        return;
+    }
+
+    QTextBlock startBlock = document()->findBlockByNumber(startPara);
+    QTextBlock endBlock = document()->findBlockByNumber(endPara);
+    if (!startBlock.isValid() || !endBlock.isValid())
+        return;
+
+    const int start = startBlock.position() + qMax(0, startPos);
+    const int end = endBlock.position() + qMax(0, endPos);
+    cur.setPosition(start);
+    cur.setPosition(end, QTextCursor::KeepAnchor);
+    setTextCursor(cur);
+}
+
+void CalcInput::removeParagraph(int para)
+{
+    QTextBlock block = document()->findBlockByNumber(para);
+    if (!block.isValid())
+        return;
+    QTextCursor cur(block);
+    cur.select(QTextCursor::BlockUnderCursor);
+    cur.removeSelectedText();
+    cur.deleteChar();
+}
+
+void CalcInput::del()
+{
+    QTextCursor cur = textCursor();
+    cur.deleteChar();
+    setTextCursor(cur);
+}
+
+void CalcInput::insert(const QString &text)
+{
+    QTextCursor cur = textCursor();
+    cur.insertText(text);
+    setTextCursor(cur);
 }

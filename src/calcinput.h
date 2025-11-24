@@ -87,6 +87,7 @@ public:
     void clearAll();
     void cursorKey(int key);
     void textInput(const QString &text);
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
@@ -111,6 +112,19 @@ signals:
     // Optional: if you still want the old (para,pos) semantics,
     // you can expose this signal and emit it from cursorSlot().
     void cursorMoved(int para, int pos);
+
+private:
+    int paragraphs() const;
+    QString text(int para) const;
+    int paragraphLength(int para) const;
+    void getCursorPosition(int *para, int *pos) const;
+    void setCursorPosition(int para, int pos);
+    bool hasSelectedText() const;
+    void getSelection(int *startPara, int *startPos, int *endPara, int *endPos, int id = 0) const;
+    void setSelection(int startPara, int startPos, int endPara, int endPos, int id = 0);
+    void removeParagraph(int para);
+    void del();
+    void insert(const QString &text);
 };
 
 #endif // CALCINPUT_H

@@ -37,6 +37,7 @@ static inline void glSetColor(const QColor &c)
 
 void GraphOutput::initializeGL()
 {
+    initializeOpenGLFunctions();
 
   ObjectInfo*currentObject;
   int c;
@@ -459,7 +460,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     if(drawColor.red()==0 && drawColor.green()==0 && drawColor.blue()==0)
                         pen.setColor(QColor(255,255,255));
                     draw->setPen(pen);
-                    draw->drawLine(mouseX,mouseY,e->x(),e->y());
+                    draw->drawLine(mouseX,mouseY,e->position().x(),e->position().y());
                     draw->end();
                 */    if(drawColor.red()==0 && drawColor.green()==0 && drawColor.blue()==0)
                         pen.setColor(QColor(0,0,0));
@@ -467,10 +468,10 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     pen.setWidth(drawPen);
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height);
+                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height);
                     draw->end();
-                    mouseX=e->x();
-                    mouseY=e->y();
+                    mouseX=e->position().x();
+                    mouseY=e->position().y();
 
                     break; 
                 }
@@ -479,7 +480,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     (*drawMap)=backupDrawMap->copy();
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height);
+                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height);
                     draw->end();
                     break;
                 }
@@ -488,7 +489,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     (*drawMap)=backupDrawMap->copy();
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawRect(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
+                    draw->drawRect(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
                     draw->end();
                     break;
                 }
@@ -497,7 +498,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     (*drawMap)=backupDrawMap->copy();
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawEllipse(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
+                    draw->drawEllipse(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
                     draw->end();
                     break;
                 }
@@ -509,7 +510,7 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     draw->setPen(pen);
                     drawFont.setPixelSize(8+3*drawPen);
                     draw->setFont(drawFont);
-                    draw->drawText(e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height,drawString);
+                    draw->drawText(e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height,drawString);
                     draw->end();
                     break;
                 }
@@ -524,8 +525,8 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
         {
             if(unlock)
             {
-                int moveX=e->x()-mouseX;
-                int moveY=e->y()-mouseY;
+                int moveX=e->position().x()-mouseX;
+                int moveY=e->position().y()-mouseY;
                 
                 xRotation+=moveX;
                 yRotation+=moveY;
@@ -539,11 +540,11 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
                     yRotation+=360;
                 repaint();
             }
-            mouseX=e->x();
-            mouseY=e->y();
+            mouseX=e->position().x();
+            mouseY=e->position().y();
         }
         
-        int iX=e->x()-mouseX,iY=e->y()-mouseY;
+        int iX=e->position().x()-mouseX,iY=e->position().y()-mouseY;
         double dX,dY;
 
         
@@ -567,9 +568,9 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
         //    emit redrawSignal();
             if(updateFunctions(oldXMin,oldXMax))
             {
-                mouseX=e->x();
+                mouseX=e->position().x();
             }
-            mouseY=e->y();
+            mouseY=e->position().y();
             repaint(); 
         }
         
@@ -579,13 +580,13 @@ void GraphOutput::mouseMoveEvent(QMouseEvent*e)
 
 void GraphOutput::mousePressEvent(QMouseEvent*e)
 {
-    int iX=e->x();
-    int iY=e->y();
+    int iX=e->position().x();
+    int iY=e->position().y();
     double dX,dY;
     double xSteps=(pref.xmax-pref.xmin)/200.0;
     double ySteps=(pref.ymax-pref.ymin)/200.0;
-    mouseX=e->x();
-    mouseY=e->y();
+    mouseX=e->position().x();
+    mouseY=e->position().y();
     if (e->button() == Qt::LeftButton)
     {
         if(drawState!=DRAWNONE)
@@ -616,7 +617,7 @@ void GraphOutput::mousePressEvent(QMouseEvent*e)
                     pen.setWidth(drawPen);
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawPoint(e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height);
+                    draw->drawPoint(e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height);
                     draw->end();
                     break;
                 case DRAWLINE:
@@ -693,21 +694,21 @@ void GraphOutput::mouseReleaseEvent(QMouseEvent*e)
                 case DRAWLINE:
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height);
+                    draw->drawLine(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height);
                     draw->end();
                     delete backupDrawMap;
                     break;
                 case DRAWRECT:
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawRect(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
+                    draw->drawRect(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
                     draw->end();
                     delete backupDrawMap;
                     break;
                 case DRAWCIRCLE:
                     draw->begin(drawMap);
                     draw->setPen(pen);
-                    draw->drawEllipse(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
+                    draw->drawEllipse(mouseX*TEXTURESIZE/width,mouseY*TEXTURESIZE/height,e->position().x()*TEXTURESIZE/width-mouseX*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height-mouseY*TEXTURESIZE/height);
                     draw->end();
                     delete backupDrawMap;
                     break;
@@ -722,7 +723,7 @@ void GraphOutput::mouseReleaseEvent(QMouseEvent*e)
                     draw->setPen(pen);
                     drawFont.setPixelSize(8+3*drawPen);
                     draw->setFont(drawFont);
-                    draw->drawText(e->x()*TEXTURESIZE/width,e->y()*TEXTURESIZE/height,drawString);
+                    draw->drawText(e->position().x()*TEXTURESIZE/width,e->position().y()*TEXTURESIZE/height,drawString);
                     drawFont.setPixelSize(oldWidth);
                     draw->setFont(drawFont);
                     draw->end();
@@ -861,7 +862,7 @@ void GraphOutput::processStdFunction(ObjectInfo*obj, int index,ThreadSync*td,Var
     xStart=pref.xmin;
     xStep=(pref.xmax-pref.xmin)/PRECISION2D;
 
-    QString num,num2;
+
 
     struct timeval t1,t2;
     
@@ -936,7 +937,6 @@ void GraphOutput::processPolarFunction(ObjectInfo*obj,int index,ThreadSync*threa
 //    perror("Polar function index: "+QString::number(index));
 
     float r;
-    QString num,num2;
     struct timeval t1,t2;
   if(obj->logic)
     {
@@ -1000,8 +1000,6 @@ void GraphOutput::processParameterFunction(ObjectInfo*obj,int index,ThreadSync*t
     double* coordinates=new double[pref.parameterSteps*2];
   obj->objectData[index].coordinates=coordinates;
   obj->objectData[index].coordinateLength=pref.parameterSteps;
-
-    QString num,num2;
     struct timeval t1,t2;
     
   if(obj->logic)
@@ -1107,9 +1105,7 @@ void GraphOutput::process3dFunction(ObjectInfo*obj,int index,ThreadSync*threadDa
 
     double*coordinates=new double[PRECISION3D*PRECISION3D];
   obj->objectData[index].coordinates=coordinates;
-  obj->objectData[index].coordinateLength=PRECISION3D;
 
-    QString num,num2;
     struct timeval t1,t2;
   if(obj->logic)
     {
@@ -1196,7 +1192,6 @@ void GraphOutput::processInequalityFunction(ObjectInfo*obj,int index,ThreadSync*
   obj->objectData[index].coordinateLength=PRECISION2D+1;
 
     float x,y1,y2;
-    QString num,num2;
     Calculate *ca1=nullptr,*ca2=nullptr;
     Script*s1=nullptr,*s2=nullptr;
     Number result;
@@ -1302,7 +1297,7 @@ void GraphOutput::processComplexFunction(ObjectInfo*obj,int index,ThreadSync*thr
         zStep=(pref.nyquistEnd-pref.nyquistStart)/(double)pref.nyquistSteps;
     }
 
-    QString num,num2;
+
     bool oldcpref=pref.complex;
     pref.complex=true;
     Script ca1(nullptr,func,&pref,vars,threadData);
@@ -1375,8 +1370,12 @@ void GraphOutput::paintGL()
         waitFont.setPixelSize(16);
         QFontMetrics f(waitFont);
         
-        int x=(width()-f.width(text))/2;
-        //renderText(x,height()/2,text,waitFont); // TODO:
+        int x=(width()-f.horizontalAdvance(text))/2;
+        draw->begin(this);
+        draw->setPen(QPen(QColor(100,100,100)));
+        draw->setFont(waitFont);
+        draw->drawText(x,height()/2,text);
+        draw->end();
         return;
     }
     
@@ -1461,11 +1460,27 @@ void GraphOutput::paintGL()
                 
         glSetColor( QColor(220,220,220) );
         
+        draw->begin(this);
+        draw->setPen(QPen(QColor(220,220,220)));
+        draw->setFont(stdFont);
         for(float c=pref.xmin-fmod(pref.xmin,pref.rasterSizeX)+pref.rasterSizeX; c<pref.xmax; c+=pref.rasterSizeX)
-            renderText(c-xTrans,staticY,staticZ,QString::number(c,'g',3),stdFont);
+            draw->drawText(QPointF(c-xTrans,staticY),QString::number(c,'g',3));
         for(float c=pref.ymin-fmod(pref.ymin,pref.rasterSizeY)+pref.rasterSizeY; c<pref.ymax; c+=pref.rasterSizeY)
-            renderText(staticX,c-yTrans,staticZ,QString::number(c,'g',3),stdFont);
+            draw->drawText(QPointF(staticX,c-yTrans),QString::number(c,'g',3));
+        draw->end();
         
+        /*
+            If you want them back properly under Qt6, the right way is:
+
+            - Make GraphOutput a QOpenGLWidget.
+            - Reimplement paintEvent(QPaintEvent *e):
+                * call makeCurrent();
+                * call your existing paintGL();
+                * then create a QPainter painter(this); and draw text in 2D using a projection from graph coords → widget coords.
+
+            That’s a bit more invasive, so I’m not rewriting it blindly here, but I can if you want to go that far.
+        */
+       
 /*        for(float c=0; c<pref.xmax; c+=pref.rasterSizeX)
             renderText(c-xTrans,staticY,0.0f,QString::number(c,'g',3),stdFont);
         for(float c=0; c>pref.xmin; c-=pref.rasterSizeX)
@@ -1479,10 +1494,14 @@ void GraphOutput::paintGL()
                 
         if(pref.graphType == GRAPH3D)
         {
-
                 staticZ=pref.zmin+zTrans;
+            
+            draw->begin(this);
+            draw->setPen(QPen(QColor(220,220,220)));
+            draw->setFont(stdFont);
             for(float c=pref.zmin-fmod(pref.zmin,pref.rasterSizeZ)+pref.rasterSizeZ; c<pref.zmax; c+=pref.rasterSizeZ)
-                renderText(staticX,staticY,c-zTrans,QString::number(c,'g',3),stdFont);
+                draw->drawText(QPointF(staticX,staticY),QString::number(c,'g',3));
+            draw->end();
 /*            for(float c=0; c<pref.zmax; c+=pref.rasterSizeZ)
                 renderText(staticX,staticY,c-zTrans,QString::number(c,'g',3),stdFont);
             for(float c=0; c>pref.zmin; c-=pref.rasterSizeZ)
@@ -1829,32 +1848,32 @@ void GraphOutput::processFunction(QString function,QString function2, int type, 
 
     if(type==GRAPHPARAMETER)
     {
-        int sep=function.find("\\");
+        int sep=function.indexOf("\\");
         QString f1=function.left(sep);
         QString f2=function.right(function.length()-sep-1);
-    info->function=preprocessor(&f1,&pref,false);
-    info->function2=preprocessor(&f2,&pref,false);
+    info->function=preprocessor(const_cast<char*>(f1.toLatin1().data()),&pref,false);
+    info->function2=preprocessor(const_cast<char*>(f2.toLatin1().data()),&pref,false);
     }
     else if(type==GRAPHIEGE)
     {
-    info->function=preprocessor(&function,&pref,false);
-    info->function2=preprocessor(&function2,&pref,false);
+    info->function=preprocessor(const_cast<char*>(function.toLatin1().data()),&pref,false);
+    info->function2=preprocessor(const_cast<char*>(function2.toLatin1().data()),&pref,false);
     }
     else if(type==GRAPHIELE)
     {
-    info->function=preprocessor(&function2,&pref,false);
-    info->function2=preprocessor(&function,&pref,false);
+    info->function=preprocessor(const_cast<char*>(function2.toLatin1().data()),&pref,false);
+    info->function2=preprocessor(const_cast<char*>(function.toLatin1().data()),&pref,false);
     }
     else if(type==GRAPHIEL || type==GRAPHIEG)
     {
-    info->function=preprocessor(&function,&pref,false);
+    info->function=preprocessor(const_cast<char*>(function.toLatin1().data()),&pref,false);
         if(function2.length()<=0)
-      info->function2=preprocessor(&function,&pref,false);
-    else info->function2=preprocessor(&function2,&pref,false);
+      info->function2=preprocessor(const_cast<char*>(function.toLatin1().data()),&pref,false);
+    else info->function2=preprocessor(const_cast<char*>(function2.toLatin1().data()),&pref,false);
     }
     else
     {
-    info->function=preprocessor(&function,&pref,false);
+    info->function=preprocessor(const_cast<char*>(function.toLatin1().data()),&pref,false);
     info->function2=nullptr;
   }
 
@@ -2764,25 +2783,22 @@ void GraphOutput::timerStartSlot(bool start)
 
 void GraphOutput::screenshotSlot(int x, int y)
 {
-    void GraphOutput::screenshotSlot(int x, int y)
+    drawScreenshot = true;
+
+    if (x <= 0)
+        x = width();
+    if (y <= 0)
+        y = height();
+
+    QImage img = grabFramebuffer();
+    if (img.width() != x || img.height() != y)
     {
-        drawScreenshot = true;
-
-        if (x <= 0)
-            x = width();
-        if (y <= 0)
-            y = height();
-
-        // Grab current framebuffer as image
-        QImage img = grabFramebuffer();
-        if (img.width() != x || img.height() != y) {
-            img = img.scaled(x, y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-        }
-        scr = QPixmap::fromImage(img);
-
-        emit screenshotSignal(&scr);
-        drawScreenshot = false;
+        img = img.scaled(x, y, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
     }
+    scr = QPixmap::fromImage(img);
+
+    emit screenshotSignal(&scr);
+    drawScreenshot = false;
 }
 
 
@@ -2839,18 +2855,16 @@ void GraphOutput::drawSlot(int state,QColor color,int pen)
         else drawState=state;
         if(drawState==DRAWTEXT)
         {
-            bool ret;
-            QString QInputDialog::getText(QWidget *parent,
-                                          const QString &title,
-                                          const QString &label,
-                                          QLineEdit::EchoMode mode = QLineEdit::Normal,
-                                          const QString &text = QString(),
-                                          bool *ok = nullptr,
-                                          Qt::WindowFlags flags = Qt::WindowFlags(),
-                                          Qt::InputMethodHints hints = Qt::ImhNone);
+            bool ok = false;
+            drawString = QInputDialog::getText(this,
+                                               tr("Draw Text"),
+                                               tr("Text:"),
+                                               QLineEdit::Normal,
+                                               QString(),
+                                               &ok);
 
-            if(!ret)
-                drawString="";
+            if(!ok)
+                drawString.clear();
         }
     //    perror("DrawSlot: "+QString::number(drawState));
     }
@@ -2911,10 +2925,7 @@ void GraphOutput::threadTimerSlot()
 void GraphicsThread::run()
 {
     if(index>=0)
-    ((GraphOutput*)parent)->processGraph(obj,index,threadData,vars);
+        ((GraphOutput*)parent)->processGraph(obj, index, threadData, vars);
     QEvent *ev=new QEvent(SIGTHREADSYNC);
     QApplication::postEvent(parent,ev);
 }
-
-
-
