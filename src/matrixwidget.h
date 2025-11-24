@@ -92,8 +92,8 @@ class MatrixWidget :public TabWidget
 
             varTable=new CalcTable(split,0,true);
             outputTable=new CalcTable(split,0,true);
-            outputTable->setNumRows(10);
-            outputTable->setNumCols(4);
+            outputTable->setRowCount(10);
+            outputTable->setColumnCount(4);
 
 
             catalog=new Catalog(CATMATHSTD | CATMATHCOMPLEX | CATMATRIX,this);
@@ -102,27 +102,26 @@ class MatrixWidget :public TabWidget
             
 
             toolBar=new QToolBar();
-            dockArea->moveDockWindow(toolBar);
             
             setMainWidget(split);
-      addSubWidget(calcButtons);
+
             
             
-            varTable->setNumRows(27);
-            varTable->setNumCols(3);
+            varTable->setRowCount(27);
+            varTable->setColumnCount(3);
             QString headLine("A");
             for(int c=0; c<26; c++)
             {
                 headLine[0]=(char)(c+65);
-                varTable->verticalHeader()->setLabel(c,headLine);
+                varTable->setVerticalHeaderItem(c, new QTableWidgetItem(headLine));
             }
-            varTable->verticalHeader()->setLabel(26,"ans");
-            varTable->horizontalHeader()->setLabel(0,MATRIXWIDGETH_STR1);
-            varTable->horizontalHeader()->setLabel(1,MATRIXWIDGETH_STR2);
-            varTable->horizontalHeader()->setLabel(2,MATRIXWIDGETH_STR3);
-            varTable->setSelectionMode(QTableWidget::SingleRow);
+            varTable->setVerticalHeaderItem(26, new QTableWidgetItem("ans"));
+            varTable->setHorizontalHeaderItem(0, new QTableWidgetItem(MATRIXWIDGETH_STR1));
+            varTable->setHorizontalHeaderItem(1, new QTableWidgetItem(MATRIXWIDGETH_STR2));
+            varTable->setHorizontalHeaderItem(2, new QTableWidgetItem(MATRIXWIDGETH_STR3));
+            varTable->setSelectionMode(QAbstractItemView::SingleSelection);
             varTable->selectRow(currentVar);
-            varTable->setColumnReadOnly(0,true);
+            for(int row = 0; row < varTable->rowCount(); ++row) { QTableWidgetItem* item = varTable->item(row, 0); if (item) item->setFlags(item->flags() & ~Qt::ItemIsEditable); }
             setVarTable();
 
             operationBox=new QComboBox(toolBar);
@@ -132,20 +131,26 @@ class MatrixWidget :public TabWidget
             catalogButton=new QPushButton(*catalogIcon,"",toolBar);
       operationBox->hide();
 
-            operationBox->insertItem(MATRIXWIDGETH_STR4);
-            operationBox->insertItem(MATRIXWIDGETH_STR5);
-            operationBox->insertItem(MATRIXWIDGETH_STR6);
-            operationBox->insertItem(MATRIXWIDGETH_STR7);
-            operationBox->insertItem(MATRIXWIDGETH_STR8);
+            operationBox->insertItem(0, MATRIXWIDGETH_STR4);
+            operationBox->insertItem(1, MATRIXWIDGETH_STR5);
+            operationBox->insertItem(2, MATRIXWIDGETH_STR6);
+            operationBox->insertItem(3, MATRIXWIDGETH_STR7);
+            operationBox->insertItem(4, MATRIXWIDGETH_STR8);
 
-            calcWidget=new CalcInput(this,vars,threadData,true);
+            calcWidget=new CalcInput(this,m_vars,m_threadData,true);
       addSubWidget(calcWidget);
       calcWidget->setFixedHeight(160);
 
 
 
-            size1Box=new QSpinBox(1,20,1,this);
-            size2Box=new QSpinBox(1,20,1,this);
+            size1Box=new QSpinBox(this);
+            size1Box->setMinimum(1);
+            size1Box->setMaximum(20);
+            size1Box->setSingleStep(1);
+            size2Box=new QSpinBox(this);
+            size2Box->setMinimum(1);
+            size2Box->setMaximum(20);
+            size2Box->setSingleStep(1);
             size1Label=new QLabel(" ",this);
             size2Label=new QLabel(" ",this);
             matrixLabel=new QLabel(" ",this);
@@ -162,8 +167,8 @@ class MatrixWidget :public TabWidget
             matrixBox=new QComboBox(this);
             vectorBox=new QComboBox(this);
             
-            Q3ValueList<int> s = split->sizes();
-            s[0]=150;
+            QList<int> s = split->sizes();
+            s.replace(0,150); split->setSizes(s);
             s[1]=450;
             split->setSizes(s);
             invertButton->setFixedWidth(30);
@@ -171,21 +176,21 @@ class MatrixWidget :public TabWidget
             sprodButton->setFixedWidth(30);
             catalogButton->setFixedWidth(30);
             
-            vectorBox->insertItem(MATRIXWIDGETH_STR11);
+            vectorBox->insertItem(0, MATRIXWIDGETH_STR11);
             for(int c=0; c<26; c++)
             {
                 headLine[0]=(char)(c+65);
-                matrixBox->insertItem(headLine);
-                vectorBox->insertItem(headLine);
+                matrixBox->insertItem(c+1, headLine);
+                vectorBox->insertItem(c+1, headLine);
             }
             typeBox=new QComboBox(this);
-            typeBox->insertItem(MATRIXWIDGETH_STR12);
-            typeBox->insertItem(MATRIXWIDGETH_STR13);
-            typeBox->insertItem(MATRIXWIDGETH_STR14);
-            typeBox->insertItem(MATRIXWIDGETH_STR15);
-            typeBox->insertItem(MATRIXWIDGETH_STR16);
-            typeBox->insertItem(MATRIXWIDGETH_STR17);
-            typeBox->insertItem(MATRIXWIDGETH_STR18);
+            typeBox->insertItem(0, MATRIXWIDGETH_STR12);
+            typeBox->insertItem(1, MATRIXWIDGETH_STR13);
+            typeBox->insertItem(2, MATRIXWIDGETH_STR14);
+            typeBox->insertItem(3, MATRIXWIDGETH_STR15);
+            typeBox->insertItem(4, MATRIXWIDGETH_STR16);
+            typeBox->insertItem(5, MATRIXWIDGETH_STR17);
+            typeBox->insertItem(6, MATRIXWIDGETH_STR18);
 
       setDockArea(1);
 
@@ -193,25 +198,25 @@ class MatrixWidget :public TabWidget
 
 
 
-            QObject::connect(calcButtons,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
-            QObject::connect(sprodButton,SIGNAL(clicked()),this,SLOT(sprodButtonSlot()));
-            QObject::connect(invertButton,SIGNAL(clicked()),this,SLOT(invertButtonSlot()));
-            QObject::connect(detButton,SIGNAL(clicked()),this,SLOT(detButtonSlot()));
-            QObject::connect(operationBox,SIGNAL(activated(int)),this,SLOT(operationBoxSlot(int)));
-            QObject::connect(calcWidget,SIGNAL(prefChange(Preferences)),this,SLOT(getPref(Preferences)));
-            QObject::connect(calcButtons,SIGNAL(emitText(QString)),this,SLOT(buttonInputSlot(QString)));
-            QObject::connect(varTable,SIGNAL(currentChanged(int,int)),this,SLOT(varSelectionSlot(int,int)));
-            QObject::connect(varTable,SIGNAL(valueChanged(int,int)),this,SLOT(varChangedSlot(int,int)));
-            QObject::connect(outputTable,SIGNAL(valueChanged(int,int)),this,SLOT(outputChangedSlot(int,int)));
-            QObject::connect(calcWidget,SIGNAL(calcSignal()),this,SLOT(enterSlot()));
-            QObject::connect(calcButton,SIGNAL(pressed()),this,SLOT(calcButtonSlot()));
-            QObject::connect(matrixBox,SIGNAL(activated(int)),this,SLOT(matrixBoxSlot(int)));
-            QObject::connect(vectorBox,SIGNAL(activated(int)),this,SLOT(vectorBoxSlot(int)));
-            QObject::connect(typeBox,SIGNAL(activated(int)),this,SLOT(typeBoxSlot(int)));
-            QObject::connect(size1Box,SIGNAL(valueChanged(int)),this,SLOT(size1BoxSlot(int)));
-            QObject::connect(sizeButton,SIGNAL(pressed()),this,SLOT(sizeButtonSlot()));
-            QObject::connect(catalog,SIGNAL(menuSignal(QString)),this,SLOT(buttonInputSlot(QString)));
-            QObject::connect(catalogButton,SIGNAL(clicked()),this,SLOT(catalogSlot()));
+            QObject::connect(m_calcButtons, &StandardButtons::prefChange, this, &MatrixWidget::getPref);
+            QObject::connect(sprodButton, &QPushButton::clicked, this, &MatrixWidget::sprodButtonSlot);
+            QObject::connect(invertButton, &QPushButton::clicked, this, &MatrixWidget::invertButtonSlot);
+            QObject::connect(detButton, &QPushButton::clicked, this, &MatrixWidget::detButtonSlot);
+            QObject::connect(operationBox, QOverload<int>::of(&QComboBox::activated), this, &MatrixWidget::operationBoxSlot);
+            QObject::connect(calcWidget, &CalcInput::prefChange, this, &MatrixWidget::getPref);
+            QObject::connect(m_calcButtons, &StandardButtons::emitText, this, &MatrixWidget::buttonInputSlot);
+            QObject::connect(varTable->selectionModel(), &QItemSelectionModel::currentChanged, this, [this](const QModelIndex &current){ varSelectionSlot(current.row(), current.column()); });
+            QObject::connect(varTable, &QTableWidget::itemChanged, this, [this](QTableWidgetItem* item){ if(item) varChangedSlot(item->row(), item->column()); });
+            QObject::connect(outputTable, &QTableWidget::itemChanged, this, [this](QTableWidgetItem* item){ if(item) outputChangedSlot(item->row(), item->column()); });
+            QObject::connect(calcWidget, &CalcInput::calcSignal, this, &MatrixWidget::enterSlot);
+            QObject::connect(calcButton, &QPushButton::pressed, this, &MatrixWidget::calcButtonSlot);
+            QObject::connect(matrixBox, QOverload<int>::of(&QComboBox::activated), this, &MatrixWidget::matrixBoxSlot);
+            QObject::connect(vectorBox, QOverload<int>::of(&QComboBox::activated), this, &MatrixWidget::vectorBoxSlot);
+            QObject::connect(typeBox, QOverload<int>::of(&QComboBox::activated), this, &MatrixWidget::typeBoxSlot);
+            QObject::connect(size1Box, QOverload<int>::of(&QSpinBox::valueChanged), this, &MatrixWidget::size1BoxSlot);
+            QObject::connect(sizeButton, &QPushButton::pressed, this, &MatrixWidget::sizeButtonSlot);
+            QObject::connect(catalog, &Catalog::menuSignal, this, &MatrixWidget::buttonInputSlot);
+            QObject::connect(catalogButton, &QPushButton::clicked, this, &MatrixWidget::catalogSlot);
             
         }
     
