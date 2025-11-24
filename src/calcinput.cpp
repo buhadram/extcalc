@@ -17,6 +17,7 @@ any later version.
 //Added by qt3to4:
 #include <QResizeEvent>
 #include <QMenu>
+#include <QTextCharFormat>
 #include <QKeyEvent>
 #include <QEvent>
 
@@ -28,13 +29,13 @@ void CalcInput::keyPressEvent(QKeyEvent*e)
 
     getCursorPosition(&para,&pos);
     if(para != paragraphs()-1 && 
-          !((e->state() == Qt::ControlButton || e->stateAfter() == Qt::ControlButton)
+          !((e->modifiers() == Qt::ControlModifier)
           && e->key() != Qt::Key_V && e->key() != Qt::Key_X ) &&
           !(e->key() == Qt::Key_Right || e->key() == Qt::Key_Left ||
           e->key() == Qt::Key_Up || e->key() == Qt::Key_Down)) 
     {
         QString content=text(para);
-        content=content.stripWhiteSpace();
+        content=content.trimmed();
 
         if(hasSelectedText())
         {
@@ -65,20 +66,20 @@ void CalcInput::keyPressEvent(QKeyEvent*e)
     }
 
     if(!noCheck)
-    switch(e->ascii())
+    switch(e->key())
     {
-        case 13:                                //enter
+        case Qt::Key_Return:                                //enter
         {
             calculateKey();
             break;
         }
-        case 8:                                    //backspace
+        case Qt::Key_Backspace:                                    //backspace
                 backKey();
             break;
-        case 127:                                //delete
+        case Qt::Key_Delete:                                //delete
             deleteKey();
             break;
-        case 9:                                    //tab
+        case Qt::Key_Tab:                                    //tab
             insert(" ");
             line.append(" ");
             lineCursor++;
@@ -96,7 +97,7 @@ void CalcInput::keyPressEvent(QKeyEvent*e)
         default:
         {
             setBold(false);
-            if(e->state() == Qt::ControlButton || e->stateAfter() == Qt::ControlButton)
+            if(e->modifiers() == Qt::ControlModifier)
             {
                 switch(e->key())
                 {
@@ -123,7 +124,7 @@ void CalcInput::keyPressEvent(QKeyEvent*e)
             }
             else {
                 if(pos==0 && ( e->text() == "+" || e->text() == "^" || e->text() == "*" ||
-                               e->text() == "/" || e->text() == "\xb2" || e->text() == "\xb3" ||
+                               e->text() == "/" || e->text() == QChar(0xb2) || e->text() == QChar(0xb3) ||
                                e->text() == "-" || e->text() == getUnicode(ROOTSTRING) ||
                                e->text() == "%" || e->text() == "!"))
                 {
@@ -162,7 +163,7 @@ QMenu* CalcInput::createPopupMenu(const QPoint&)
     menu->insertItem(CALCWIDGETC_MENU3,3);
     menu->insertItem(CALCWIDGETC_MENU4,4);
     menu->insertItem(CALCWIDGETC_MENU5,5);    
-    QObject::connect(menu,SIGNAL(activated(int)),this,SLOT(menuSlot(int)));
+    QObject::connect(menu, &QMenu::activated, this, &CalcInput::menuSlot);
     
     return menu;
 }
@@ -374,7 +375,7 @@ void CalcInput::resizeEvent(QResizeEvent*)
 {
 
     QFontMetrics fontSize=fontMetrics();
-    charLength=fontSize.size(0,QString("m")).width();
+    charLength=fontSize.size(0,QStringLiteral("m")).width();
     lineLength=(width())/charLength-1;
 
 }
@@ -419,12 +420,7 @@ void CalcInput::textInput(QString inputText)
     getCursorPosition(&para,&pos);
     if(para != paragraphs()-1)
     {
-        QString content=text(para);
-        while(content[0] == ' ' || content[0] == '\t')
-        {
-            content.remove(0,1);
-            pos--;
-        }
+        QString content=text(para).trimmed();
         
         if(hasSelectedText())
         {
@@ -466,7 +462,7 @@ void CalcInput::textInput(QString inputText)
     
     if(autoBrace && (inputText[0]>='A' && inputText[0]<='Z' || inputText=="ans"))
     {
-        int var=(int)(inputText.ascii()[0])-65;
+        int var=(int)(inputText.at(0).unicode())-65;
 
         if(threadData->dimension[var][0]!=1)
             insert("[]");
@@ -512,3 +508,8 @@ void CalcInput::scriptSlot(QString*code)
 
 
 
+
+void CalcInput::setPref(Preferences newPref)
+{
+    pref = newPref;
+}

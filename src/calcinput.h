@@ -35,6 +35,8 @@ class CalcInput : public QTextEdit
     Preferences pref;
 
 public:
+    void setPref(Preferences newPref);
+    void setBold(bool isBold);
     explicit CalcInput(QWidget *parentWin,
                        Variable *va,
                        ThreadSync *td,
@@ -85,11 +87,6 @@ public:
     void clearAll();
     void cursorKey(int key);
     void textInput(const QString &text);
-
-    void setPref(Preferences newPref)
-    {
-        pref = newPref;
-    }
 
 protected:
     void keyPressEvent(QKeyEvent *event) override;
