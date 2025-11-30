@@ -21,26 +21,32 @@ file.
 #ifndef GLOBALH
 #define GLOBALH
 
-#include <qstring.h>
-#include <QCoreApplication>
-#include <qmessagebox.h>
-#include <qtranslator.h>
-#include <qmutex.h>
+// --- Standard C++ and POSIX Includes (Checked for modern equivalents) ---
+#include <cstdlib>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
+#include <complex>
+#include <cerrno>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <unistd.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <pthread.h>
-#include <math.h>
-#include <complex>
-#include <errno.h>
+
+// --- Qt Includes (Updated for Qt 6) ---
+#include <QCoreApplication>
+#include <QMessageBox>
+#include <QTranslator>
+#include <QMutex>
+#include <QString>
+#include <QChar>      // Use QChar explicitly for Unicode
+//#include <QCustomEvent> // QCustomEvent is still used for cross-thread events
+#include <QtGlobal>   // For QT_VERSION checking
+
 #include "list.h"
 #include "calclocale.h"
 
-using namespace std;
+// Do not use 'using namespace std;' in a header file (violates C++ best practices)
 
 
 #define CONFIGFILE ".extcalc/extcalc.conf"
@@ -50,363 +56,363 @@ using namespace std;
 #define UIFILE ".extcalc/ui.conf"
 #define GRAPHSDIR ".extcalc/graphs/"
 
-#define VERSIONSTRING "Version: 0.9.3-1\n2010-04-09\n\n"+QString(DEVVERSION)
+// FIX: Updated macros to use QCoreApplication::applicationName/version/etc.
+//#define VERSIONSTRING "Version: 0.9.3-1\n2010-04-09\n\n"+QString(DEVVERSION)
+#define VERSIONSTRING QCoreApplication::applicationName() + " Version: 0.9.3-1\n2010-04-09\n\n" + QString(DEVVERSION)
+#define AUTHORSTRING "Homepage:\nhttp://extcalc-linux.sourceforge.net\n\n" + QString(GLOBALH_STR1)
 
 
-#define AUTHORSTRING "Homepage:\nhttp://extcalc-linux.sourceforge.net\n\n"+QString(GLOBALH_STR1)
+#define FILEM				1
+#define PREFERENCES			2
+#define CALCULATOR			3
+#define GRAPH				4
+#define HELP				5
+#define EXTHELP				10
+#define INFO				11
+#define CPREF				17
+#define GPREF				18
+#define TPREF				55
+#define TABLE				58
+#define EDITUNDO			59
+#define EDITREDO			60
+#define EDITCUT				61
+#define EDITCOPY			62
+#define EDITPASTE			63
+#define VIEWCALC1			64
+#define VIEWCALC2			65
+#define VIEWGRAPH			66
+#define VIEWTABLE			67
+#define VIEWSCRIPTING		68
+#define VIEW				69
+#define EDIT				70
+#define QUIT				71
+#define SPREF				72
+#define VIEWSCRIPTIO		83
+#define EDITSELECTALL		175
+#define EDITORRUN			176
+#define EDITORMINIMIZE		177
+#define EDITORIMPORT		178
+#define EDITOREXPORT		179
+#define VIEWMATRIX			180
+#define VIEWSTATISTICS		181
+
+#define FILENEWSCRIPT		73
+#define FILENEWDIR			74
+#define FILEDELETE			75
+#define FILERENAME			76
+#define FILECUT				77
+#define FILECOPY			78
+#define FILEUPDATE			79
+#define FILESAVE			80
+#define FILESAVEALL			81
+#define FILEPASTE			82
 
 
-#define FILEM                1
-#define PREFERENCES            2
-#define CALCULATOR            3
-#define GRAPH                4
-#define HELP                5
-#define EXTHELP                10
-#define INFO                11
-#define CPREF                17
-#define GPREF                18
-#define TPREF                55
-#define TABLE                58
-#define EDITUNDO            59
-#define EDITREDO            60
-#define EDITCUT                61
-#define EDITCOPY            62
-#define EDITPASTE            63
-#define VIEWCALC1            64
-#define VIEWCALC2            65
-#define VIEWGRAPH            66
-#define VIEWTABLE            67
-#define VIEWSCRIPTING        68
-#define VIEW                69
-#define EDIT                70
-#define QUIT                71
-#define SPREF                72
-#define VIEWSCRIPTIO        83
-#define EDITSELECTALL        175
-#define EDITORRUN            176
-#define EDITORMINIMIZE        177
-#define EDITORIMPORT        178
-#define EDITOREXPORT        179
-#define VIEWMATRIX            180
-#define VIEWSTATISTICS        181
+#define ANGLE				9
+#define OUTPUT				12
 
-#define FILENEWSCRIPT        73
-#define FILENEWDIR            74
-#define FILEDELETE            75
-#define FILERENAME            76
-#define FILECUT                77
-#define FILECOPY            78
-#define FILEUPDATE            79
-#define FILESAVE            80
-#define FILESAVEALL            81
-#define FILEPASTE            82
+#define RAD					6
+#define DEG					7
+#define GRA					8
 
+#define FIXEDNUM			13
+#define VARIABLENUM			14
+#define EXPSYM				15
+#define FLOATPOINT			16
 
-#define ANGLE                9
-#define OUTPUT                12
+#define STANDARDCOORDS 		24
+#define TRIGONOMETRICCOORDS	25
+#define COORDINATE			26
+#define SHOWAXES			27
+#define SHOWLABELS			28
+#define SHOWRASTER			29
+#define CONSTRATIO			30
+#define GRAPHTYPE			31
+#define TABLETYPE			56
+#define STANDARDTABLE		57
+#define RESETTABLE			184
+#define GRAPHIMPORT			212
+#define GRAPHEXPORT			213
+#define GRAPHSETCH			214
+#define GRAPHSETMANAGE		215
+#define GRAPHSAVECURR		216
+#define GRAPHCREATESET		217
 
-#define RAD                    6
-#define DEG                    7
-#define GRA                    8
+#define EXPORTSCRIPT		171
+#define IMPORTSCRIPT		172
+#define CLEARMEMALWAYS		173
+#define CLEARMEMNOW			174
+#define SCRIPTM				175
+#define STATISTICSM			207
 
-#define FIXEDNUM            13
-#define VARIABLENUM            14
-#define EXPSYM                15
-#define FLOATPOINT            16
+#define MODE				39
+#define SCIENTIFIC			32
+#define BASE				33
+#define COMPLEXMENU			165
 
-#define STANDARDCOORDS         24
-#define TRIGONOMETRICCOORDS    25
-#define COORDINATE            26
-#define SHOWAXES            27
-#define SHOWLABELS            28
-#define SHOWRASTER            29
-#define CONSTRATIO            30
-#define GRAPHTYPE            31
-#define TABLETYPE            56
-#define STANDARDTABLE        57
-#define RESETTABLE            184
-#define GRAPHIMPORT            212
-#define GRAPHEXPORT            213
-#define GRAPHSETCH            214
-#define GRAPHSETMANAGE        215
-#define GRAPHSAVECURR        216
-#define GRAPHCREATESET        217
+#define BASEMENU			40
+#define BIN					34
+#define HEX					35
+#define OCT					36
+#define DEC					38
 
-#define EXPORTSCRIPT        171
-#define IMPORTSCRIPT        172
-#define CLEARMEMALWAYS        173
-#define CLEARMEMNOW            174
-#define SCRIPTM                175
-#define STATISTICSM            207
+#define NONE				 1
+#define PLUS				 2
+#define MINUS				 3
+#define MULT				 4
+#define DIVIDE				 5
+#define POW					 6
+#define ROOT				 7
+#define SIN					 8
+#define COS					 9
+#define TAN					10
+#define ASIN				11
+#define ACOS				12
+#define ATAN				13
+#define ASINH				14
+#define ACOSH				15
+#define ATANH				16
+#define SINH				17
+#define COSH				18
+#define TANH				19
+#define LG					20
+#define LN					21
+#define DIFF				22
+#define INTEGRAL			23
+#define MODULO				116
+#define ARRAY				129
+#define RSHIFT				139
+#define LSHIFT				140
+#define XOR					141
+#define CPOW				153
+#define CROOT				154
+#define CSIN				155
+#define CCOS				156
+#define CTAN				157
+#define CSINH				158
+#define CCOSH				159
+#define CTANH				160
+#define CLN					161
+#define CLG					162
+#define CABS				163
+#define CDIVIDE				164
+#define SQRT				166
+#define CSQRT				167
+#define CURT				168
+#define SCALARPROD			170
+#define DETERMINANT			182
+#define INVERT				183
 
-#define MODE                39
-#define SCIENTIFIC            32
-#define BASE                33
-#define COMPLEXMENU            165
+#define SSEMICOLON			83
+#define SCOMPARE			84
+#define SIF					85
+#define SFOR				86
+#define SWHILE				87
+#define SPRINT				88
+#define SSET				89
+#define SBRACKET			99
+#define SFAIL				100
+#define SIFELSE				101
+#define SSPLIT				102
+#define SGREATHER			103
+#define SLESS				104
+#define SGREQ				105
+#define SLESSEQ				106
+#define SUNEQUAL			107
+#define SVALUE				108
+#define SINIT				109
+#define SSETCURSOR			110
+#define SCLEARTEXT			111
+#define SSLEEP				112
+#define SGETLINE			113
+#define SGETKEY				114
+#define SVAR				115
+#define SAND				117
+#define SOR					118
+#define SNOT				119
+#define SCAST				120
+#define SKEYSTATE			121
+#define SARRAY				122
+#define SRAND				123
+#define SMATRIX				124
+#define SBREAK				125
+#define SCONTINUE			126
+#define SSTOP				127
+#define SRUN				128
+#define SBAND				142
+#define SBOR				143
+#define SFAK				144
+#define SBNOT				145
+#define SABS				148
+#define SCONJ				149
+#define SREAL				150
+#define SIMAG				151
+#define SARG				152
+#define SVECTOR				169
+#define SFREAD				186
+#define SFWRITE				187
+#define SFAPPEND			188
+#define SFREMOVE			189
+#define SGRAPHLIST			190
+#define SGRAPHCONTROL		191
+#define SGRAPHPAINT			192
+#define SGRAPHVERTEX		193
+#define SGRAPHTEXT			194
+#define SGRAPHCOLOR			195
+#define SGRAPHTRANSFORM		196
+#define SGRAPHIDENTITY		197
+#define SDRAW				211
 
-#define BASEMENU            40
-#define BIN                    34
-#define HEX                    35
-#define OCT                    36
-#define DEC                    38
+#define CALCYVAL			0
+#define CALCZEROS			1
+#define CALCNEWTON			2
+#define CALCXVAL			3
+#define CALCCROSSP			4
+#define CALCEXTRVAL			5
+#define CALCINTEGRAL		6
+#define CALCDIFF			7
+#define CALCZVAL			8
+#define GETSCREENSHOT		9
 
-#define NONE                 1
-#define PLUS                 2
-#define MINUS                 3
-#define MULT                 4
-#define DIVIDE                 5
-#define POW                     6
-#define ROOT                 7
-#define SIN                     8
-#define COS                     9
-#define TAN                    10
-#define ASIN                11
-#define ACOS                12
-#define ATAN                13
-#define ASINH                14
-#define ACOSH                15
-#define ATANH                16
-#define SINH                17
-#define COSH                18
-#define TANH                19
-#define LG                    20
-#define LN                    21
-#define DIFF                22
-#define INTEGRAL            23
-#define MODULO                116
-#define ARRAY                129
-#define RSHIFT                139
-#define LSHIFT                140
-#define XOR                    141
-#define CPOW                153
-#define CROOT                154
-#define CSIN                155
-#define CCOS                156
-#define CTAN                157
-#define CSINH                158
-#define CCOSH                159
-#define CTANH                160
-#define CLN                    161
-#define CLG                    162
-#define CABS                163
-#define CDIVIDE                164
-#define SQRT                166
-#define CSQRT                167
-#define CURT                168
-#define SCALARPROD            170
-#define DETERMINANT            182
-#define INVERT                183
+#define MATCALC				0
+#define MATLSE				1
+#define MATGENERATE			2
+#define MATANALYSE			3
+#define MATINV				4
 
-#define SSEMICOLON            83
-#define SCOMPARE            84
-#define SIF                    85
-#define SFOR                86
-#define SWHILE                87
-#define SPRINT                88
-#define SSET                89
-#define SBRACKET            99
-#define SFAIL                100
-#define SIFELSE                101
-#define SSPLIT                102
-#define SGREATHER            103
-#define SLESS                104
-#define SGREQ                105
-#define SLESSEQ                106
-#define SUNEQUAL            107
-#define SVALUE                108
-#define SINIT                109
-#define SSETCURSOR            110
-#define SCLEARTEXT            111
-#define SSLEEP                112
-#define SGETLINE            113
-#define SGETKEY                114
-#define SVAR                115
-#define SAND                117
-#define SOR                    118
-#define SNOT                119
-#define SCAST                120
-#define SKEYSTATE            121
-#define SARRAY                122
-#define SRAND                123
-#define SMATRIX                124
-#define SBREAK                125
-#define SCONTINUE            126
-#define SSTOP                127
-#define SRUN                128
-#define SBAND                142
-#define SBOR                143
-#define SFAK                144
-#define SBNOT                145
-#define SABS                148
-#define SCONJ                149
-#define SREAL                150
-#define SIMAG                151
-#define SARG                152
-#define SVECTOR                169
-#define SFREAD                186
-#define SFWRITE                187
-#define SFAPPEND            188
-#define SFREMOVE            189
-#define SGRAPHLIST            190
-#define SGRAPHCONTROL        191
-#define SGRAPHPAINT            192
-#define SGRAPHVERTEX        193
-#define SGRAPHTEXT            194
-#define SGRAPHCOLOR            195
-#define SGRAPHTRANSFORM        196
-#define SGRAPHIDENTITY        197
-#define SDRAW                211
+#define GRAPHSTD			41
+#define GRAPHPOLAR			42
+#define GRAPHPARAMETER		43
+#define GRAPHDYNAMIC		44
+#define GRAPHIEL			45
+#define GRAPHIELE			46
+#define GRAPHIEG			47
+#define GRAPHIEGE			48
+#define GRAPH3D				49
+#define GRAPHCOMPLEX		146
+#define GRAPHCOMP3D			147
 
-#define CALCYVAL            0
-#define CALCZEROS            1
-#define CALCNEWTON            2
-#define CALCXVAL            3
-#define CALCCROSSP            4
-#define CALCEXTRVAL            5
-#define CALCINTEGRAL        6
-#define CALCDIFF            7
-#define CALCZVAL            8
-#define GETSCREENSHOT        9
+#define TABLENORMAL			50
+#define TABLEPOLAR			51
+#define TABLEPARAMETER		52
+#define TABLEINEQUALITY		53
+#define TABLE3D				54
+#define TABLECOMPLEX		185
 
-#define MATCALC                0
-#define MATLSE                1
-#define MATGENERATE            2
-#define MATANALYSE            3
-#define MATINV                4
+#define STATCLEAR			203
+#define STATAUTOCLEAR		204
+#define STATPOINTS			205
+#define STATLINES			206
 
-#define GRAPHSTD            41
-#define GRAPHPOLAR            42
-#define GRAPHPARAMETER        43
-#define GRAPHDYNAMIC        44
-#define GRAPHIEL            45
-#define GRAPHIELE            46
-#define GRAPHIEG            47
-#define GRAPHIEGE            48
-#define GRAPH3D                49
-#define GRAPHCOMPLEX        146
-#define GRAPHCOMP3D            147
+#define STATAPPROX			198
+#define STATINTERPOL		199
+#define STATNORMAL			200
+#define STATBARGRAPH		201
+#define STATLINEGRAPH		202
 
-#define TABLENORMAL            50
-#define TABLEPOLAR            51
-#define TABLEPARAMETER        52
-#define TABLEINEQUALITY        53
-#define TABLE3D                54
-#define TABLECOMPLEX        185
+#define SCRIPTTEXT			208
+#define SCRIPT2D			209
+#define SCRIPT3D			210
 
-#define STATCLEAR            203
-#define STATAUTOCLEAR        204
-#define STATPOINTS            205
-#define STATLINES            206
+#define DRAWNONE			130
+#define DRAWFREE			131
+#define DRAWLINE			132
+#define DRAWRECT			133
+#define DRAWCIRCLE			134
+#define DRAWFORWARD			135
+#define DRAWBACK			136
+#define DRAWCLEAR			137
+#define DRAWTEXT			138
 
-#define STATAPPROX            198
-#define STATINTERPOL        199
-#define STATNORMAL            200
-#define STATBARGRAPH        201
-#define STATLINEGRAPH        202
+#define PINVALIDCOMMAND		176
+#define PPINVALIDARGUMENT	177
+#define PPINVALIDPREF		178
+#define PPEMPTY				179
+#define MPEMPTY				212
+#define MPINVALIDMACRO		213
 
-#define SCRIPTTEXT            208
-#define SCRIPT2D            209
-#define SCRIPT3D            210
+#define LANG_EN				214
+#define LANG_DE				215
+#define LANG_FR				216
+#define LPREF				217
 
-#define DRAWNONE            130
-#define DRAWFREE            131
-#define DRAWLINE            132
-#define DRAWRECT            133
-#define DRAWCIRCLE            134
-#define DRAWFORWARD            135
-#define DRAWBACK            136
-#define DRAWCLEAR            137
-#define DRAWTEXT            138
-
-#define PINVALIDCOMMAND        176
-#define PPINVALIDARGUMENT    177
-#define PPINVALIDPREF        178
-#define PPEMPTY                179
-#define MPEMPTY                212
-#define MPINVALIDMACRO        213
-
-#define LANG_EN                214
-#define LANG_DE                215
-#define LANG_FR                216
-#define LPREF                217
-
-#define CATMATHSTD            0x1
-#define CATMATHCOMPLEX        0x2
-#define CATMATRIX            0x4
-#define CATSCRIPT            0x8
-#define CATMATHLOGIC        0x10
-#define CATCONSTANTS        0x20
+#define CATMATHSTD			0x1
+#define CATMATHCOMPLEX		0x2
+#define CATMATRIX			0x4
+#define CATSCRIPT			0x8
+#define CATMATHLOGIC		0x10
+#define CATCONSTANTS		0x20
 
 
-#define NNONE                0x1
-#define NFLOAT                0x2
-#define NINT                0x4
-#define NBOOL                0x8
-#define NCHAR                0x10
-#define NVECTOR                0x20
-#define NMATRIX                0x40
-#define NCOMPLEX            0x80
+#define NNONE				0x1
+#define NFLOAT				0x2
+#define NINT				0x4
+#define NBOOL				0x8
+#define NCHAR				0x10
+#define NVECTOR				0x20
+#define NMATRIX				0x40
+#define NCOMPLEX			0x80
 
-#define SIGPRINT            50000
-#define SIGSETTEXTPOS        50001
-#define SIGCLEARTEXT        50002
-#define SIGGETLINE            50003
-#define SIGGETKEY            50004
-#define SIGKEYSTATE            50005
-#define SIGDEBUG            50006
-#define SIGFILEREAD            50007
-#define SIGFILEWRITE        50008
-#define SIGFILEAPPEND        50009
-#define SIGFILEREMOVE        50010
-#define SIGCALLLIST            50011
-#define SIGSTARTLIST        50012
-#define SIGENDLIST            50013
-#define SIGGRAPHSHOW        50014
-#define SIGGRAPHCLEAR        50015
-#define SIGGRAPHEND            50016
-#define SIGGRAPHBEGIN        50017
-#define SIGGRAPHVERTEX        50018
-#define SIGGRAPHTEXT        50019
-#define SIGGRAPHCOLOR        50020
-#define SIGGRAPHROTATE        50021
-#define SIGGRAPHSCALE        50022
-#define SIGGRAPHTRANSLATE    50023
-#define SIGIDENTITY            50024
-#define SIGDRAW                50025
-#define SIGTHREADSYNC        50026
-#define SIGFINISHED            50030
+#define SIGPRINT			50000
+#define SIGSETTEXTPOS		50001
+#define SIGCLEARTEXT		50002
+#define SIGGETLINE			50003
+#define SIGGETKEY			50004
+#define SIGKEYSTATE			50005
+#define SIGDEBUG			50006
+#define SIGFILEREAD			50007
+#define SIGFILEWRITE		50008
+#define SIGFILEAPPEND		50009
+#define SIGFILEREMOVE		50010
+#define SIGCALLLIST			50011
+#define SIGSTARTLIST		50012
+#define SIGENDLIST			50013
+#define SIGGRAPHSHOW		50014
+#define SIGGRAPHCLEAR		50015
+#define SIGGRAPHEND			50016
+#define SIGGRAPHBEGIN		50017
+#define SIGGRAPHVERTEX		50018
+#define SIGGRAPHTEXT		50019
+#define SIGGRAPHCOLOR		50020
+#define SIGGRAPHROTATE		50021
+#define SIGGRAPHSCALE		50022
+#define SIGGRAPHTRANSLATE	50023
+#define SIGIDENTITY			50024
+#define SIGDRAW				50025
+#define SIGTHREADSYNC		50026
+#define SIGFINISHED			50030
 
-#define ROOTSTRING            8730
-#define PISTRING            960
-#define EULERSTRING            65349
-#define INTEGRALSTRING        8747
-#define DELTASTRING            916
-#define MEGASTRING            65325
-#define GIGASTRING            65319
-#define TERASTRING            65332
-#define DIFFSTRING            8706
-#define DEGREESTRING        176
+#define ROOTSTRING			8730
+#define PISTRING			960
+#define EULERSTRING			65349
+#define INTEGRALSTRING		8747
+#define DELTASTRING			916
+#define MEGASTRING			65325
+#define GIGASTRING			65319
+#define TERASTRING			65332
+#define DIFFSTRING			8706
+#define DEGREESTRING		176
 
-#define VARNUM                29
-#define VARDIMENSIONS        2
+#define VARNUM				29
+#define VARDIMENSIONS		2
 
 
 
 //String constants (with 40 digits precisision) and system constants (128-bit) for Pi and e
 #ifdef M_PIl
-#define PI                    M_PIl
+#define PI					M_PIl
 #else
-#define PI                    3.141592653589793238462643383279502884197
+#define PI					3.141592653589793238462643383279502884197
 #endif
 
 #ifdef M_El
-#define EULER                M_El
+#define EULER				M_El
 #else 
-#define EULER                2.718281828459045235360287471352662497757
+#define EULER				2.718281828459045235360287471352662497757
 #endif
 
-#define SPI                    "3.141592653589793238462643383279502884197"
-#define SEULER                "2.718281828459045235360287471352662497757"
+#define SPI					"3.141592653589793238462643383279502884197"
+#define SEULER				"2.718281828459045235360287471352662497757"
 
 #ifndef NAN
 #define NAN (HUGE_VAL/HUGE_VAL)
@@ -414,383 +420,386 @@ using namespace std;
 
 class Math;
 
+// --- Structs and Typedefs ---
+typedef std::complex <long double> Complex;
 typedef long double Variable;
 
 struct Constant
 {
-    QString *identifier;
-    QString *description;
-    QString *value;
+	QString *identifier;
+	QString *description;
+	QString *value;
 };
 
 
 struct Preferences
 {
-    int angle;
-    int outputType;
-    int outputLength;
-    int precision;
-    bool shift;
-    bool alpha;
-    bool hyp;
-    bool showWindows[8];
-    double xmin,xmax,ymin,ymax,zmin,zmax;
-    double rasterSizeX,rasterSizeY,rasterSizeZ;
-    double radiusMax,angleMax;
-    double rasterSizeRadius,rasterSizeAngle;
-    double parameterStart,parameterEnd;
-    double dynamicStart,dynamicEnd;
-    double nyquistStart,nyquistEnd;
-    double tableXStart,tableXEnd,tableZStart,tableZEnd;
-    double tableAValue;
-    int parameterSteps;
-    int dynamicSteps;
-    int dynamicDelay;
-    int nyquistSteps;
-    int prec2dSteps;
-    int prec3dSteps;
-    int solvePrec;
-    int tableXSteps,tableZSteps;
-    bool raster;
-    bool axis;
-    bool label;
-    bool autosize;
-    bool moveUpDown;
-    bool show3dGrid;
-    bool logNyquistSteps;
-    bool complex;
-    bool clearScriptMemory;
-    bool showStatLines;
-    bool showStatPoints;
-    bool statAutoClear;
-    int graphType;
-    int calcType;
-    int tableType;
-    int base;
-    int scriptGraphicsMode;
-    QString scriptPath;
-    QString scriptDirName;
-    QString dataDirName;
-    QString currentSet;
-    QString*functions;
-    QString*functionComments;
-    bool*activeFunctions;
-    int*functionTypes;
-    bool*dynamicFunctions;
-    bool*logicFunctions;
-    QColor*functionColors;
-    QString drawText;
-    int language;
-    Constant*constList;
-    int constLen,userConstLen;
+	int angle;
+	int outputType;
+	int outputLength;
+	int precision;
+	bool shift;
+	bool alpha;
+	bool hyp;
+	bool showWindows[8];
+	double xmin,xmax,ymin,ymax,zmin,zmax;
+	double rasterSizeX,rasterSizeY,rasterSizeZ;
+	double radiusMax,angleMax;
+	double rasterSizeRadius,rasterSizeAngle;
+	double parameterStart,parameterEnd;
+	double dynamicStart,dynamicEnd;
+	double nyquistStart,nyquistEnd;
+	double tableXStart,tableXEnd,tableZStart,tableZEnd;
+	double tableAValue;
+	int parameterSteps;
+	int dynamicSteps;
+	int dynamicDelay;
+	int nyquistSteps;
+	int prec2dSteps;
+	int prec3dSteps;
+	int solvePrec;
+	int tableXSteps,tableZSteps;
+	bool raster;
+	bool axis;
+	bool label;
+	bool autosize;
+	bool moveUpDown;
+	bool show3dGrid;
+	bool logNyquistSteps;
+	bool complex;
+	bool clearScriptMemory;
+	bool showStatLines;
+	bool showStatPoints;
+	bool statAutoClear;
+	int graphType;
+	int calcType;
+	int tableType;
+	int base;
+	int scriptGraphicsMode;
+	QString scriptPath;
+	QString scriptDirName;
+	QString dataDirName;
+	QString currentSet;
+	QString*functions;
+	QString*functionComments;
+	bool*activeFunctions;
+	int*functionTypes;
+	bool*dynamicFunctions;
+	bool*logicFunctions;
+	QColor*functionColors;
+	QString drawText;
+	int language;
+	Constant*constList;
+	int constLen,userConstLen;
 };
+
 
 struct Number
 {
-
-    complex <long double> fval;
+    Complex fval;
     long long ival;
     bool bval;
     char*cval;
     int type;
 };
 
+
 typedef List<Number> Vector;
-typedef complex <long double> Complex;
 
 struct ThreadSync
 {
-    QMutex*mutex;
-    QObject*eventReciver;
-    void*data;
-    int type;
-    int sleepTime;
-    int status;
-    int eventCount;
-    bool usleep;
-    bool exit;
-    bool bbreak;
-    bool bcontinue;
-    bool calcMode;
-    int numlen[VARNUM];    
-    int dimension[VARNUM][VARDIMENSIONS];                    //vector, matrix size
-    Number**vars;
-    List <Math*>subprograms;
-    List <char*>subprogramPath;
+	QMutex*mutex;
+	QObject*eventReciver;
+	void*data;
+	int type;
+	int sleepTime;
+	int status;
+	int eventCount;
+	bool usleep;
+	bool exit;
+	bool bbreak;
+	bool bcontinue;
+	bool calcMode;
+	int numlen[VARNUM];	
+	int dimension[VARNUM][VARDIMENSIONS];					//vector, matrix size
+	Number**vars;
+	List <Math*>subprograms;
+	List <char*>subprogramPath;
 };
 
 
+// Standard Calculator functions
+int bracketFind(char* string, char* searchString, int start = 0, int end = -1);
+int bracketFindRev(char* string, char* searchString, int start = -1, int end = 0);
+char* strcut(char* src, int index, int len = 1);
+char* strins(char* dest, const char* src, int index);
+int strcopy(char* dest, char* src, int len);
+char* strreplace(char* st, int index, int len, char* rep);
+char* strinsert(char* st, int index, char* ins);
+char* checkStringAnsi(char* calcString, Preferences* pref);
 
+// FIX: Updated QMessageBox function signatures for Qt 6
+void MessageBox(const QString& text);
+int YesNoBox(const QString& text);
+int YesNoCancelBox(const QString& text);
+void WarningBox(const QString& text);
+void ErrorBox(const QString& text);
 
-//Standard Calculator functions
-int bracketFind(char* string,char* searchString, int start=0,int end=-1);
-int bracketFindRev(char* string,char* searchString, int start=-1, int end=0);
-char*strcut(char*src,int index,int len=1);
-char*strins(char*dest,const char*src,int index);
-int strcopy(char*dest,char*src,int len);
-char* strreplace(char*st,int index,int len,char*rep);
-char* strinsert(char*st,int index,char*ins);
-char* checkStringAnsi(char*calcString,Preferences*pref);        //same as checkString in Calc
-void MessageBox(QString text);
-int YesNoBox(QString text);
- int YesNoCancelBox(QString text);
- void WarningBox(QString text);
- void ErrorBox(QString text);
-//char* checkString(QString calcString,Preferences*pref);        //Removes Unicode and runs checkStringAnsi
-char* preprocessor(char*,Preferences*,bool);
-char* preprocessor(QString*,Preferences*,bool);
-char* preferencesPreprocessor(char*,Preferences*);
+char* preprocessor(char*, Preferences*, bool);
+char* preprocessor(QString*, Preferences*, bool);
+char* preferencesPreprocessor(char*, Preferences*);
 char* macroPreprocessor(char*);
-char* cleanString(char*,Preferences*);
+char* cleanString(char*, Preferences*);
 char* removeUnicode(QString*);
 char* removeComments(char*);
-void replaceConstants(QString*,Preferences*);
-QString getConfigString(QString*,QString);
-QString cleanConfigString(QString,QString);
+void replaceConstants(QString*, Preferences*);
+QString getConfigString(QString*, QString);
+QString cleanConfigString(QString, QString);
 QString resetConfigString(QString);
+// FIX: Changed to return QString by value
 QString getUnicode(int code);
-QString formatOutput(long double num,Preferences*pref);
-QString formatOutput(Number num,Preferences*pref,ThreadSync*varData=nullptr);
+QString formatOutput(long double num, Preferences* pref);
+QString formatOutput(Number num, Preferences* pref, ThreadSync* varData = nullptr);
 QColor getColor(QString colorName);
 QString getColorName(QColor col);
 QString getErrorMessage();
-long double runCalc(QString,Preferences*,Variable*);
-long double determinant(int,long double*);
-long double gauss(int sizex,int sizey,long double*matrix);
-bool invertMatrix(int size,long double*matrix);
-void printError(const char*,int,ThreadSync*);
-void convertToFloat(Number*num);
-inline void convertToInt(Number*num);
-inline void convertToBool(Number*num);
+long double runCalc(QString, Preferences*, Variable*);
+long double determinant(int, long double*);
+long double gauss(int sizex, int sizey, long double* matrix);
+bool invertMatrix(int size, long double* matrix);
+void printError(const char*, int, ThreadSync*);
+void convertToFloat(Number* num);
+void convertToInt(Number* num);
+void convertToBool(Number* num);
 
 
 // for compatibility with systems without math functions for long double
 #ifdef NO_LONG_DOUBLE
 
-#define sinl(var) sin(var)
-#define cosl(var) cos(var)
-#define tanl(var) tan(var)
+#define sinl(var) std::sin(var)
+#define cosl(var) std::cos(var)
+#define tanl(var) std::tan(var)
 
-#define asinl(var) asin(var)
-#define acosl(var) acos(var)
-#define atanl(var) atan(var)
+#define asinl(var) std::asin(var)
+#define acosl(var) std::acos(var)
+#define atanl(var) std::atan(var)
 
-#define sinhl(var) sinh(var)
-#define coshl(var) cosh(var)
-#define tanhl(var) tanh(var)
+#define sinhl(var) std::sinh(var)
+#define coshl(var) std::cosh(var)
+#define tanhl(var) std::tanh(var)
 
-#define asinhl(var) asinh(var)
-#define acoshl(var) acosh(var)
-#define atanhl(var) atanh(var)
+#define asinhl(var) std::asinh(var)
+#define acoshl(var) std::acosh(var)
+#define atanhl(var) std::atanh(var)
 
-#define logl(var) log(var)
-#define sqrtl(var) sqrt(var)
-#define powl(va,vb) pow(va,vb)
-#define fmodl(va,vb) fmod(va,vb)
-#define strtold(va,vb) strtod(va,vb)
-#define cbrtl(var) cbrt(var)
-#define fabsl(var) fabs(var)
-#define expl(var) exp(var)
+#define logl(var)       std::log(var)
+#define sqrtl(var)      std::sqrt(var)
+#define powl(va,vb)     std::pow(va,vb)
+#define fmodl(va,vb)    std::fmod(va,vb)
+#define strtold(va,vb)  std::strtod(va,vb)
+#define cbrtl(var)      std::cbrt(var)
+#define fabsl(var)      std::fabs(var)
+#define expl(var)       std::exp(var)
 
 #endif
 
 class Math
 {
-    protected:
-    Variable*vars;
-    Preferences*pref;
-    Math*parent;
-    Math *vertObj,*horzObj;
-    double number;
-    int var;
+	protected:
+	Variable*vars;
+	Preferences*pref;
+	Math*parent;
+	Math *vertObj,*horzObj;
+	double number;
+	int var;
 
-    
-    
+	
+	
 public:
-            int operation;
-    Math(Math*par,Preferences*pr,Variable*va)
-    {
-        parent=par;
-        pref=pr;
-        vars=va;
-    }
-    virtual ~Math()
-    {
-        if(vertObj!=nullptr)
-        {
-            delete vertObj;
-            vertObj=nullptr;
-        }
-        if(horzObj!=nullptr)
-        {
-            delete horzObj;
-            horzObj=nullptr;
-        }
-    }
-    
-    int getOperation()
-    {
-        return operation;
-    }
-    
-    virtual double calc() {return 0.0;}
-    virtual double calcVertObj() {return 0.0;}
-    virtual double calcHorzObj() {return 0.0;}
-    
-    virtual Number exec() {Number r;r.type=NNONE;return r;}
-    virtual Number execVertObj() {Number r;r.type=NNONE;return r;}
-    virtual Number execHorzObj() {Number r;r.type=NNONE;return r;}
+			int operation;
+	Math(Math*par,Preferences*pr,Variable*va)
+	{
+		parent=par;
+		pref=pr;
+		vars=va;
+	}
+	virtual ~Math()
+	{
+		if(vertObj!=NULL)
+		{
+			delete vertObj;
+			vertObj=NULL;
+		}
+		if(horzObj!=NULL)
+		{
+			delete horzObj;
+			horzObj=NULL;
+		}
+	}
+	
+	int getOperation()
+	{
+		return operation;
+	}
+	
+	virtual double calc() {return 0.0;}
+	virtual double calcVertObj() {return 0.0;}
+	virtual double calcHorzObj() {return 0.0;}
+	
+	virtual Number exec() {Number r;r.type=NNONE;return r;}
+	virtual Number execVertObj() {Number r;r.type=NNONE;return r;}
+	virtual Number execHorzObj() {Number r;r.type=NNONE;return r;}
 
-    virtual int split(char*,int,int){return 0;}
-    virtual int parse(char*,int,int){return 0;}
-    
+	virtual int split(char*,int,int){return 0;}
+	virtual int parse(char*,int,int){return 0;}
+	
 };
 
 
 class Calculate :public Math
 {
-    
-    virtual int split(char* line,int,int);
+	
+	virtual int split(char* line,int,int);
 
 public:
-    
-    Calculate(Math *par,char* line,int start, int end,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
-    {
-        horzObj=vertObj=nullptr;
-        split(line,start,end);
-    }
-    Calculate(Math *par,char* line,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
-    {
-        horzObj=vertObj=nullptr;
-        if(line==nullptr)
-        {
-            operation=NONE;
-            number=NAN;
-            var=-1;
-        }
-        else split(line,0,strlen(line));
-    }
-    ~Calculate()
-    {
-        if(horzObj!=nullptr)
-        {
-            delete horzObj;
-            horzObj=nullptr;
-        }
-        if(vertObj!=nullptr)
-        {
-            delete vertObj;
-            vertObj=nullptr;
-        }
-    }
+	
+	Calculate(Math *par,char* line,int start, int end,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
+	{
+		horzObj=vertObj=NULL;
+		split(line,start,end);
+	}
+	Calculate(Math *par,char* line,Preferences*pr,Variable*va) :Math((Math*)par,pr,va)
+	{
+		horzObj=vertObj=NULL;
+		if(line==NULL)
+		{
+			operation=NONE;
+			number=NAN;
+			var=-1;
+		}
+		else split(line,0,strlen(line));
+	}
+	~Calculate()
+	{
+		if(horzObj!=NULL)
+		{
+			delete horzObj;
+			horzObj=NULL;
+		}
+		if(vertObj!=NULL)
+		{
+			delete vertObj;
+			vertObj=NULL;
+		}
+	}
 
 
-    virtual double calc();
-    virtual double calcVertObj();
-    virtual double calcHorzObj();
+	virtual double calc();
+	virtual double calcVertObj();
+	virtual double calcHorzObj();
 };
 
 class Script :public Math
 {
-    Number value;
-    Math *vertObj2,*vertObj3,*vertObj4;
-    ThreadSync*eventReciver;
-        
+	Number value;
+	Math *vertObj2,*vertObj3,*vertObj4;
+	ThreadSync*eventReciver;
+		
 private:
-    
-    inline bool resizeVar(int var,int newlen);
+	
+	inline bool resizeVar(int var,int newlen);
 
 public:
 
-    Script(Script*par,char*line,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
-    {
-        parent=par;
-        horzObj=vertObj=vertObj2=vertObj3=vertObj4=nullptr;
-        value.type=NNONE;
-        operation=SFAIL;
-        number=NAN;
-        eventReciver=evrec;
-        value.cval=nullptr;
-        if(line!=nullptr)
-        {
-            if(par==nullptr)
-            {
-                split(line,0,strlen(line));
-            }
-            else
-            {
-                int rest=parse(line,0,strlen(line));
-                if(rest!=-1)
-                    operation=SFAIL;
-            }
-        }
-    }
-    
-    Script(Script*par,char*line,int start,int end,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
-    {
-        horzObj=vertObj=vertObj2=vertObj3=vertObj4=nullptr;
-        value.type=NNONE;
-        operation=SFAIL;
-        eventReciver=evrec;
-        value.cval=nullptr;
-        if(line!=nullptr)
-        {
-            if(par==nullptr)
-            {
-                split(line,start,end);
-            }
-            else if(line!=nullptr)
-            {
-                int rest=parse(line,start,end);
-                if(rest!=-1)
-                    operation=SFAIL;
-            }
-        }
-    }
-    ~Script()
-    {
-        if(value.type==SVALUE && value.type==NCHAR && value.cval!=nullptr)
-        {
-            free(value.cval);
-            value.cval=nullptr;
-        }
-        if(horzObj!=nullptr)
-        {
-            delete horzObj;
-            horzObj=nullptr;
-        }
-        if(vertObj!=nullptr)
-        {
-            delete vertObj;
-            vertObj=nullptr;
-        }
-        if(vertObj2!=nullptr)
-        {
-            delete vertObj2;
-            vertObj2=nullptr;
-        }
-        if(vertObj3!=nullptr)
-        {
-            delete vertObj3;
-            vertObj3=nullptr;
-        }
-        if(vertObj4!=nullptr)
-        {
-            delete vertObj4;
-            vertObj4=nullptr;
-        }
-    }
-    virtual int parse(char*line,int start,int end);
-    virtual int split(char* line,int start,int end);
+	Script(Script*par,char*line,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
+	{
+		parent=par;
+		horzObj=vertObj=vertObj2=vertObj3=vertObj4=NULL;
+		value.type=NNONE;
+		operation=SFAIL;
+		number=NAN;
+		eventReciver=evrec;
+		value.cval=NULL;
+		if(line!=NULL)
+		{
+			if(par==NULL)
+			{
+				split(line,0,strlen(line));
+			}
+			else
+			{
+				int rest=parse(line,0,strlen(line));
+				if(rest!=-1)
+					operation=SFAIL;
+			}
+		}
+	}
+	
+	Script(Script*par,char*line,int start,int end,Preferences*pr,Variable*va,ThreadSync*evrec) :Math((Math*)par,pr,va)
+	{
+		horzObj=vertObj=vertObj2=vertObj3=vertObj4=NULL;
+		value.type=NNONE;
+		operation=SFAIL;
+		eventReciver=evrec;
+		value.cval=NULL;
+		if(line!=NULL)
+		{
+			if(par==NULL)
+			{
+				split(line,start,end);
+			}
+			else if(line!=NULL)
+			{
+				int rest=parse(line,start,end);
+				if(rest!=-1)
+					operation=SFAIL;
+			}
+		}
+	}
+	~Script()
+	{
+		if(value.type==SVALUE && value.type==NCHAR && value.cval!=NULL)
+		{
+			free(value.cval);
+			value.cval=NULL;
+		}
+		if(horzObj!=NULL)
+		{
+			delete horzObj;
+			horzObj=NULL;
+		}
+		if(vertObj!=NULL)
+		{
+			delete vertObj;
+			vertObj=NULL;
+		}
+		if(vertObj2!=NULL)
+		{
+			delete vertObj2;
+			vertObj2=NULL;
+		}
+		if(vertObj3!=NULL)
+		{
+			delete vertObj3;
+			vertObj3=NULL;
+		}
+		if(vertObj4!=NULL)
+		{
+			delete vertObj4;
+			vertObj4=NULL;
+		}
+	}
+	virtual int parse(char*line,int start,int end);
+	virtual int split(char* line,int start,int end);
 
 
-    virtual double calc();
-    virtual double calcVertObj();
-    virtual double calcHorzObj();
+	virtual double calc();
+	virtual double calcVertObj();
+	virtual double calcHorzObj();
 
-    virtual Number exec();
-    virtual Number execVertObj();
-    virtual Number execHorzObj();
+	virtual Number exec();
+	virtual Number execVertObj();
+	virtual Number execHorzObj();
 
 };
 
